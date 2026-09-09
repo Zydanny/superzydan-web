@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -79,6 +80,7 @@ export default function RootLayout({
         <SiteHeader />
         <div className="flex w-full min-w-0 flex-1 flex-col">{children}</div>
         <SiteFooter />
+        <Analytics />
       </body>
     </html>
   );
