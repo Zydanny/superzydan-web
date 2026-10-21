@@ -103,7 +103,7 @@ export function VlogFeed({
 function VlogCard({ post }: { post: VlogPost }) {
   const internal = Boolean(post.internal || post.url.startsWith("/"));
   const card = (
-    <SpotlightCard className="group/card flex h-full gap-4 p-4 sm:flex-row">
+    <SpotlightCard className="group/card flex h-full flex-col gap-4 p-4 sm:flex-row">
       <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-muted sm:aspect-square sm:w-32">
         {post.thumbnail ? (
           <Image
@@ -121,7 +121,7 @@ function VlogCard({ post }: { post: VlogPost }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
       </div>
 
-      <div className="flex min-w-0 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] font-medium text-primary">
             {post.tag}
