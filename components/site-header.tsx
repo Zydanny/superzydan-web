@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
@@ -24,11 +24,12 @@ const linkClass =
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
+  /*
+   * Remember which page the menu was opened on rather than a plain boolean, so
+   * navigating anywhere else closes it without a setState-in-effect.
+   */
+  const [openedOn, setOpenedOn] = useState<string | null>(null);
+  const menuOpen = openedOn === pathname;
 
   return (
     <motion.header
@@ -85,7 +86,10 @@ export function SiteHeader() {
             Join Discord
           </ShimmerButton>
 
-          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+          <Sheet
+            open={menuOpen}
+            onOpenChange={(open) => setOpenedOn(open ? pathname : null)}
+          >
             <SheetTrigger
               render={
                 <Button
