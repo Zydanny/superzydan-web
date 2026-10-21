@@ -41,7 +41,7 @@ export function VlogFeed({
       <SectionHeading
         eyebrow="Lifestyle"
         title="Latest from the blog"
-        description="Pulled live from superzydanofficial.com — reviews, recipes, and kitchen chaos, newest first."
+        description="Reviews, recipes, and kitchen chaos, newest first."
       />
       ) : null}
 

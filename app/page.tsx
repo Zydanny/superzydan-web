@@ -10,15 +10,14 @@ import { VlogFeed } from "@/components/home/vlog-feed";
 import { YoutubeGrid } from "@/components/home/youtube-grid";
 import { TwitchStatusProvider } from "@/components/twitch-status-provider";
 import { getDiscordStats } from "@/lib/discord";
-import { vlogPosts, youtubeVideos } from "@/lib/site";
+import { youtubeVideos } from "@/lib/site";
 import { getTwitchClips, getTwitchStatus } from "@/lib/twitch";
-import { mergeLifestylePosts } from "@/lib/reviews";
-import { getVlogPosts } from "@/lib/wordpress";
+import { getVlogPosts } from "@/lib/blog";
 import { getLatestChannelVideos, getYouTubeSubscriberCount } from "@/lib/youtube";
 
 /*
- * Re-render every 15 min so YouTube uploads, subscriber count, and blog posts
- * stay current. Next requires this to be a literal it can read statically, so
+ * Re-render every 15 min so YouTube uploads and the subscriber count stay
+ * current. Next requires this to be a literal it can read statically, so
  * it cannot be imported from the lib files — keep in sync with
  * YOUTUBE_REVALIDATE_SECONDS in lib/youtube.ts.
  *
@@ -31,7 +30,7 @@ export default async function Home() {
   const [
     liveVideos,
     subscriberCount,
-    livePosts,
+    posts,
     twitchStatus,
     discordStats,
     twitchClips,
@@ -45,7 +44,6 @@ export default async function Home() {
   ]);
 
   const videos = liveVideos.length > 0 ? liveVideos : youtubeVideos;
-  const posts = mergeLifestylePosts(livePosts.length > 0 ? livePosts : vlogPosts);
 
   return (
     <TwitchStatusProvider initialStatus={twitchStatus}>

@@ -111,15 +111,15 @@ export const setupIntro =
 
 const setupPhotos = {
   pc1: {
-    src: "https://superzydanofficial.com/wp-content/uploads/2025/05/PC-1-1024x768.jpg",
+    src: "/images/setup/pc-build-1.webp",
     alt: "Custom PC build, angle one",
   },
   pc2: {
-    src: "https://superzydanofficial.com/wp-content/uploads/2025/05/PC-2-1024x768.jpg",
+    src: "/images/setup/pc-build-2.webp",
     alt: "Custom PC build, angle two",
   },
   desk: {
-    src: "https://superzydanofficial.com/wp-content/uploads/2025/05/IMG_0598-1024x768.jpg",
+    src: "/images/setup/desk-setup.webp",
     alt: "Desk setup",
   },
   keyboard: {
@@ -282,7 +282,7 @@ export const reviewCategories = [
 ] as const;
 
 export const lifestyleIntro =
-  "Reviews, recipes, and the back-to-school lists — pulled live from the blog.";
+  "Reviews, recipes, gear guides, and the back-to-school lists. Newest first.";
 
 export const merchPage = {
   eyebrow: "Merch",

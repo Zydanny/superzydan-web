@@ -281,7 +281,7 @@ export const gearCategories: GearCategory[] = [
         cta: "Open the full spec sheet",
         tag: "On the desk",
         image:
-          "https://superzydanofficial.com/wp-content/uploads/2025/05/PC-2-1024x768.jpg",
+          "/images/setup/pc-build-2.webp",
         pending: false,
       },
     ],
@@ -307,7 +307,7 @@ export const gearCategories: GearCategory[] = [
         cta: "See it on the setup",
         tag: "On the desk",
         image:
-          "https://superzydanofficial.com/wp-content/uploads/2025/05/PC-1-1024x768.jpg",
+          "/images/setup/pc-build-1.webp",
         pending: false,
       },
       {
@@ -331,10 +331,7 @@ export const gearCategories: GearCategory[] = [
   },
 ];
 
-/*
- * Placeholder feed for the vlog automation. `thumbnail` reuses YouTube stills
- * so the layout has real imagery without whitelisting another image host.
- */
+/* Card shape for blog posts; built from content/blog by lib/blog.ts. */
 export type VlogPost = {
   title: string;
   excerpt: string;
@@ -347,57 +344,6 @@ export type VlogPost = {
   /** On-site review. Opens in the same tab instead of a new window. */
   internal?: boolean;
 };
-
-/*
- * Fallback list, used only if the WordPress REST API is unreachable. Mirrors
- * real published posts so an outage still shows genuine content.
- */
-export const vlogPosts: VlogPost[] = [
-  {
-    title: "Creamy Korean Carbonara Udon: The Ultimate Fusion Comfort Food",
-    excerpt:
-      "Creamy, savory, and spicy — crispy pancetta, rich Parmesan, and a Korean secret ingredient.",
-    tag: "Home & Kitchen",
-    readTime: 2,
-    status: "Published",
-    thumbnail:
-      "https://superzydanofficial.com/wp-content/uploads/2025/08/Creamy-Korean-Carbonara-Thubmnail.png",
-    url: "https://superzydanofficial.com/creamy-korean-carbonara/",
-  },
-  {
-    title: "Who's the Jedi Master? My Son Challenged Me to a Lightsaber Battle",
-    excerpt:
-      "My son and I faced off in an epic lightsaber duel filled with hilarious fails, questionable techniques, and a lot of dad jokes.",
-    tag: "Lifestyle & Mindset",
-    readTime: 1,
-    status: "Published",
-    // No uploaded image on this post; its embedded video's thumbnail stands in.
-    thumbnail: "https://i.ytimg.com/vi/RHOgBjl1V_c/maxresdefault.jpg",
-    url: "https://superzydanofficial.com/whos-the-jedi-master/",
-  },
-  {
-    title: "Anker 165W Power Bank: The Ultimate Solution to Your Cord Chaos",
-    excerpt:
-      "A portable charger with built-in cables that finally ends the cord chaos on the go.",
-    tag: "Electronics",
-    readTime: 3,
-    status: "Published",
-    thumbnail:
-      "https://superzydanofficial.com/wp-content/uploads/2025/08/Anker-Full-View-1024x766.png",
-    url: "https://superzydanofficial.com/anker165-powerbank/",
-  },
-  {
-    title: "Hollyland Lark M2 Review: A Creator's New Best Friend",
-    excerpt:
-      "A tiny wireless lavalier that punches well above its price for vlogging and streaming.",
-    tag: "Electronics",
-    readTime: 5,
-    status: "Published",
-    thumbnail:
-      "https://superzydanofficial.com/wp-content/uploads/2025/06/Case-with-open-shot-1024x586.png",
-    url: "https://superzydanofficial.com/hollylandlarkm2/",
-  },
-];
 
 export const partners = [
   { name: "DreamHack Dallas 2025", href: "https://dreamhack.com/dallas/" },

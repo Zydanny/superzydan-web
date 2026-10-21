@@ -1,5 +1,10 @@
 import type { VlogPost } from "@/lib/site";
 
+/*
+ * Shared facts about the FNP75 review for the setup and product-review pages.
+ * The write-up itself lives in content/blog/gateron-sikakeyb-fnp75-he.mdx.
+ */
+
 export const KEYBOARD_REVIEW_SLUG = "gateron-sikakeyb-fnp75-he";
 export const KEYBOARD_REVIEW_PATH = `/lifestyle/${KEYBOARD_REVIEW_SLUG}`;
 export const KEYBOARD_PRODUCT_URL =
@@ -45,18 +50,3 @@ export const keyboardReviewPost: VlogPost = {
   url: KEYBOARD_REVIEW_PATH,
   internal: true,
 };
-
-export const keyboardReviewBody = [
-  "It was time to make the upgrade to a Hall Effect keyboard. I did a ton of research to find the right one — this is not your average TikTok-shop board, and nobody sponsored me. I looked at Wooting, Keychron, Gravistar, MelGeek, and a pile of others. When I landed on the Gateron collaboration with SIKAKEYB, it was just… that’s the one.",
-  "I bought the Gateron × SIKAKEYB FNP75 HE myself. It comes in red, orange, and gold. Guess which one I picked.",
-  "The box is heavy, which is a good sign. It ships in a real carry case, and the board has a built-in incline so you don’t have to fake a tent. Aluminum case, 75% layout, USB-C, 8K polling, Rapid Trigger, and adjustable actuation — the Hall Effect stuff that actually matters for sweaty games. SIKAKEYB is known for the triple spacebar, and this one has it: three independent switches instead of one wobbly bar.",
-  "Stock it came with Gateron Delta switches. WASD and the stabilized keys use Delta Light; the rest of the board is custom themed to the color you pick, so mine are red. It already sounded good out of the box. Hot-swap, Gateron badge, a little crystal / dragon-heart emblem on the side that lights up. The included cable is a basic black USB-C — fine, but it is not surviving on a red desk. That one’s getting swapped.",
-  "I still wanted the best, so I bought an extra set: Gateron Magnetic Jade Ultra, about $70 more. I was chasing that deeper, dockier mahjong sound. First I swapped four keys and compared WASD to JKL;. Barely a difference. Then I learned the WASD Deltas are a different SKU than the rest of the board, which explained some of the confusion — and I still couldn’t tell them apart. I almost shipped the Ultras back.",
-  "For the love of the game I replaced every letter and the spacebar anyway. That’s when it clicked. Full board of Jade Ultras is a little deeper, a tiny bit more clicky. Not night and day. Was it worth $70? Maybe, in the end. I kept them.",
-  "If you want Hall Effect without guessing from a random shop listing, this is the board on my desk. Watch the unboxing and the switch tests, then grab the FNP75 HE if it looks like your color.",
-] as const;
-
-export function mergeLifestylePosts(posts: VlogPost[]): VlogPost[] {
-  const withoutDup = posts.filter((post) => post.url !== KEYBOARD_REVIEW_PATH);
-  return [keyboardReviewPost, ...withoutDup];
-}
