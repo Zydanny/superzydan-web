@@ -9,7 +9,7 @@ import remarkGfm from "remark-gfm";
 import type { MDXComponents } from "mdx/types";
 import { ArrowUpRightIcon } from "lucide-react";
 import { YouTubeEmbed } from "@/components/blog/youtube-embed";
-import { isAffiliateUrl } from "@/lib/affiliate";
+import { isAffiliateUrl, withAssociateTag } from "@/lib/affiliate";
 
 /*
  * Local images are sized from the file itself so the page doesn't jump while
@@ -46,7 +46,8 @@ async function PostImage({ src, alt }: ComponentPropsWithoutRef<"img">) {
   );
 }
 
-function PostLink({ href = "", children, ...rest }: ComponentPropsWithoutRef<"a">) {
+function PostLink({ href: rawHref = "", children, ...rest }: ComponentPropsWithoutRef<"a">) {
+  const href = withAssociateTag(rawHref);
   const external = /^https?:\/\//.test(href);
   const rel = external
     ? isAffiliateUrl(href)

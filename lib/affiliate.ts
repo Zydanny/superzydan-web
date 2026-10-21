@@ -1,3 +1,9 @@
+import linkFixes from "@/lib/amazon-link-fixes.json";
+import { AMAZON_ASSOCIATE_TAG } from "@/lib/site";
+
+/* Short links that land on another tracking ID, mapped to our tag. Kept up to date by `npm run links:audit`. */
+const LINK_FIXES: Record<string, string | null> = linkFixes;
+
 /*
  * Affiliate and referral links get rel="sponsored nofollow" (Google's and
  * Amazon's guidance) and sit under a disclosure. Matches the shorteners and
@@ -35,6 +41,27 @@ export function isAmazonUrl(href: string): boolean {
     return host === "amazon.com" || host.endsWith(".amazon.com") || host === "amzn.to" || host === "link.amazon";
   } catch {
     return false;
+  }
+}
+
+/*
+ * Stamps our tracking ID on amazon.com links, replacing any other tag. Short
+ * links (amzn.to, geni.us) carry the tag they were made with, so ones known to
+ * use another tag are swapped through LINK_FIXES.
+ */
+export function withAssociateTag(href: string): string {
+  const fixed = LINK_FIXES[href];
+  if (fixed) return fixed;
+  try {
+    const url = new URL(href);
+    const host = url.hostname.replace(/^www\./, "");
+    if (!(host === "amazon.com" || host.endsWith(".amazon.com")) || url.pathname.startsWith("/shop/")) {
+      return href;
+    }
+    url.searchParams.set("tag", AMAZON_ASSOCIATE_TAG);
+    return url.toString();
+  } catch {
+    return href;
   }
 }
 

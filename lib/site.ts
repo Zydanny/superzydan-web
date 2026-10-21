@@ -174,6 +174,12 @@ export const youtubeVideos: VideoMeta[] = [
 ];
 
 /*
+ * The only Amazon Associates tracking ID the site uses. lib/affiliate.ts puts
+ * it on every amazon.com link, replacing any other tag.
+ */
+export const AMAZON_ASSOCIATE_TAG = "superzydan1-20";
+
+/*
  * The separate product-reviews channel (@superzydanreviews). Its feed fills
  * the Product Reviews page, and scripts/new-review.mjs reads the ID from here.
  */
@@ -355,6 +361,6 @@ export type VlogPost = {
 export const partners = [
   { name: "DreamHack Dallas 2025", href: "https://dreamhack.com/dallas/" },
   { name: "HexClad", href: "https://lvnta.com/lv_8oJYlsZ8k8GUl7RcDQ" },
-  { name: "GameSir", href: "https://amzn.to/4jLZmTs" },
+  { name: "GameSir", href: "https://www.amazon.com/s?k=GAMESIR&tag=superzydan1-20" },
   { name: "Goblin Tech Keys", href: "https://goblintechkeys.com/?ref=p8hHC0WDNtCKEx" },
 ] as const;
