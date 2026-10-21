@@ -168,13 +168,23 @@ function clipThumbnail(raw: string | undefined): string | null {
   }
 }
 
+/*
+ * Twitch caps a single recording at 48 hours, so anything longer is bad data
+ * rather than a real stream. Hide it instead of showing something like
+ * "2195h 43m".
+ */
+const MAX_VOD_HOURS = 48;
+
 /** "4h33m16s" reads better as "4h 33m"; seconds are noise at this size. */
 function formatDuration(raw: string | undefined): string | null {
   if (!raw) return null;
-  const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(raw);
-  if (!match) return raw;
+  const match = /^(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(raw);
+  if (!match) return null;
 
-  const [, hours, minutes, seconds] = match;
+  const [, days, hoursPart, minutes, seconds] = match;
+  const hours = Number(days ?? 0) * 24 + Number(hoursPart ?? 0);
+  if (hours > MAX_VOD_HOURS) return null;
+
   if (hours) return `${hours}h ${minutes ?? 0}m`;
   if (minutes) return `${minutes}m`;
   return seconds ? `${seconds}s` : null;
