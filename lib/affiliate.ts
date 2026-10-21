@@ -18,6 +18,8 @@ const AFFILIATE_HOSTS = [
   "shopltk.com",
   "liketoknow.it",
   "lvnta.com",
+  // Brand referral links from video descriptions.
+  "homerunpet.com",
 ];
 
 const REFERRAL_PARAMS = ["tag", "ref", "aff", "affiliate"];

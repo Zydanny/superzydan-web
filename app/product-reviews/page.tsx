@@ -51,8 +51,10 @@ export default async function ProductReviewsPage({
   const requested = Array.isArray(params.category) ? params.category[0] : params.category;
   const initialTag = requested && cards.some((card) => card.tag === requested) ? requested : "All";
 
-  // Shorts without a write-up of their own, newest first.
-  const written = new Set(reviews.map((post) => post.youtubeId));
+  // Shorts without a write-up of their own, newest first. A Short embedded in a post's body counts as written.
+  const written = new Set(
+    reviews.flatMap((post) => [post.youtubeId, ...[...post.body.matchAll(/<YouTube id="([\w-]{11})"/g)].map((m) => m[1])]),
+  );
   const quickTakes = uploads.filter((upload) => upload.short && !written.has(upload.id));
   const quickTakesHaveAmazon = quickTakes.some((upload) => upload.productUrl && isAffiliateUrl(upload.productUrl));
 
