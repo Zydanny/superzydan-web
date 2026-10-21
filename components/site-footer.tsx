@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { SiteLogo } from "@/components/site-logo";
-import { navLinks, site, socialLinks } from "@/lib/site";
+import { affiliateDisclosure, navLinks, site, socialLinks } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -74,6 +74,10 @@ export function SiteFooter() {
         </div>
       </div>
 
+      <Separator />
+      <p className="shell py-6 text-xs leading-relaxed text-muted-foreground">
+        {affiliateDisclosure}
+      </p>
       <Separator />
       <p className="shell py-6 text-xs text-muted-foreground">
         Copyright © {new Date().getFullYear()} {site.name} | Powered by {site.name}
