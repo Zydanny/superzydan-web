@@ -43,7 +43,7 @@ The real keys live in `.env.local` on your machine and in the Vercel project set
 Reviews are blog posts with `category: Reviews`. They show on the Product Reviews page, filtered by `productCategory`. Extra frontmatter:
 
 - `youtubeId`: the video, shown at the top. Add `short: true` for a vertical Short; that post becomes a Quick Review.
-- `disclosure`: how you got the product: `gifted`, `sponsored`, `affiliate`, `purchased`, or `unclear` until you confirm. `disclosureNote` replaces the standard sentence. It shows at the top of the post.
+- `disclosure`: how you got the product: `gifted`, `sponsored`, `affiliate`, `purchased`, `own-product` (something you made and sell), or `unclear` until you confirm. `disclosureNote` replaces the standard sentence. It shows at the top of the post.
 - `products`: `{ name, url, note }` for each product in the video. Links come only from the video description, your storefront or you.
 - `alternatives`: 2 or 3 other options, each with `why`, `tested: true|false` and an optional `othersSay: { text, source, url }` from a real outside review.
 - `draft: true`: shows on your computer and on Vercel preview links, never on the live site.

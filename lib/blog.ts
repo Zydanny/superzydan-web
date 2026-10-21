@@ -37,7 +37,8 @@ export const REVIEW_CATEGORY = "Reviews";
 
 /*
  * How the owner got the product. Every review needs a `disclosure`. The rule:
- * `purchased` unless the video says the product was sent or sponsored, and
+ * `purchased` unless the video says the product was sent or sponsored,
+ * `own-product` for things the owner made and sells himself, and
  * `unclear` only when it hints at that without saying so (shows nothing on the
  * live site until confirmed). `disclosureNote` overrides the wording.
  */
@@ -46,6 +47,7 @@ export const DISCLOSURES = {
   sponsored: "This is a paid partnership with the brand. All opinions are mine.",
   affiliate: "Nobody paid me or sent me this. I may earn a commission from the links in this post.",
   purchased: "I bought this myself. Nobody paid me or sent me anything for this review.",
+  "own-product": "I made this. It's my own product, so I earn from every sale.",
 } as const;
 
 export type Disclosure = keyof typeof DISCLOSURES;

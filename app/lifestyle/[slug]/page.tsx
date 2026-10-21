@@ -53,6 +53,7 @@ const DISCLOSURE_LABELS: Record<Disclosure, string> = {
   sponsored: "Sponsored",
   affiliate: "Affiliate links",
   purchased: "Bought it myself",
+  "own-product": "My own product",
 };
 
 function formatDate(date: string) {
@@ -149,7 +150,7 @@ export default async function BlogPostPage({
             </p>
           ) : review && isPreviewBuild ? (
             <p className="mt-6 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
-              Disclosure not confirmed. Set <code>disclosure</code> to gifted, sponsored, affiliate or purchased.
+              Disclosure not confirmed. Set <code>disclosure</code> to gifted, sponsored, affiliate, purchased or own-product.
             </p>
           ) : null}
 
