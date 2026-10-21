@@ -46,9 +46,10 @@ Reviews are blog posts with `category: Reviews`. They show on the Product Review
 - `disclosure`: how you got the product: `gifted`, `sponsored`, `affiliate`, `purchased`, `own-product` (something you made and sell), or `unclear` until you confirm. `disclosureNote` replaces the standard sentence. It shows at the top of the post.
 - `products`: `{ name, url, note }` for each product in the video. Links come only from the video description, your storefront or you.
 - `alternatives`: 2 or 3 other options, each with `why`, `tested: true|false` and an optional `othersSay: { text, source, url }` from a real outside review.
+- `availabilityNote`: a line shown above the alternatives when the product isn't sold anymore, for example "This one isn't sold on Amazon anymore. Here are similar picks."
 - `draft: true`: shows on your computer and on Vercel preview links, never on the live site.
 
-Amazon links always use the tracking ID in `AMAZON_ASSOCIATE_TAG` (`lib/site.ts`).
+Amazon links always use the tracking ID in `AMAZON_ASSOCIATE_TAG` (`lib/site.ts`). The build fails on Levanta (lvnta.com) links and on Amazon product links that aren't an `amazon.com/dp/<ASIN>` page, except the brand store pages listed in `lib/affiliate.ts`.
 
 - `npm run review:new -- <youtube-url>` drafts a review post from a video.
 - `npm run links:audit` checks every Amazon short link on the site and the reviews channel, and maps any that use a different tracking ID to one with ours (`lib/amazon-link-fixes.json`).

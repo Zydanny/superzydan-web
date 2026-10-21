@@ -12,6 +12,11 @@ function goesToAmazon(product: BlogProduct) {
   return product.store === "Amazon" || isAmazonUrl(product.url);
 }
 
+/* A brand's Amazon store, not one product, so "price" would be misleading. */
+function isAmazonStorePage(href: string) {
+  return isAmazonUrl(href) && new URL(href).pathname.startsWith("/stores/");
+}
+
 function ProductButton({ product, label }: { product: BlogProduct; label?: string }) {
   return (
     <a
@@ -20,7 +25,14 @@ function ProductButton({ product, label }: { product: BlogProduct; label?: strin
       rel={isAffiliateUrl(product.url) ? "sponsored nofollow noopener noreferrer" : "noopener noreferrer"}
       className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
     >
-      {label ?? (goesToAmazon(product) ? "Check price on Amazon" : product.store ? `View on ${product.store}` : "View product")}
+      {label ??
+        (isAmazonStorePage(product.url)
+          ? "Check on Amazon"
+          : goesToAmazon(product)
+            ? "Check price on Amazon"
+            : product.store
+              ? `View on ${product.store}`
+              : "View product")}
       <ArrowUpRightIcon className="size-4" />
     </a>
   );
@@ -29,10 +41,12 @@ function ProductButton({ product, label }: { product: BlogProduct; label?: strin
 export function ProductList({
   products,
   alternatives = [],
+  availabilityNote,
   title = "Products in this post",
 }: {
   products: BlogProduct[];
   alternatives?: BlogAlternative[];
+  availabilityNote?: string;
   title?: string;
 }) {
   if (products.length === 0 && alternatives.length === 0) return null;
@@ -74,6 +88,11 @@ export function ProductList({
         <>
           {products.length > 0 ? (
             <h3 className="text-display mt-12 text-xl font-bold tracking-tight">Other options to look at</h3>
+          ) : null}
+          {availabilityNote ? (
+            <p className="mt-4 rounded-xl border border-border bg-card px-4 py-3 text-sm text-zinc-300">
+              {availabilityNote}
+            </p>
           ) : null}
           <ul className="mt-6 grid gap-4">
             {alternatives.map((alternative) => (

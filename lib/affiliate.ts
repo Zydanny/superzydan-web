@@ -17,7 +17,6 @@ const AFFILIATE_HOSTS = [
   "link.amazon",
   "shopltk.com",
   "liketoknow.it",
-  "lvnta.com",
   // Brand referral links from video descriptions.
   "homerunpet.com",
 ];
@@ -64,6 +63,31 @@ export function withAssociateTag(href: string): string {
     return url.toString();
   } catch {
     return href;
+  }
+}
+
+/* Amazon brand stores the owner approved as a post's main link, for products that aren't sold anymore. */
+const APPROVED_AMAZON_STORE_PAGES = ["/stores/GTPLAYER/page/0B4F3664-43B3-4BFE-96C6-86C0E09864A1"];
+
+/*
+ * Why a post's product link can't be used, or null when it's fine. Levanta
+ * links carry Amazon's tag=maas instead of ours, so they're never allowed.
+ * Amazon links must be a product page or an approved store page. Short links
+ * pass here; `npm run links:audit` checks where they land.
+ */
+export function productLinkProblem(href: string): string | null {
+  try {
+    const url = new URL(href);
+    const host = url.hostname.replace(/^www\./, "");
+    if (host === "lvnta.com" || host.endsWith(".lvnta.com")) return "Levanta links aren't used; link the Amazon product";
+    if (host !== "amazon.com") return null;
+    if (isAmazonProductPage(href)) return null;
+    if (APPROVED_AMAZON_STORE_PAGES.includes(url.pathname) && url.searchParams.get("tag") === AMAZON_ASSOCIATE_TAG) {
+      return null;
+    }
+    return `Amazon links must be an amazon.com/dp/<ASIN> page with tag=${AMAZON_ASSOCIATE_TAG}`;
+  } catch {
+    return "not a valid URL";
   }
 }
 

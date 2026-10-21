@@ -175,6 +175,7 @@ export default async function BlogPostPage({
           <ProductList
             products={post.products}
             alternatives={post.alternatives}
+            availabilityNote={post.availabilityNote}
             title={post.youtubeId ? "Products in this video" : "Products in this post"}
           />
         </div>

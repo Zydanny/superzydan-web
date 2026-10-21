@@ -2,7 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 import YAML from "yaml";
-import { isAmazonProductPage, withAssociateTag } from "@/lib/affiliate";
+import { isAmazonProductPage, productLinkProblem, withAssociateTag } from "@/lib/affiliate";
 import { AMAZON_ASSOCIATE_TAG, type VlogPost } from "@/lib/site";
 
 /*
@@ -72,6 +72,8 @@ export type BlogPost = {
   disclosure: { type: Disclosure; text: string } | null;
   products: BlogProduct[];
   alternatives: BlogAlternative[];
+  /** Shown above the alternatives when the reviewed product isn't sold anymore. */
+  availabilityNote?: string;
   /** Drafts show in `npm run dev` and on Vercel preview links, never on the live site. */
   draft: boolean;
   /** Markdown/MDX body without the frontmatter. */
@@ -100,9 +102,12 @@ function parseProduct(entry: unknown, label: string, file: string): BlogProduct 
   }
   const note = optionalString(product.note);
   const store = optionalString(product.store);
+  const url = withAssociateTag(product.url);
+  const problem = productLinkProblem(url);
+  if (problem) throw new Error(`content/blog/${file}: ${label}: ${problem}`);
   return {
     name: product.name,
-    url: withAssociateTag(product.url),
+    url,
     ...(note ? { note } : {}),
     ...(store ? { store } : {}),
   };
@@ -174,6 +179,7 @@ function parsePost(file: string, raw: string): BlogPost {
   const category = typeof data.category === "string" ? data.category : "Lifestyle";
   const draft = data.draft === true;
   const productCategory = optionalString(data.productCategory);
+  const availabilityNote = optionalString(data.availabilityNote);
 
   return {
     title: requireString(data, "title", file),
@@ -195,6 +201,7 @@ function parsePost(file: string, raw: string): BlogPost {
     alternatives: parseList(data.alternatives, "alternatives", file).map((entry, index) =>
       parseAlternative(entry, index, file),
     ),
+    ...(availabilityNote ? { availabilityNote } : {}),
     draft,
     body,
   };

@@ -360,7 +360,7 @@ export type VlogPost = {
 
 export const partners = [
   { name: "DreamHack Dallas 2025", href: "https://dreamhack.com/dallas/" },
-  { name: "HexClad", href: "https://lvnta.com/lv_8oJYlsZ8k8GUl7RcDQ" },
+  { name: "HexClad", href: "https://www.amazon.com/stores/page/84D63786-37D7-4ED6-B9B8-496C46020D43?tag=superzydan1-20" },
   { name: "GameSir", href: "https://www.amazon.com/s?k=GAMESIR&tag=superzydan1-20" },
   { name: "Goblin Tech Keys", href: "https://goblintechkeys.com/?ref=p8hHC0WDNtCKEx" },
 ] as const;
