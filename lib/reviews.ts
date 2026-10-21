@@ -14,7 +14,7 @@ export const KEYBOARD_THUMB = "/images/gateron-sikakeyb-fnp75-he.jpg";
 export const keyboardReview = {
   title: "Gateron × SIKAKEYB FNP75 HE: I upgraded to a Hall Effect board",
   excerpt:
-    "Not a TikTok-shop keyboard. I researched Wooting, Keychron, Gravistar, and MelGeek, then bought the red Gateron × SIKAKEYB FNP75 HE myself — and swapped in Magnetic Jade Ultras to hear if $70 extra actually matters.",
+    "Not a TikTok-shop keyboard. I researched Wooting, Keychron, GravaStar, and MelGeek, then bought the red Gateron × SIKAKEYB FNP75 HE myself — and swapped in Magnetic Jade Ultras to hear if $70 extra actually matters.",
   tag: "Electronics",
   thumbnail: KEYBOARD_THUMB,
   youtubeId: KEYBOARD_YOUTUBE_ID,
