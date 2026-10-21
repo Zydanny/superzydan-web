@@ -1,5 +1,30 @@
 import type { NextConfig } from "next";
 
+/*
+ * Posts from the old WordPress site, which used /<slug>/ permalinks. They now
+ * live at /lifestyle/<slug>; these keep old links and search results working.
+ * Next strips the trailing slash before redirects run, so /<slug>/ matches too.
+ */
+const legacyPostSlugs = [
+  "anker165-powerbank",
+  "backtoschool2025",
+  "budget-irl-streaming-setup",
+  "creamy-korean-carbonara",
+  "dyson-v11",
+  "emeet-nova-4k-webcam-upgrade",
+  "gamesir-cyclone2",
+  "gamestop-trade-in",
+  "grow-a-garden-chris-p-bacon-cooking-event",
+  "hollylandlarkm2",
+  "hyperx-cloud-headset",
+  "kitchen-fail-redemption",
+  "need-vs-want-episode-1",
+  "stop-losing-amazon-commissions",
+  "sweatandprogress",
+  "urevo-smart-walking-pad",
+  "whos-the-jedi-master",
+];
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -7,12 +32,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.ytimg.com",
         pathname: "/vi/**",
-      },
-      {
-        // Blog thumbnails pulled from the WordPress media library.
-        protocol: "https",
-        hostname: "superzydanofficial.com",
-        pathname: "/wp-content/uploads/**",
       },
       {
         // Twitch past-broadcast thumbnails.
@@ -27,6 +46,20 @@ const nextConfig: NextConfig = {
         pathname: "/twitch-video-assets/**",
       },
     ],
+  },
+  /*
+   * /lifestyle reads ?tag= so it renders per request, and lib/blog.ts reads the
+   * post files at runtime there. Post pages are prerendered and don't need this.
+   */
+  outputFileTracingIncludes: {
+    "/lifestyle": ["./content/blog/**/*"],
+  },
+  async redirects() {
+    return legacyPostSlugs.map((slug) => ({
+      source: `/${slug}`,
+      destination: `/lifestyle/${slug}`,
+      permanent: true,
+    }));
   },
 };
 
