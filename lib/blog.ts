@@ -17,7 +17,12 @@ export type BlogProduct = {
   name: string;
   url: string;
   note?: string;
+  /** Where the link goes, for links that hide it (geni.us). "Amazon" gets the Amazon button and statement. */
+  store?: string;
 };
+
+/* Posts with this category show on the Product Reviews page. */
+export const REVIEW_CATEGORY = "Reviews";
 
 export type BlogPost = {
   title: string;
@@ -31,8 +36,14 @@ export type BlogPost = {
   coverAlt: string;
   readTime: number;
   youtubeId?: string;
+  /** The video is a vertical Short, so the embed renders 9:16. */
+  short: boolean;
+  /** Reviews only: Keyboards, Audio, Kitchen... The Product Reviews filters come from this. */
+  productCategory?: string;
+  /** Reviews only, out of 10, and only when the owner gives one. */
+  rating?: number;
   products: BlogProduct[];
-  /** Drafts only show in `npm run dev`, never in a production build. */
+  /** Drafts show in `npm run dev` and on Vercel preview links, never on the live site. */
   draft: boolean;
   /** Markdown/MDX body without the frontmatter. */
   body: string;
@@ -62,9 +73,18 @@ function parseProducts(value: unknown, file: string): BlogProduct[] {
     return {
       name: product.name,
       url: product.url,
-      ...(typeof product.note === "string" ? { note: product.note } : {}),
+      ...(typeof product.note === "string" && product.note ? { note: product.note } : {}),
+      ...(typeof product.store === "string" && product.store ? { store: product.store } : {}),
     };
   });
+}
+
+function parseRating(value: unknown, file: string): { rating: number } | null {
+  if (value == null || value === "") return null;
+  if (typeof value !== "number" || value < 0 || value > 10) {
+    throw new Error(`content/blog/${file}: "rating" must be a number from 0 to 10`);
+  }
+  return { rating: value };
 }
 
 function parsePost(file: string, raw: string): BlogPost {
@@ -95,13 +115,18 @@ function parsePost(file: string, raw: string): BlogPost {
     readTime:
       typeof data.readTime === "number" ? data.readTime : Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
     ...(typeof data.youtubeId === "string" && data.youtubeId ? { youtubeId: data.youtubeId } : {}),
+    short: data.short === true,
+    ...(typeof data.productCategory === "string" && data.productCategory
+      ? { productCategory: data.productCategory }
+      : {}),
+    ...(parseRating(data.rating, file) ?? {}),
     products: parseProducts(data.products, file),
     draft: data.draft === true,
     body,
   };
 }
 
-const showDrafts = process.env.NODE_ENV === "development";
+const showDrafts = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
 
 /* Every visible post, newest first. Cached per request. */
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
@@ -114,6 +139,14 @@ export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
     .filter((post) => showDrafts || !post.draft)
     .sort((a, b) => (a.date === b.date ? a.title.localeCompare(b.title) : b.date.localeCompare(a.date)));
 });
+
+export function isReview(post: BlogPost) {
+  return post.category === REVIEW_CATEGORY;
+}
+
+export async function getReviewPosts(): Promise<BlogPost[]> {
+  return (await getAllPosts()).filter(isReview);
+}
 
 export async function getPost(slug: string): Promise<BlogPost | null> {
   return (await getAllPosts()).find((post) => post.slug === slug) ?? null;
