@@ -3,12 +3,15 @@
  *
  *   npm run review:new -- https://www.youtube.com/watch?v=VIDEO_ID
  *
- * Writes content/blog/<slug>.mdx with draft: true, prefilled with the video's
- * title, date, chapters, description and every product link in the
- * description, and saves the thumbnail as public/blog/<slug>/cover.webp.
- * The body is only the description: rewrite it before publishing.
+ * Writes content/blog/<slug>.mdx with draft: true and disclosure: unclear,
+ * prefilled with the video's title, date, chapters and every product link in
+ * the description, and saves the thumbnail as public/blog/<slug>/cover.webp.
+ * The body is a section outline with the description in a comment: write it
+ * from the transcript before publishing. Shorts get the Quick Review outline.
  *
  * Product links come from the description and nowhere else (Amazon rules).
+ * Amazon short links that carry a different tracking ID are swapped for the
+ * product's own amazon.com link with ours (AMAZON_ASSOCIATE_TAG in lib/site.ts).
  * Needs YOUTUBE_API_KEY, read from the environment or .env.local.
  */
 import { existsSync } from "node:fs";
@@ -38,6 +41,8 @@ const CATEGORY_KEYWORDS = [
   ["Kitchen", /knife|knives|\bpans?\b|air fryer|instant pot|blender|kitchen|grinder|thermometer|cutting board|keurig|coffee|microwave|mortar|chopper|sharpener|bowl|vacuum sealer|ricer|masher|roasting|burger press/i],
   ["Food & Drink", /candy|snack|protein bar|protein shake|ramen|seasoning|\bsalt\b|hot pot|curry|chocolate|whiskey/i],
   ["Fitness", /weight|bench|kettlebell|lifting|\bgym\b|workout|treadmill|walking pad|dip belt|calisthenics|wobble board|barbell/i],
+  ["Home", /vacuum|smart lock|thermostat|\bfan\b|heater|fireplace|curtain lights|floor lamp|mattress pad|blanket|umbrella/i],
+  ["Creator Tools", /extension|amazon influencer|broken link/i],
   ["Car", /\bcar\b|bmw|jeep|license plate|detailer|buffer|polisher|clay bar|valve caps|cup holder|tow hook/i],
   ["Tech", /charger|power bank|power strip|cable|\busb\b|ipad|monitor|motherboard|smart lock|thermostat|vacuum|stream deck|airtag|find my|photo frame/i],
   ["Kids & Toys", /\bkids\b|\btoy\b|lego|marble run|board game|card game|graphic novel|puzzle|fidget/i],
@@ -72,9 +77,9 @@ async function apiKey() {
   }
 }
 
-async function reviewsChannelId() {
+async function siteSetting(name) {
   const site = await readFile(path.join(ROOT, "lib", "site.ts"), "utf8");
-  return /REVIEWS_YOUTUBE_CHANNEL_ID = "([^"]+)"/.exec(site)?.[1] ?? null;
+  return new RegExp(`${name} = "([^"]+)"`).exec(site)?.[1] ?? null;
 }
 
 /* YouTube answers /shorts/<id> with 200 for a Short and a redirect to /watch for anything else. */
@@ -92,17 +97,48 @@ function matchesHost(url, domains) {
   return domains.some((domain) => h === domain || h.endsWith(`.${domain}`));
 }
 
-/* Follows geni.us and friends only to learn which store they land on. The post keeps the original link. */
-async function storeFor(url) {
-  if (!matchesHost(url, SHORTENERS)) return null;
-  try {
-    const response = await fetch(url, { redirect: "follow", headers: { "User-Agent": "Mozilla/5.0" } });
-    const landed = host(response.url);
-    if (landed === "amazon.com" || landed.endsWith(".amazon.com")) return "Amazon";
-  } catch {
-    // Unreachable right now; the owner can add `store` by hand.
+function isAmazonHost(h) {
+  return h === "amazon.com" || h.endsWith(".amazon.com");
+}
+
+/*
+ * Follows geni.us and friends to learn where they land. Keeps the owner's link
+ * when it lands on Amazon with our tag; otherwise swaps in the product's own
+ * amazon.com link with our tag. geni.us rate-limits, so 429s are retried.
+ */
+async function resolveProductLink(url, tag, warnings) {
+  if (!matchesHost(url, SHORTENERS) && !isAmazonHost(host(url))) return { url };
+  let landed = url;
+  if (matchesHost(url, SHORTENERS)) {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        const response = await fetch(url, { redirect: "follow", headers: { "User-Agent": "Mozilla/5.0" } });
+        if (response.status === 429) {
+          await new Promise((resolve) => setTimeout(resolve, 3000 * (attempt + 1)));
+          continue;
+        }
+        landed = response.url;
+      } catch {
+        // Unreachable right now; checked below.
+      }
+      break;
+    }
   }
-  return null;
+  if (landed === url && matchesHost(url, SHORTENERS)) {
+    warnings.push(`couldn't resolve ${url}; check it goes to the right product with tag ${tag}`);
+    return { url };
+  }
+  const target = new URL(landed);
+  if (!isAmazonHost(host(landed))) return { url };
+  if (target.searchParams.get("tag") === tag) return isAmazonHost(host(url)) ? { url } : { url, store: "Amazon" };
+  const asin = /\/(?:dp|gp\/product)\/([A-Z0-9]{10})/.exec(target.pathname)?.[1];
+  if (!asin) {
+    warnings.push(`${url} goes to Amazon without a product page; fix it by hand`);
+    return { url, store: "Amazon" };
+  }
+  const fixed = `https://www.amazon.com/dp/${asin}?tag=${tag}`;
+  if (fixed !== url) warnings.push(`${url} used tracking ID "${target.searchParams.get("tag")}"; swapped for ${fixed}`);
+  return { url: fixed };
 }
 
 function stripSymbols(text) {
@@ -111,14 +147,14 @@ function stripSymbols(text) {
 
 function productName(label) {
   const name = stripSymbols(label)
-    .replace(/^(?:check out|buy|get|grab|shop)\s+(?:the|my|yours|it)?\s*/i, "")
-    .replace(/\s+(?:on amazon|here|below)$/i, "")
+    .replace(/^(?:check out|buy|get|grab|shop|purchase|order)\s+(?:the|my|yours|it)?\s*/i, "")
+    .replace(/\s+(?:on amazon|here|below|at)$/i, "")
     .replace(/[\s:|-]+$/, "")
     .trim();
   return /^(?:product )?links?$|^$/i.test(name) ? null : name;
 }
 
-async function parseProducts(lines) {
+async function parseProducts(lines, tag, warnings) {
   const products = [];
   const seen = new Set();
   for (const [index, line] of lines.entries()) {
@@ -127,8 +163,8 @@ async function parseProducts(lines) {
       seen.add(url);
       const label = line.slice(0, line.indexOf(url));
       const name = productName(label) ?? productName(lines[index - 1] ?? "");
-      const store = await storeFor(url);
-      products.push({ name: name ?? "TODO: name this product", url, ...(store ? { store } : {}) });
+      const link = await resolveProductLink(url, tag, warnings);
+      products.push({ name: name ?? "TODO: name this product", ...link });
     }
   }
   return products;
@@ -242,7 +278,9 @@ async function main() {
   if (!video) fail(`no video found for ${id}`);
 
   const warnings = [];
-  if (video.channelId !== (await reviewsChannelId())) {
+  const tag = await siteSetting("AMAZON_ASSOCIATE_TAG");
+  if (!tag) fail("AMAZON_ASSOCIATE_TAG isn't set in lib/site.ts");
+  if (video.channelId !== (await siteSetting("REVIEWS_YOUTUBE_CHANNEL_ID"))) {
     warnings.push(`this video is from "${video.channelTitle}", not the reviews channel`);
   }
 
@@ -254,7 +292,7 @@ async function main() {
   for (let n = 2; existsSync(path.join(BLOG_DIR, `${slug}.mdx`)); n++) slug = `${slugify(title)}-${n}`;
 
   const short = await isShort(id);
-  const products = await parseProducts(lines);
+  const products = await parseProducts(lines, tag, warnings);
   const chapters = parseChapters(lines);
   const paragraphs = proseParagraphs(description, chapters);
   const productCategory =
@@ -277,13 +315,20 @@ async function main() {
     coverAlt: `Thumbnail from the video: ${title}`,
     youtubeId: id,
     ...(short ? { short: true } : {}),
+    disclosure: "unclear",
     draft: true,
     ...(products.length ? { products } : {}),
   };
 
+  // The description stays in a comment for reference; the post itself is written from the transcript.
+  const reference = paragraphs.join("\n\n").replace(/\*\//g, "* /");
+  const outline = short
+    ? ["## My take", "## Key specs", "## Who it's for"]
+    : ["## My take", "## What I liked", "## Heads up", "## Key specs", "## Who it's for"];
   const body = [
-    "{/* DRAFT: this is the video description. Rewrite it in your own words with your take, pros and cons, then set draft: false. */}",
-    ...paragraphs.map(escapeMdx),
+    "{/* DRAFT: write each section from the transcript in the owner's words, then set disclosure and draft: false. */}",
+    reference ? `{/* From the video description:\n\n${reference}\n*/}` : "",
+    ...outline.map((heading) => `${heading}\n\nTODO`),
     ...(chapters.length
       ? [
           "## What's in the video",
@@ -295,7 +340,9 @@ async function main() {
             .join("\n"),
         ]
       : []),
-  ].join("\n\n");
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
   await writeFile(
     path.join(BLOG_DIR, `${slug}.mdx`),
