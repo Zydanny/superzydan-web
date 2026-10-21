@@ -35,7 +35,7 @@ export default async function Home() {
     discordStats,
     twitchClips,
   ] = await Promise.all([
-    getLatestChannelVideos(4),
+    getLatestChannelVideos(5),
     getYouTubeSubscriberCount(),
     getVlogPosts(6),
     getTwitchStatus(),
@@ -44,6 +44,8 @@ export default async function Home() {
   ]);
 
   const videos = liveVideos.length > 0 ? liveVideos : youtubeVideos;
+  // The hero already features the newest video, so the grid starts after it.
+  const moreVideos = videos.slice(1, 5);
 
   return (
     <TwitchStatusProvider initialStatus={twitchStatus}>
@@ -56,7 +58,7 @@ export default async function Home() {
         <DiscordCta stats={discordStats} />
         <TwitchClips clips={twitchClips} />
         <YoutubeGrid
-          videos={videos}
+          videos={moreVideos}
           eyebrow="Latest"
           title="Newest from the channel"
           description="The most recent landscape upload — edited videos and live VODs — pulled from YouTube. Tap a card for a preview without leaving the page."
