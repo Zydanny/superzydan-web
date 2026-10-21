@@ -2,8 +2,8 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 import YAML from "yaml";
-import { withAssociateTag } from "@/lib/affiliate";
-import type { VlogPost } from "@/lib/site";
+import { isAmazonProductPage, withAssociateTag } from "@/lib/affiliate";
+import { AMAZON_ASSOCIATE_TAG, type VlogPost } from "@/lib/site";
 
 /*
  * Blog posts live in content/blog/<slug>.mdx: YAML frontmatter between `---`
@@ -22,7 +22,7 @@ export type BlogProduct = {
   store?: string;
 };
 
-/* Another product to look at, listed under the review's own product. */
+/* Another product to look at, listed under the review's own product. Always an amazon.com product page. */
 export type BlogAlternative = BlogProduct & {
   /** One line on why someone might pick it instead. */
   why: string;
@@ -36,9 +36,10 @@ export type BlogAlternative = BlogProduct & {
 export const REVIEW_CATEGORY = "Reviews";
 
 /*
- * How the owner got the product. Every review needs a `disclosure`: one of
- * these, or `unclear` while the owner confirms (shows nothing on the live
- * site). `disclosureNote` overrides the wording.
+ * How the owner got the product. Every review needs a `disclosure`. The rule:
+ * `purchased` unless the video says the product was sent or sponsored, and
+ * `unclear` only when it hints at that without saying so (shows nothing on the
+ * live site until confirmed). `disclosureNote` overrides the wording.
  */
 export const DISCLOSURES = {
   gifted: "The brand sent me this for free. No money changed hands, and all opinions are mine.",
@@ -119,12 +120,19 @@ function parseAlternative(entry: unknown, index: number, file: string): BlogAlte
   if (typeof data.tested !== "boolean") {
     throw new Error(`content/blog/${file}: ${label} needs "tested: true" or "tested: false"`);
   }
+  // Alternatives are always an amazon.com product page with our tag, so the link is checkable from the file.
+  const product = parseProduct(entry, label, file);
+  if (!isAmazonProductPage(product.url)) {
+    throw new Error(
+      `content/blog/${file}: ${label} must link to an amazon.com/dp/<ASIN> page with tag=${AMAZON_ASSOCIATE_TAG}`,
+    );
+  }
   const others = (data.othersSay ?? {}) as Record<string, unknown>;
   const text = optionalString(others.text);
   const source = optionalString(others.source);
   const url = optionalString(others.url);
   return {
-    ...parseProduct(entry, label, file),
+    ...product,
     why,
     tested: data.tested,
     ...(text && source && url ? { othersSay: { text, source, url } } : {}),

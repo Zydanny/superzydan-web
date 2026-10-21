@@ -65,5 +65,19 @@ export function withAssociateTag(href: string): string {
   }
 }
 
+/* An amazon.com/dp/<ASIN> product page carrying our tracking ID. */
+export function isAmazonProductPage(href: string): boolean {
+  try {
+    const url = new URL(href);
+    return (
+      url.hostname.replace(/^www\./, "") === "amazon.com" &&
+      /^\/dp\/[A-Z0-9]{10}\/?$/.test(url.pathname) &&
+      url.searchParams.get("tag") === AMAZON_ASSOCIATE_TAG
+    );
+  } catch {
+    return false;
+  }
+}
+
 /* Required wording from the Amazon Associates Program Operating Agreement. */
 export const AMAZON_ASSOCIATE_STATEMENT = "As an Amazon Associate I earn from qualifying purchases.";

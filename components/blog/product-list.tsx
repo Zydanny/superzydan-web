@@ -12,7 +12,7 @@ function goesToAmazon(product: BlogProduct) {
   return product.store === "Amazon" || isAmazonUrl(product.url);
 }
 
-function ProductButton({ product }: { product: BlogProduct }) {
+function ProductButton({ product, label }: { product: BlogProduct; label?: string }) {
   return (
     <a
       href={product.url}
@@ -20,7 +20,7 @@ function ProductButton({ product }: { product: BlogProduct }) {
       rel={isAffiliateUrl(product.url) ? "sponsored nofollow noopener noreferrer" : "noopener noreferrer"}
       className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
     >
-      {goesToAmazon(product) ? "Check price on Amazon" : product.store ? `View on ${product.store}` : "View product"}
+      {label ?? (goesToAmazon(product) ? "Check price on Amazon" : product.store ? `View on ${product.store}` : "View product")}
       <ArrowUpRightIcon className="size-4" />
     </a>
   );
@@ -108,7 +108,7 @@ export function ProductList({
                     </p>
                   ) : null}
                 </div>
-                <ProductButton product={alternative} />
+                <ProductButton product={alternative} label="Check on Amazon" />
               </li>
             ))}
           </ul>
