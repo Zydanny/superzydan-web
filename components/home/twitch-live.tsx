@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowUpRightIcon,
+  ClockIcon,
   EyeIcon,
   GamepadIcon,
 } from "lucide-react";
@@ -156,24 +157,25 @@ export function TwitchLive() {
                         />
                       ) : null}
                       <span className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-
-                      <span className="absolute right-2 bottom-2 flex gap-1.5">
-                        {status.lastStream.views !== null ? (
-                          <span className="glass inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] tabular-nums">
-                            <EyeIcon className="size-2.5" />
-                            {numberFormat.format(status.lastStream.views)}
-                          </span>
-                        ) : null}
-                        {status.lastStream.duration ? (
-                          <span className="glass rounded-full px-2 py-0.5 text-[10px] tabular-nums">
-                            {status.lastStream.duration}
-                          </span>
-                        ) : null}
-                      </span>
                     </div>
 
                     <p className="mt-3 line-clamp-2 text-sm leading-snug font-medium transition-colors group-hover/vod:text-primary">
                       {status.lastStream.title}
+                    </p>
+                    <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground tabular-nums">
+                      {status.lastStream.views !== null ? (
+                        <span className="inline-flex items-center gap-1">
+                          <EyeIcon className="size-3" aria-hidden />
+                          {numberFormat.format(status.lastStream.views)}{" "}
+                          {status.lastStream.views === 1 ? "view" : "views"}
+                        </span>
+                      ) : null}
+                      {status.lastStream.duration ? (
+                        <span className="inline-flex items-center gap-1">
+                          <ClockIcon className="size-3" aria-hidden />
+                          {status.lastStream.duration} long
+                        </span>
+                      ) : null}
                     </p>
                   </a>
                 ) : (

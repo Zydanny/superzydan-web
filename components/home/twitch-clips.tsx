@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRightIcon, EyeIcon, PlayIcon } from "lucide-react";
+import { ArrowUpRightIcon, ClockIcon, EyeIcon, PlayIcon } from "lucide-react";
 import { Section } from "@/components/section";
 import { SectionHeading } from "@/components/section-heading";
 import { SpotlightCard } from "@/components/spotlight-card";
@@ -62,24 +62,25 @@ export function TwitchClips({ clips }: { clips: TwitchClip[] }) {
                       <PlayIcon className="size-4 translate-x-px fill-current" />
                     </span>
                   </span>
-
-                  <span className="absolute right-2 bottom-2 flex gap-1.5">
-                    <span className="glass inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] tabular-nums">
-                      <EyeIcon className="size-2.5" />
-                      {numberFormat.format(clip.views)}
-                    </span>
-                    {clip.duration > 0 ? (
-                      <span className="glass rounded-full px-2 py-0.5 text-[10px] tabular-nums">
-                        {formatClipDuration(clip.duration)}
-                      </span>
-                    ) : null}
-                  </span>
                 </div>
 
                 <div className="p-4">
                   <h3 className="line-clamp-2 text-sm leading-snug font-medium transition-colors group-hover/card:text-primary">
                     {clip.title}
                   </h3>
+                  <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground tabular-nums">
+                    <span className="inline-flex items-center gap-1">
+                      <EyeIcon className="size-3" aria-hidden />
+                      {numberFormat.format(clip.views)}{" "}
+                      {clip.views === 1 ? "view" : "views"}
+                    </span>
+                    {clip.duration > 0 ? (
+                      <span className="inline-flex items-center gap-1">
+                        <ClockIcon className="size-3" aria-hidden />
+                        {formatClipDuration(clip.duration)} long
+                      </span>
+                    ) : null}
+                  </p>
                 </div>
               </SpotlightCard>
             </a>
