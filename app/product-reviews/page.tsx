@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRightIcon, PlayIcon } from "lucide-react";
+import { ArrowUpRightIcon } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
 import { VlogFeed } from "@/components/home/vlog-feed";
 import { GearBento } from "@/components/pages/gear-bento";
+import { QuickTakes } from "@/components/pages/quick-takes";
 import { Section } from "@/components/section";
 import { SectionHeading } from "@/components/section-heading";
 import { SpotlightCard } from "@/components/spotlight-card";
@@ -18,6 +18,7 @@ import {
   setupItems,
   STOREFRONT_URL,
 } from "@/lib/pages";
+import { AMAZON_ASSOCIATE_STATEMENT, isAffiliateUrl } from "@/lib/affiliate";
 import { getReviewPosts, toVlogPost } from "@/lib/blog";
 import { keyboardReview } from "@/lib/reviews";
 import { reviewsChannelUrl } from "@/lib/site";
@@ -50,9 +51,10 @@ export default async function ProductReviewsPage({
   const requested = Array.isArray(params.category) ? params.category[0] : params.category;
   const initialTag = requested && cards.some((card) => card.tag === requested) ? requested : "All";
 
-  // Newest channel videos that don't have a write-up yet go straight to YouTube.
+  // Shorts without a write-up of their own, newest first.
   const written = new Set(reviews.map((post) => post.youtubeId));
-  const unwritten = uploads.filter((upload) => !written.has(upload.id)).slice(0, 8);
+  const quickTakes = uploads.filter((upload) => upload.short && !written.has(upload.id));
+  const quickTakesHaveAmazon = quickTakes.some((upload) => upload.productUrl && isAffiliateUrl(upload.productUrl));
 
   return (
     <main id="content" className="flex-1">
@@ -72,53 +74,20 @@ export default async function ProductReviewsPage({
         />
       ) : null}
 
-      {unwritten.length > 0 ? (
+      {quickTakes.length > 0 ? (
         <Section>
           <SectionHeading
-            eyebrow="On the reviews channel"
-            title="Fresh videos, write-ups coming"
-            description="The newest uploads from SuperZydan Reviews that don't have a post yet. These open on YouTube."
+            eyebrow="Quick Takes"
+            title="Short and to the point"
+            description="Shorts from SuperZydan Reviews. Tap one to watch it on YouTube."
           />
-          <StaggerGroup className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {unwritten.map((upload) => (
-              <StaggerItem key={upload.id}>
-                <a
-                  href={`https://www.youtube.com/watch?v=${upload.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/card block h-full"
-                >
-                  <SpotlightCard className="flex h-full flex-col overflow-hidden p-0">
-                    <div className="relative aspect-video overflow-hidden bg-muted">
-                      <Image
-                        src={`https://i.ytimg.com/vi/${upload.id}/hqdefault.jpg`}
-                        alt=""
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                        className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
-                      />
-                      <span className="absolute right-2 bottom-2 grid size-8 place-items-center rounded-full bg-black/60 text-white">
-                        <PlayIcon className="ml-0.5 size-4 fill-current" />
-                      </span>
-                    </div>
-                    <div className="flex flex-1 flex-col p-3">
-                      <p className="line-clamp-2 text-sm leading-snug font-medium transition-colors group-hover/card:text-primary">
-                        {upload.title}
-                      </p>
-                      <time dateTime={upload.date} className="mt-auto pt-2 text-[11px] text-muted-foreground">
-                        {new Date(`${upload.date}T12:00:00Z`).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                          timeZone: "UTC",
-                        })}
-                      </time>
-                    </div>
-                  </SpotlightCard>
-                </a>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+          {quickTakesHaveAmazon ? (
+            <p className="-mt-4 mb-6 text-sm text-muted-foreground">
+              The shop links are affiliate links. If you buy through them I may earn a small commission at no extra
+              cost to you. {AMAZON_ASSOCIATE_STATEMENT}
+            </p>
+          ) : null}
+          <QuickTakes shorts={quickTakes} />
           <Reveal>
             <div className="mt-8">
               <ShimmerButton href={reviewsChannelUrl} external>
