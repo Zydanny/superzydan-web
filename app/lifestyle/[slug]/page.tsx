@@ -7,7 +7,7 @@ import { MdxContent } from "@/components/blog/mdx-content";
 import { ProductList } from "@/components/blog/product-list";
 import { YouTubeEmbed } from "@/components/blog/youtube-embed";
 import { Reveal } from "@/components/motion/reveal";
-import { getAllPosts, getPost, isReview, postPath } from "@/lib/blog";
+import { getAllPosts, getPost, isPreviewBuild, isReview, postPath, type Disclosure } from "@/lib/blog";
 
 /* Every post is prerendered at build time; unknown slugs are a 404. */
 export const dynamicParams = false;
@@ -47,6 +47,13 @@ export async function generateMetadata({
     },
   };
 }
+
+const DISCLOSURE_LABELS: Record<Disclosure, string> = {
+  gifted: "Gifted",
+  sponsored: "Sponsored",
+  affiliate: "Affiliate links",
+  purchased: "Bought it myself",
+};
 
 function formatDate(date: string) {
   return new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
@@ -110,7 +117,7 @@ export default async function BlogPostPage({
           <Reveal>
             <header className="mt-4">
               <p className="text-eyebrow flex flex-wrap items-center gap-x-3 gap-y-1 text-primary">
-                <span>{post.category}</span>
+                <span>{review && post.short ? "Quick Review" : post.category}</span>
                 {post.productCategory ? (
                   <>
                     <span aria-hidden className="text-zinc-600">/</span>
@@ -130,13 +137,21 @@ export default async function BlogPostPage({
               <h1 className="text-display mt-4 text-4xl leading-[1.05] font-extrabold tracking-tight sm:text-5xl">
                 {post.title}
               </h1>
-              {post.rating != null ? (
-                <p className="mt-4 text-lg font-semibold">
-                  My rating: <span className="text-primary">{post.rating}/10</span>
-                </p>
-              ) : null}
             </header>
           </Reveal>
+
+          {post.disclosure ? (
+            <p className="mt-6 flex flex-col gap-1 rounded-xl border border-border bg-card px-4 py-3 text-sm leading-relaxed text-zinc-300 sm:flex-row sm:gap-3">
+              <span className="text-eyebrow shrink-0 pt-px text-primary">
+                {DISCLOSURE_LABELS[post.disclosure.type]}
+              </span>
+              <span>{post.disclosure.text}</span>
+            </p>
+          ) : review && isPreviewBuild ? (
+            <p className="mt-6 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
+              Disclosure not confirmed. Set <code>disclosure</code> to gifted, sponsored, affiliate or purchased.
+            </p>
+          ) : null}
 
           {videoOnTop ? <YouTubeEmbed id={videoOnTop} title={post.title} short={post.short} /> : null}
 
@@ -158,6 +173,7 @@ export default async function BlogPostPage({
 
           <ProductList
             products={post.products}
+            alternatives={post.alternatives}
             title={post.youtubeId ? "Products in this video" : "Products in this post"}
           />
         </div>

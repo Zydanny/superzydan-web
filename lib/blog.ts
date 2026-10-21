@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { cache } from "react";
 import YAML from "yaml";
+import { withAssociateTag } from "@/lib/affiliate";
 import type { VlogPost } from "@/lib/site";
 
 /*
@@ -21,8 +22,32 @@ export type BlogProduct = {
   store?: string;
 };
 
+/* Another product to look at, listed under the review's own product. */
+export type BlogAlternative = BlogProduct & {
+  /** One line on why someone might pick it instead. */
+  why: string;
+  /** True only for products the owner has reviewed or keeps in his storefront. */
+  tested: boolean;
+  /** A short summary of a named outside review, never Amazon customer reviews. */
+  othersSay?: { text: string; source: string; url: string };
+};
+
 /* Posts with this category show on the Product Reviews page. */
 export const REVIEW_CATEGORY = "Reviews";
+
+/*
+ * How the owner got the product. Every review needs a `disclosure`: one of
+ * these, or `unclear` while the owner confirms (shows nothing on the live
+ * site). `disclosureNote` overrides the wording.
+ */
+export const DISCLOSURES = {
+  gifted: "The brand sent me this for free. No money changed hands, and all opinions are mine.",
+  sponsored: "This is a paid partnership with the brand. All opinions are mine.",
+  affiliate: "Nobody paid me or sent me this. I may earn a commission from the links in this post.",
+  purchased: "I bought this myself. Nobody paid me or sent me anything for this review.",
+} as const;
+
+export type Disclosure = keyof typeof DISCLOSURES;
 
 export type BlogPost = {
   title: string;
@@ -36,13 +61,14 @@ export type BlogPost = {
   coverAlt: string;
   readTime: number;
   youtubeId?: string;
-  /** The video is a vertical Short, so the embed renders 9:16. */
+  /** The video is a vertical Short: the embed renders 9:16 and the post is a Quick Review. */
   short: boolean;
   /** Reviews only: Keyboards, Audio, Kitchen... The Product Reviews filters come from this. */
   productCategory?: string;
-  /** Reviews only, out of 10, and only when the owner gives one. */
-  rating?: number;
+  /** Reviews only. Null while the owner still has to confirm (`disclosure: unclear`). */
+  disclosure: { type: Disclosure; text: string } | null;
   products: BlogProduct[];
+  alternatives: BlogAlternative[];
   /** Drafts show in `npm run dev` and on Vercel preview links, never on the live site. */
   draft: boolean;
   /** Markdown/MDX body without the frontmatter. */
@@ -60,31 +86,63 @@ function requireString(data: Record<string, unknown>, key: string, file: string)
   return value.trim();
 }
 
-function parseProducts(value: unknown, file: string): BlogProduct[] {
-  if (value == null) return [];
-  if (!Array.isArray(value)) {
-    throw new Error(`content/blog/${file}: "products" must be a list`);
-  }
-  return value.map((entry, index) => {
-    const product = entry as Record<string, unknown>;
-    if (typeof product?.name !== "string" || typeof product?.url !== "string") {
-      throw new Error(`content/blog/${file}: product ${index + 1} needs a name and a url`);
-    }
-    return {
-      name: product.name,
-      url: product.url,
-      ...(typeof product.note === "string" && product.note ? { note: product.note } : {}),
-      ...(typeof product.store === "string" && product.store ? { store: product.store } : {}),
-    };
-  });
+function optionalString(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
-function parseRating(value: unknown, file: string): { rating: number } | null {
-  if (value == null || value === "") return null;
-  if (typeof value !== "number" || value < 0 || value > 10) {
-    throw new Error(`content/blog/${file}: "rating" must be a number from 0 to 10`);
+function parseProduct(entry: unknown, label: string, file: string): BlogProduct {
+  const product = entry as Record<string, unknown>;
+  if (typeof product?.name !== "string" || typeof product?.url !== "string") {
+    throw new Error(`content/blog/${file}: ${label} needs a name and a url`);
   }
-  return { rating: value };
+  const note = optionalString(product.note);
+  const store = optionalString(product.store);
+  return {
+    name: product.name,
+    url: withAssociateTag(product.url),
+    ...(note ? { note } : {}),
+    ...(store ? { store } : {}),
+  };
+}
+
+function parseList(value: unknown, key: string, file: string): unknown[] {
+  if (value == null) return [];
+  if (!Array.isArray(value)) throw new Error(`content/blog/${file}: "${key}" must be a list`);
+  return value;
+}
+
+function parseAlternative(entry: unknown, index: number, file: string): BlogAlternative {
+  const label = `alternative ${index + 1}`;
+  const data = entry as Record<string, unknown>;
+  const why = optionalString(data?.why);
+  if (!why) throw new Error(`content/blog/${file}: ${label} needs a "why" line`);
+  if (typeof data.tested !== "boolean") {
+    throw new Error(`content/blog/${file}: ${label} needs "tested: true" or "tested: false"`);
+  }
+  const others = (data.othersSay ?? {}) as Record<string, unknown>;
+  const text = optionalString(others.text);
+  const source = optionalString(others.source);
+  const url = optionalString(others.url);
+  return {
+    ...parseProduct(entry, label, file),
+    why,
+    tested: data.tested,
+    ...(text && source && url ? { othersSay: { text, source, url } } : {}),
+  };
+}
+
+function parseDisclosure(data: Record<string, unknown>, review: boolean, file: string) {
+  const type = data.disclosure;
+  if (typeof type === "string" && type in DISCLOSURES) {
+    const key = type as Disclosure;
+    return { type: key, text: optionalString(data.disclosureNote) ?? DISCLOSURES[key] };
+  }
+  if (review && type !== "unclear") {
+    throw new Error(
+      `content/blog/${file}: reviews need "disclosure" (${Object.keys(DISCLOSURES).join(", ")}, or unclear)`,
+    );
+  }
+  return null;
 }
 
 function parsePost(file: string, raw: string): BlogPost {
@@ -103,12 +161,15 @@ function parsePost(file: string, raw: string): BlogPost {
 
   const slug = path.basename(file, ".mdx");
   const words = body.replace(/<[^>]+>|[#*_>`[\]()!-]/g, " ").split(/\s+/).filter(Boolean).length;
+  const category = typeof data.category === "string" ? data.category : "Lifestyle";
+  const draft = data.draft === true;
+  const productCategory = optionalString(data.productCategory);
 
   return {
     title: requireString(data, "title", file),
     slug,
     date,
-    category: typeof data.category === "string" ? data.category : "Lifestyle",
+    category,
     excerpt: typeof data.excerpt === "string" ? data.excerpt : "",
     cover: typeof data.cover === "string" && data.cover ? data.cover : null,
     coverAlt: typeof data.coverAlt === "string" ? data.coverAlt : requireString(data, "title", file),
@@ -116,17 +177,21 @@ function parsePost(file: string, raw: string): BlogPost {
       typeof data.readTime === "number" ? data.readTime : Math.max(1, Math.round(words / WORDS_PER_MINUTE)),
     ...(typeof data.youtubeId === "string" && data.youtubeId ? { youtubeId: data.youtubeId } : {}),
     short: data.short === true,
-    ...(typeof data.productCategory === "string" && data.productCategory
-      ? { productCategory: data.productCategory }
-      : {}),
-    ...(parseRating(data.rating, file) ?? {}),
-    products: parseProducts(data.products, file),
-    draft: data.draft === true,
+    ...(productCategory ? { productCategory } : {}),
+    disclosure: parseDisclosure(data, category === REVIEW_CATEGORY, file),
+    products: parseList(data.products, "products", file).map((entry, index) =>
+      parseProduct(entry, `product ${index + 1}`, file),
+    ),
+    alternatives: parseList(data.alternatives, "alternatives", file).map((entry, index) =>
+      parseAlternative(entry, index, file),
+    ),
+    draft,
     body,
   };
 }
 
-const showDrafts = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
+/* Local dev and Vercel preview links: drafts and owner-only notes show here, never on the live site. */
+export const isPreviewBuild = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
 
 /* Every visible post, newest first. Cached per request. */
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
@@ -136,7 +201,7 @@ export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
   );
 
   return posts
-    .filter((post) => showDrafts || !post.draft)
+    .filter((post) => isPreviewBuild || !post.draft)
     .sort((a, b) => (a.date === b.date ? a.title.localeCompare(b.title) : b.date.localeCompare(a.date)));
 });
 
