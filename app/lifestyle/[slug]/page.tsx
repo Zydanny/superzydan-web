@@ -72,9 +72,11 @@ export default async function BlogPostPage({
   const showCover =
     post.cover && !post.cover.startsWith("https://i.ytimg.com/") && !post.body.includes(post.cover);
 
-  // Reviews lead with the video. Older posts already place it inside the body.
+  // Reviews lead with the video. Older posts already place a <YouTube> embed inside the body.
+  // (Chapter links also contain the ID, so look for the embed itself.)
   const review = isReview(post);
-  const videoOnTop = post.youtubeId && !post.body.includes(post.youtubeId) ? post.youtubeId : null;
+  const bodyEmbedsVideo = post.youtubeId ? post.body.includes(`<YouTube id="${post.youtubeId}"`) : false;
+  const videoOnTop = post.youtubeId && !bodyEmbedsVideo ? post.youtubeId : null;
 
   const jsonLd = {
     "@context": "https://schema.org",
