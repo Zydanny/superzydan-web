@@ -8,6 +8,8 @@ import { merchPage, STOREFRONT_URL } from "@/lib/pages";
 export const metadata: Metadata = {
   title: "Merch",
   description: merchPage.blurb,
+  // Merch isn't ready, so the page stays out of search results and the nav.
+  robots: { index: false, follow: false },
 };
 
 export default function MerchPage() {
