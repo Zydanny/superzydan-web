@@ -254,7 +254,7 @@ export const setupItems: SetupItem[] = [
     subtitle: "Hall Effect 75%",
     blurb: keyboardReview.setupBlurb,
     specs: [...keyboardReview.specs],
-    badges: ["Hall Effect", "Rapid Trigger"],
+    badges: [],
     href: KEYBOARD_PRODUCT_URL,
     cta: "View the board",
   },

@@ -232,7 +232,7 @@ export const gearCategories: GearCategory[] = [
           "Rapid Trigger",
           "Magnetic Jade Ultra",
         ],
-        badges: ["Hall Effect", "Rapid Trigger"],
+        badges: [],
         href: "/lifestyle/gateron-sikakeyb-fnp75-he",
         cta: "Read the review",
         tag: "On the desk",
@@ -246,6 +246,23 @@ export const gearCategories: GearCategory[] = [
     label: "Audio",
     icon: "headphones",
     items: [
+      {
+        title: "Hollyland Lark M2",
+        subtitle: "Wireless lavalier mics",
+        blurb:
+          "The little magnetic mics I clip on for vlogs and on-the-go videos. I bought them myself. Unboxing, sound test and thoughts are in the review.",
+        specs: [
+          "Wireless lavalier",
+          "All-in-one charging case",
+          "USB-C and Lightning receivers",
+        ],
+        badges: [],
+        href: "/lifestyle/hollylandlarkm2",
+        cta: "Read the review",
+        tag: "On the desk",
+        image: "/blog/hollylandlarkm2/case-with-open-shot.webp",
+        pending: false,
+      },
       {
         title: "Elgato Wave 3 White",
         subtitle: "Mic chain",
