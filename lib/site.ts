@@ -58,12 +58,12 @@ export const twitchChannel = `https://www.twitch.tv/${twitchUsername}`;
 /*
  * Twitch blocks its embed unless the embedding hostname is passed as a `parent`
  * param. Add the production domain(s) via NEXT_PUBLIC_TWITCH_PARENTS as a
- * comma-separated list; localhost is always included for local development.
+ * comma-separated list. localhost is only added in development builds.
  */
 export const twitchEmbedParents: string[] = Array.from(
   new Set(
     [
-      "localhost",
+      ...(process.env.NODE_ENV === "development" ? ["localhost"] : []),
       "superzydanofficial.com",
       "www.superzydanofficial.com",
       ...(process.env.NEXT_PUBLIC_TWITCH_PARENTS ?? "")
