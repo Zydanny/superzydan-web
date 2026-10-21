@@ -17,10 +17,16 @@ export function VlogFeed({
   posts,
   heading = true,
   initialTag = "All",
+  eyebrow = "Lifestyle",
+  title = "Latest from the blog",
+  description = "Reviews, recipes, and kitchen chaos, newest first.",
 }: {
   posts: VlogPost[];
   heading?: boolean;
   initialTag?: string;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
 }) {
   const [activeTag, setActiveTag] = useState(initialTag);
 
@@ -38,11 +44,7 @@ export function VlogFeed({
   return (
     <Section divider={heading}>
       {heading ? (
-      <SectionHeading
-        eyebrow="Lifestyle"
-        title="Latest from the blog"
-        description="Reviews, recipes, and kitchen chaos, newest first."
-      />
+      <SectionHeading eyebrow={eyebrow} title={title} description={description} />
       ) : null}
 
       <div className="mb-8 flex flex-wrap items-center gap-2">

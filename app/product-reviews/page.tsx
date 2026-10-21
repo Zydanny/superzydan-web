@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRightIcon } from "lucide-react";
+import { ArrowUpRightIcon, PlayIcon } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
+import { VlogFeed } from "@/components/home/vlog-feed";
 import { GearBento } from "@/components/pages/gear-bento";
 import { Section } from "@/components/section";
 import { SectionHeading } from "@/components/section-heading";
@@ -17,7 +18,10 @@ import {
   setupItems,
   STOREFRONT_URL,
 } from "@/lib/pages";
-import { keyboardReview, keyboardReviewPost } from "@/lib/reviews";
+import { getReviewPosts, toVlogPost } from "@/lib/blog";
+import { keyboardReview } from "@/lib/reviews";
+import { reviewsChannelUrl } from "@/lib/site";
+import { getReviewsChannelUploads } from "@/lib/youtube";
 
 export const metadata: Metadata = {
   title: "Product Reviews",
@@ -30,7 +34,26 @@ const featured = setupItems.filter((item) =>
   ),
 );
 
-export default function ProductReviewsPage() {
+export default async function ProductReviewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string | string[] }>;
+}) {
+  const [reviews, uploads, params] = await Promise.all([
+    getReviewPosts(),
+    getReviewsChannelUploads(),
+    searchParams,
+  ]);
+
+  // The filter pills use the product category, so ?category=Keyboards links straight to one.
+  const cards = reviews.map((post) => ({ ...toVlogPost(post), tag: post.productCategory ?? "Other" }));
+  const requested = Array.isArray(params.category) ? params.category[0] : params.category;
+  const initialTag = requested && cards.some((card) => card.tag === requested) ? requested : "All";
+
+  // Newest channel videos that don't have a write-up yet go straight to YouTube.
+  const written = new Set(reviews.map((post) => post.youtubeId));
+  const unwritten = uploads.filter((upload) => !written.has(upload.id)).slice(0, 8);
+
   return (
     <main id="content" className="flex-1">
       <PageHero
@@ -39,6 +62,73 @@ export default function ProductReviewsPage() {
         description={reviewsIntro}
       />
 
+      {cards.length > 0 ? (
+        <VlogFeed
+          posts={cards}
+          initialTag={initialTag}
+          eyebrow="Reviews"
+          title="Every review, newest first"
+          description="The video, what I actually think, and where to get it. Pick a category to narrow it down."
+        />
+      ) : null}
+
+      {unwritten.length > 0 ? (
+        <Section>
+          <SectionHeading
+            eyebrow="On the reviews channel"
+            title="Fresh videos, write-ups coming"
+            description="The newest uploads from SuperZydan Reviews that don't have a post yet. These open on YouTube."
+          />
+          <StaggerGroup className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {unwritten.map((upload) => (
+              <StaggerItem key={upload.id}>
+                <a
+                  href={`https://www.youtube.com/watch?v=${upload.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/card block h-full"
+                >
+                  <SpotlightCard className="flex h-full flex-col overflow-hidden p-0">
+                    <div className="relative aspect-video overflow-hidden bg-muted">
+                      <Image
+                        src={`https://i.ytimg.com/vi/${upload.id}/hqdefault.jpg`}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
+                      />
+                      <span className="absolute right-2 bottom-2 grid size-8 place-items-center rounded-full bg-black/60 text-white">
+                        <PlayIcon className="ml-0.5 size-4 fill-current" />
+                      </span>
+                    </div>
+                    <div className="flex flex-1 flex-col p-3">
+                      <p className="line-clamp-2 text-sm leading-snug font-medium transition-colors group-hover/card:text-primary">
+                        {upload.title}
+                      </p>
+                      <time dateTime={upload.date} className="mt-auto pt-2 text-[11px] text-muted-foreground">
+                        {new Date(`${upload.date}T12:00:00Z`).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                          timeZone: "UTC",
+                        })}
+                      </time>
+                    </div>
+                  </SpotlightCard>
+                </a>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+          <Reveal>
+            <div className="mt-8">
+              <ShimmerButton href={reviewsChannelUrl} external>
+                Watch the reviews channel
+              </ShimmerButton>
+            </div>
+          </Reveal>
+        </Section>
+      ) : null}
+
       <Section>
         <SectionHeading
           eyebrow="Featured"
@@ -46,44 +136,6 @@ export default function ProductReviewsPage() {
           description="The three pieces people ask about most — specs and affiliate links on every card."
         />
         <GearBento items={featured} />
-      </Section>
-
-      <Section>
-        <SectionHeading
-          eyebrow="Latest review"
-          title="Electronics"
-          description="New write-up from the desk — also lives under LifeStyle → Electronics."
-        />
-        <Reveal>
-          <Link href={keyboardReviewPost.url} className="block">
-            <SpotlightCard className="group/card grid w-full overflow-hidden p-0 md:grid-cols-2">
-              <div className="relative aspect-video md:aspect-auto md:min-h-[280px]">
-                <Image
-                  src={keyboardReview.thumbnail}
-                  alt=""
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
-                />
-              </div>
-              <div className="flex flex-col p-6 md:p-8">
-                <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-[11px] font-medium text-primary w-fit">
-                  {keyboardReview.tag}
-                </span>
-                <h3 className="text-display mt-4 text-2xl transition-colors group-hover/card:text-primary">
-                  {keyboardReview.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {keyboardReview.excerpt}
-                </p>
-                <p className="text-eyebrow mt-auto inline-flex items-center gap-1.5 pt-6 text-muted-foreground transition-colors group-hover/card:text-primary">
-                  Read the review
-                  <ArrowUpRightIcon className="size-3.5" />
-                </p>
-              </div>
-            </SpotlightCard>
-          </Link>
-        </Reveal>
       </Section>
 
       <Section>

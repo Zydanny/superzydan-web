@@ -1,8 +1,10 @@
-import type { VideoMeta } from "@/lib/site";
+import { REVIEWS_YOUTUBE_CHANNEL_ID, type VideoMeta } from "@/lib/site";
 
 export const YOUTUBE_CHANNEL_ID = "UCdnz6bn82ihEWxpsbvWC80w";
 
-const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
+function feedUrl(channelId: string) {
+  return `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+}
 
 /** How long fetched YouTube data is cached before Next refetches it. */
 export const YOUTUBE_REVALIDATE_SECONDS = 900;
@@ -73,8 +75,8 @@ function toVideoMeta(entry: FeedEntry): VideoMeta {
   };
 }
 
-async function fetchChannelFeed(): Promise<FeedEntry[]> {
-  const response = await fetch(FEED_URL, {
+async function fetchChannelFeed(channelId = YOUTUBE_CHANNEL_ID): Promise<FeedEntry[]> {
+  const response = await fetch(feedUrl(channelId), {
     next: { revalidate: YOUTUBE_REVALIDATE_SECONDS },
   });
   if (!response.ok) return [];
@@ -119,6 +121,49 @@ export async function getLatestStreamVods(limit = 4): Promise<VideoMeta[]> {
       .map(toVideoMeta);
 
     return uniqueByTitle(candidates).slice(0, limit);
+  } catch {
+    return [];
+  }
+}
+
+export type ChannelUpload = {
+  id: string;
+  title: string;
+  /** YYYY-MM-DD. */
+  date: string;
+};
+
+type PlaylistItem = { snippet?: { title?: string; resourceId?: { videoId?: string } }; contentDetails?: { videoPublishedAt?: string } };
+
+/*
+ * The reviews channel's newest uploads. Uses the Data API when YOUTUBE_API_KEY
+ * is set (one quota unit per refresh) because YouTube's RSS feeds go down for
+ * days at a time; falls back to RSS, then to [].
+ */
+export async function getReviewsChannelUploads(limit = 15): Promise<ChannelUpload[]> {
+  const key = process.env.YOUTUBE_API_KEY;
+  try {
+    if (key) {
+      // A channel's uploads playlist is its ID with UC swapped for UU.
+      const playlistId = `UU${REVIEWS_YOUTUBE_CHANNEL_ID.slice(2)}`;
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=${limit}&playlistId=${playlistId}&key=${key}`,
+        { next: { revalidate: YOUTUBE_REVALIDATE_SECONDS } },
+      );
+      if (response.ok) {
+        const items: PlaylistItem[] = (await response.json())?.items ?? [];
+        return items.flatMap((item) => {
+          const id = item.snippet?.resourceId?.videoId;
+          const title = item.snippet?.title;
+          const date = item.contentDetails?.videoPublishedAt;
+          return id && title && date ? [{ id, title, date: date.slice(0, 10) }] : [];
+        });
+      }
+    }
+
+    return (await fetchChannelFeed(REVIEWS_YOUTUBE_CHANNEL_ID))
+      .slice(0, limit)
+      .map((entry) => ({ id: entry.id, title: entry.title, date: entry.publishedAt.slice(0, 10) }));
   } catch {
     return [];
   }

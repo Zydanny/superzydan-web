@@ -1,5 +1,3 @@
-import type { VlogPost } from "@/lib/site";
-
 /*
  * Shared facts about the FNP75 review for the setup and product-review pages.
  * The write-up itself lives in content/blog/gateron-sikakeyb-fnp75-he.mdx.
@@ -39,14 +37,3 @@ export const keyboardReview = {
   setupBlurb:
     "The daily driver now. Red 75% Hall Effect from Gateron × SIKAKEYB — Rapid Trigger, a triple spacebar, and Magnetic Jade Ultra switches after I swapped the stock Deltas. Not sponsored. I bought this one myself.",
 } as const;
-
-export const keyboardReviewPost: VlogPost = {
-  title: keyboardReview.title,
-  excerpt: keyboardReview.excerpt,
-  tag: keyboardReview.tag,
-  readTime: 5,
-  status: "Published",
-  thumbnail: KEYBOARD_THUMB,
-  url: KEYBOARD_REVIEW_PATH,
-  internal: true,
-};

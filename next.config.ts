@@ -48,11 +48,14 @@ const nextConfig: NextConfig = {
     ],
   },
   /*
-   * /lifestyle reads ?tag= so it renders per request, and lib/blog.ts reads the
-   * post files at runtime there. Post pages are prerendered and don't need this.
+   * These pages read the post files at runtime: /lifestyle and /product-reviews
+   * render per request (they read ?tag= and ?category=), and the home page
+   * regenerates every 15 minutes. Post pages are prerendered and don't need this.
    */
   outputFileTracingIncludes: {
+    "/": ["./content/blog/**/*"],
     "/lifestyle": ["./content/blog/**/*"],
+    "/product-reviews": ["./content/blog/**/*"],
   },
   async redirects() {
     return legacyPostSlugs.map((slug) => ({

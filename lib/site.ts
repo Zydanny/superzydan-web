@@ -173,6 +173,13 @@ export const youtubeVideos: VideoMeta[] = [
   },
 ];
 
+/*
+ * The separate product-reviews channel (@superzydanreviews). Its feed fills
+ * the Product Reviews page, and scripts/new-review.mjs reads the ID from here.
+ */
+export const REVIEWS_YOUTUBE_CHANNEL_ID = "UCUvfzwFAAZp2oV-bG0PWk9Q";
+export const reviewsChannelUrl = "https://www.youtube.com/@superzydanreviews";
+
 export const affiliateDisclosure =
   "Purchasing through my affiliate links will help support this channel at no additional cost to you. As an Amazon Associate I earn commission from qualifying purchases. I appreciate you!";
 
