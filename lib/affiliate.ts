@@ -7,6 +7,8 @@ const AFFILIATE_HOSTS = [
   "amazon.com",
   "amzn.to",
   "geni.us",
+  "urlgeni.us",
+  "link.amazon",
   "shopltk.com",
   "liketoknow.it",
   "lvnta.com",
@@ -30,7 +32,7 @@ export function isAffiliateUrl(href: string): boolean {
 export function isAmazonUrl(href: string): boolean {
   try {
     const host = new URL(href).hostname.replace(/^www\./, "");
-    return host === "amazon.com" || host.endsWith(".amazon.com") || host === "amzn.to";
+    return host === "amazon.com" || host.endsWith(".amazon.com") || host === "amzn.to" || host === "link.amazon";
   } catch {
     return false;
   }
