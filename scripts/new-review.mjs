@@ -3,7 +3,7 @@
  *
  *   npm run review:new -- https://www.youtube.com/watch?v=VIDEO_ID
  *
- * Writes content/blog/<slug>.mdx with draft: true and disclosure: unclear,
+ * Writes content/blog/<slug>.mdx with draft: true and disclosure: purchased,
  * prefilled with the video's title, date, chapters and every product link in
  * the description, and saves the thumbnail as public/blog/<slug>/cover.webp.
  * The body is a section outline with the description in a comment: write it
@@ -315,7 +315,8 @@ async function main() {
     coverAlt: `Thumbnail from the video: ${title}`,
     youtubeId: id,
     ...(short ? { short: true } : {}),
-    disclosure: "unclear",
+    // The owner's rule: bought it myself unless the video says it was sent or sponsored.
+    disclosure: "purchased",
     draft: true,
     ...(products.length ? { products } : {}),
   };
@@ -353,6 +354,8 @@ async function main() {
   console.log(`  ${short ? "Short" : "Video"} from ${frontmatter.date}, guessed category: ${productCategory}`);
   console.log(`  ${products.length} product link(s), ${chapters.length} chapter(s), cover: ${cover}`);
   for (const warning of warnings) console.log(`  check: ${warning}`);
+  console.log("  Disclosure is set to purchased. Change it if the video says the product was sent or sponsored,");
+  console.log("  or use unclear if it only hints at that.");
   console.log(`  Next: write the body. The transcript is under "...more" > "Show transcript" on the video page.`);
 }
 
