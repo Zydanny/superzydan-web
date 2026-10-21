@@ -45,7 +45,11 @@ export function CountUp({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.4 });
+  /*
+   * "some": start the moment any of the number is on screen. A partial
+   * threshold left numbers cut by the fold reading 0 until scrolled further.
+   */
+  const inView = useInView(ref, { once: true, amount: "some" });
   const reduceMotion = useReducedMotion();
 
   const count = useMotionValue(value);

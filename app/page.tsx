@@ -1,13 +1,11 @@
 import { AmazonStorefront } from "@/components/home/amazon-storefront";
 import { DiscordCta } from "@/components/home/discord-cta";
 import { GearReviews } from "@/components/home/gear-reviews";
-import { Hero } from "@/components/home/hero";
+import { NeonHero } from "@/components/home/neon-hero";
 import { Partners } from "@/components/home/partners";
 import { SocialStats } from "@/components/home/social-stats";
-import { TwitchClips } from "@/components/home/twitch-clips";
-import { TwitchLive } from "@/components/home/twitch-live";
 import { VlogFeed } from "@/components/home/vlog-feed";
-import { YoutubeGrid } from "@/components/home/youtube-grid";
+import { Watch } from "@/components/home/watch";
 import { TwitchStatusProvider } from "@/components/twitch-status-provider";
 import { getDiscordStats } from "@/lib/discord";
 import { youtubeVideos } from "@/lib/site";
@@ -35,7 +33,7 @@ export default async function Home() {
     discordStats,
     twitchClips,
   ] = await Promise.all([
-    getLatestChannelVideos(5),
+    getLatestChannelVideos(4),
     getYouTubeSubscriberCount(),
     getVlogPosts(6),
     getTwitchStatus(),
@@ -43,26 +41,18 @@ export default async function Home() {
     getTwitchClips(4),
   ]);
 
-  const videos = liveVideos.length > 0 ? liveVideos : youtubeVideos;
-  // The hero already features the newest video, so the grid starts after it.
-  const moreVideos = videos.slice(1, 5);
+  const videos = liveVideos.length > 0 ? liveVideos : youtubeVideos.slice(0, 4);
 
   return (
     <TwitchStatusProvider initialStatus={twitchStatus}>
       <main id="content" className="flex-1">
-        <Hero
-          youtubeSubscribers={subscriberCount}
+        <NeonHero
           latestVideo={videos[0] ?? null}
+          youtubeSubscribers={subscriberCount}
+          discordMembers={discordStats.members}
         />
-        <TwitchLive />
+        <Watch videos={videos} clips={twitchClips} />
         <DiscordCta stats={discordStats} />
-        <TwitchClips clips={twitchClips} />
-        <YoutubeGrid
-          videos={moreVideos}
-          eyebrow="Latest"
-          title="Newest from the channel"
-          description="The most recent landscape upload — edited videos and live VODs — pulled from YouTube. Tap a card for a preview without leaving the page."
-        />
         <SocialStats
           youtubeSubscribers={subscriberCount}
           twitchFollowers={twitchStatus.followers}
