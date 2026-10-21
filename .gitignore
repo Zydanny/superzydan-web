@@ -24,11 +24,23 @@
 .DS_Store
 *.pem
 
-# debug
+# debug and logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+# site backups (database dumps, file archives, WordPress exports)
+*.sql
+*.sql.gz
+*.tar
+*.tar.gz
+*.xml
+wp-config.php
+
+# local Claude Code settings
+.claude/
 
 # env files (can opt-in for committing if needed)
 .env*
