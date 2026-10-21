@@ -37,7 +37,7 @@ export function GearReviews() {
       <SectionHeading
         eyebrow="Loadout"
         title="Gear & setup showcase"
-        description="Pulled from the real desk — Keyboards, audio, the PC, and the stream kit. Tap through for the full SetUp list and shop links."
+        description="Pulled from the real desk — Keyboards, audio, the PC, and the stream kit. Tap through for the full Setup list and shop links."
       />
 
       {/* Category switcher: the active pill slides between tabs via layoutId. */}

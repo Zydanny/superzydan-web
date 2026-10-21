@@ -13,7 +13,7 @@ import {
 } from "@/lib/pages";
 
 export const metadata: Metadata = {
-  title: "SetUp",
+  title: "Setup",
   description: setupIntro,
 };
 
@@ -21,7 +21,7 @@ export default function SetupPage() {
   return (
     <main id="content" className="flex-1">
       <PageHero
-        eyebrow="SetUp"
+        eyebrow="Setup"
         title="The desk that runs the chaos"
         description={setupIntro}
       />

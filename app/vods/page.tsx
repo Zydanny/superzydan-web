@@ -5,7 +5,7 @@ import { youtubeVideos } from "@/lib/site";
 import { getLatestChannelVideos } from "@/lib/youtube";
 
 export const metadata: Metadata = {
-  title: "VODS",
+  title: "VODs",
   description: "Past streams and videos from the SuperZydan YouTube channel.",
 };
 
@@ -18,7 +18,7 @@ export default async function VodsPage() {
   return (
     <main id="content" className="flex-1">
       <PageHero
-        eyebrow="VODS"
+        eyebrow="VODs"
         title="Catch up on the streams"
         description="Landscape uploads from the SuperZydan channel — Videos and Lives, newest first. Tap a card for a preview without leaving the page."
       />

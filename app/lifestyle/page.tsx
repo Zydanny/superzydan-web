@@ -5,7 +5,7 @@ import { getVlogPosts } from "@/lib/blog";
 import { lifestyleIntro } from "@/lib/pages";
 
 export const metadata: Metadata = {
-  title: "LifeStyle",
+  title: "Lifestyle",
   description: lifestyleIntro,
 };
 
@@ -23,7 +23,7 @@ export default async function LifestylePage({
   return (
     <main id="content" className="flex-1">
       <PageHero
-        eyebrow="LifeStyle"
+        eyebrow="Lifestyle"
         title="Recipes, reviews, and kitchen chaos"
         description={lifestyleIntro}
       />

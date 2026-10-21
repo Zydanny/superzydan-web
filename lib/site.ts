@@ -8,12 +8,11 @@ export const site = {
 
 export const navLinks = [
   { label: "About Us", href: "/about" },
-  { label: "LifeStyle", href: "/lifestyle" },
-  { label: "VODS", href: "/vods" },
+  { label: "Lifestyle", href: "/lifestyle" },
+  { label: "VODs", href: "/vods" },
   { label: "Product Reviews", href: "/product-reviews" },
-  { label: "SetUp", href: "/setup" },
+  { label: "Setup", href: "/setup" },
   { label: "Community", href: "/community" },
-  { label: "Merch", href: "/merch" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -47,7 +46,7 @@ export const socialLinks = [
 
 export const heroLinks = [
   { label: "Streaming", href: "#stream" },
-  { label: "SetUp", href: "/setup" },
+  { label: "Setup", href: "/setup" },
   { label: "Lifestyle", href: "/lifestyle" },
   { label: "Reviews", href: "/product-reviews" },
 ] as const;
@@ -187,7 +186,7 @@ export const REVIEWS_YOUTUBE_CHANNEL_ID = "UCUvfzwFAAZp2oV-bG0PWk9Q";
 export const reviewsChannelUrl = "https://www.youtube.com/@superzydanreviews";
 
 export const affiliateDisclosure =
-  "Purchasing through my affiliate links will help support this channel at no additional cost to you. As an Amazon Associate I earn commission from qualifying purchases. I appreciate you!";
+  "Some links on this site are affiliate or referral links, including Amazon, HexClad, GameSir and Goblin Tech Keys. If you buy through them I may earn a small commission or credit at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. I appreciate you!";
 
 /*
  * Gear showcase. Items flagged `pending` have no confirmed spec sheet yet and
@@ -278,7 +277,7 @@ export const gearCategories: GearCategory[] = [
       {
         title: "HyperX Cloud Alpha",
         subtitle: "Headset",
-        blurb: "The monitoring cans on the desk — shop link and the rest of the audio chain live on SetUp.",
+        blurb: "The monitoring cans on the desk — shop link and the rest of the audio chain live on Setup.",
         specs: ["HyperX Cloud Alpha"],
         badges: ["Monitoring"],
         href: "/setup#cloud-alpha",
@@ -344,7 +343,7 @@ export const gearCategories: GearCategory[] = [
         title: "Elgato broadcast kit",
         subtitle: "Capture and lights",
         blurb:
-          "4K60 Pro MK.2, Stream Deck MK.2, Key Light, and Key Light Air — the rest of the stream desk from SetUp.",
+          "4K60 Pro MK.2, Stream Deck MK.2, Key Light, and Key Light Air — the rest of the stream desk from Setup.",
         specs: [
           "4K60 Pro MK.2",
           "Stream Deck MK.2",
