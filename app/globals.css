@@ -7,9 +7,18 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-sans: var(--font-figtree);
+  --font-heading: var(--font-figtree);
+  --font-display: var(--font-big-shoulders);
+  --color-night: var(--night);
+  --color-night-raised: var(--night-raised);
+  --color-neon-magenta: var(--neon-magenta);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-violet: var(--neon-violet);
+  --color-paint-orange: var(--paint-orange);
+  --color-paint-yellow: var(--paint-yellow);
+  --color-live: var(--live);
+  --color-haze: var(--haze);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,46 +58,63 @@
 }
 
 /*
-  Linear-style near-black zinc base with an emerald primary and cyan secondary
-  accent. Both accents are reused by the ambient mesh and the card glow borders.
+  Neon Night: a rain-black violet street lit by the SZ logo's own inks.
+  Magenta and cyan are the neon tubes, violet is depth, orange and yellow are
+  the logo's paint specks. Scarlet (--live) is reserved for the LIVE state and
+  nothing else.
 */
 :root,
 .dark {
-  --background: oklch(0.145 0.004 285);
-  --foreground: oklch(0.97 0.002 285);
-  --card: oklch(0.19 0.005 285);
-  --card-foreground: oklch(0.97 0.002 285);
-  --popover: oklch(0.17 0.005 285);
-  --popover-foreground: oklch(0.97 0.002 285);
-  --primary: oklch(0.76 0.18 158);
-  --primary-foreground: oklch(0.16 0.03 158);
-  --secondary: oklch(0.24 0.006 285);
-  --secondary-foreground: oklch(0.97 0.002 285);
-  --muted: oklch(0.23 0.005 285);
-  --muted-foreground: oklch(0.68 0.008 285);
-  --accent: oklch(0.78 0.13 205);
-  --accent-foreground: oklch(0.16 0.03 205);
-  --destructive: oklch(0.66 0.21 25);
-  --border: oklch(0.98 0 0 / 9%);
-  --input: oklch(0.98 0 0 / 12%);
-  --ring: oklch(0.76 0.18 158);
-  --chart-1: oklch(0.76 0.18 158);
-  --chart-2: oklch(0.78 0.13 205);
-  --chart-3: oklch(0.62 0.1 250);
-  --chart-4: oklch(0.5 0.05 285);
-  --chart-5: oklch(0.35 0.02 285);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.17 0.005 285);
-  --sidebar-foreground: oklch(0.97 0.002 285);
-  --sidebar-primary: oklch(0.76 0.18 158);
-  --sidebar-primary-foreground: oklch(0.16 0.03 158);
-  --sidebar-accent: oklch(0.24 0.006 285);
-  --sidebar-accent-foreground: oklch(0.97 0.002 285);
-  --sidebar-border: oklch(0.98 0 0 / 9%);
-  --sidebar-ring: oklch(0.76 0.18 158);
+  --night: #08060f;
+  --night-raised: #130c22;
+  --neon-magenta: #ff3fb4;
+  --neon-cyan: #2fe0ff;
+  --neon-violet: #7a3cff;
+  --paint-orange: #f07a3a;
+  --paint-yellow: #f5c23a;
+  --live: #ff2d3d;
+  /* Body copy on the night ground, tinted from the violet instead of grey. */
+  --haze: #c9bfe3;
 
-  --glow-emerald: oklch(0.76 0.18 158);
-  --glow-cyan: oklch(0.78 0.13 205);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --background: var(--night);
+  --foreground: #f6f2ff;
+  --card: var(--night-raised);
+  --card-foreground: #f6f2ff;
+  --popover: #100a1c;
+  --popover-foreground: #f6f2ff;
+  --primary: var(--neon-magenta);
+  --primary-foreground: #1a0612;
+  --secondary: #1d1430;
+  --secondary-foreground: #f6f2ff;
+  --muted: #1d1430;
+  --muted-foreground: #b3a8cc;
+  --accent: var(--neon-cyan);
+  --accent-foreground: #04161b;
+  --destructive: var(--live);
+  --border: rgb(201 191 227 / 12%);
+  --input: rgb(201 191 227 / 16%);
+  --ring: var(--neon-cyan);
+  --chart-1: var(--neon-magenta);
+  --chart-2: var(--neon-cyan);
+  --chart-3: var(--neon-violet);
+  --chart-4: var(--paint-orange);
+  --chart-5: var(--paint-yellow);
+  --radius: 0.75rem;
+  --sidebar: #100a1c;
+  --sidebar-foreground: #f6f2ff;
+  --sidebar-primary: var(--neon-magenta);
+  --sidebar-primary-foreground: #1a0612;
+  --sidebar-accent: #1d1430;
+  --sidebar-accent-foreground: #f6f2ff;
+  --sidebar-border: rgb(201 191 227 / 12%);
+  --sidebar-ring: var(--neon-cyan);
+
+  /* Older sections still read these until they're redesigned. */
+  --glow-emerald: var(--neon-magenta);
+  --glow-cyan: var(--neon-cyan);
 }
 
 @layer base {
@@ -104,6 +130,16 @@
     @apply font-sans;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
+    color-scheme: dark;
+    scrollbar-color: color-mix(in srgb, var(--neon-violet) 70%, transparent) var(--night);
+  }
+  ::selection {
+    background: var(--neon-magenta);
+    color: var(--night);
+  }
+  :focus-visible {
+    outline: 2px solid var(--neon-cyan);
+    outline-offset: 3px;
   }
 }
 
@@ -233,11 +269,176 @@
   animation: grid-fade 9s ease-in-out infinite;
 }
 
+/*
+  Neon sign plumbing. Each sign's glow is a static text-shadow / box-shadow
+  painted once; motion only ever touches the sign's opacity, so the flicker
+  stays on the compositor and costs nothing on phones.
+*/
+@utility neon-magenta {
+  color: #ffd9ef;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px var(--neon-magenta),
+    0 0 18px color-mix(in srgb, var(--neon-magenta) 70%, transparent);
+}
+
+@utility neon-cyan {
+  color: #d9fbff;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px var(--neon-cyan),
+    0 0 18px color-mix(in srgb, var(--neon-cyan) 70%, transparent);
+}
+
+/* A tube that's wired up but switched off. */
+@utility neon-off {
+  /* Dim enough to read as unlit, still 3:1 on the night ground. */
+  color: #86505c;
+  text-shadow: none;
+}
+
+@utility neon-live {
+  color: #ffe3e5;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px var(--live),
+    0 0 20px color-mix(in srgb, var(--live) 75%, transparent);
+}
+
+/* Cut corners, like the sign plates bolted to the wall. */
+@utility chamfer {
+  --cut: 10px;
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
+/*
+  A sign powering on: it starts as a dim, unlit tube (never invisible, so it
+  paints at once and counts for LCP), stutters a couple of times, then holds.
+*/
+@keyframes tube-on {
+  0% {
+    opacity: 0.25;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  14% {
+    opacity: 0.3;
+  }
+  24% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.55;
+  }
+  40%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* The odd dip a real tube makes. Mostly steady, so it never nags. */
+@keyframes tube-hum {
+  0%,
+  91%,
+  95%,
+  100% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.82;
+  }
+}
+
+/* Headline words lift into place from an already-visible start. */
+@keyframes word-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+  A screen switching on: a squashed frame that opens to full height. Transform
+  only, so the text in it is never drawn dimmed.
+*/
+@keyframes screen-on {
+  from {
+    transform: scaleY(0.88);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes speck-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -40px, 0);
+  }
+}
+
+@utility animate-tube-on {
+  animation: tube-on 900ms linear both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@utility animate-tube-hum {
+  animation:
+    tube-on 900ms linear both,
+    tube-hum 7s linear 1.2s infinite;
+  animation-delay: var(--delay, 0ms), calc(var(--delay, 0ms) + 1.2s);
+}
+
+@utility animate-word-in {
+  animation: word-in 520ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms + var(--delay, 0ms));
+}
+
+@utility animate-speck {
+  animation: speck-drift var(--speed, 9s) ease-in-out infinite alternate;
+}
+
+/*
+  The Watch screen switches on as it scrolls in, driven by the scroll position
+  itself (off the main thread, no observers). Where scroll timelines aren't
+  supported, or motion is reduced, the screen is simply on.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .screen-on {
+      animation: screen-on linear both;
+      animation-timing-function: var(--ease-out);
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-mesh,
   .animate-live-ping,
   .animate-shimmer,
-  .hud-grid {
+  .hud-grid,
+  .animate-tube-on,
+  .animate-tube-hum,
+  .animate-word-in,
+  .animate-speck {
     animation: none !important;
   }
 }

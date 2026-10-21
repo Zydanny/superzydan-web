@@ -1,24 +1,29 @@
 import { Analytics } from "@vercel/analytics/react";
 import type React from "react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { AmbientBackground } from "@/components/ambient-background";
+import { Big_Shoulders, Figtree } from "next/font/google";
 import { HashScroll } from "@/components/hash-scroll";
-import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Condensed signage caps for headlines and the neon signs.
+const bigShoulders = Big_Shoulders({
+  variable: "--font-big-shoulders",
+  subsets: ["latin"],
+  // Display type is only ever set black; one static weight keeps the file small.
+  weight: "900",
+  // Next has no metrics for this face, so name a condensed fallback ourselves.
+  adjustFontFallback: false,
+  fallback: ["Arial Narrow", "Roboto Condensed", "sans-serif"],
+});
+
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://superzydanofficial.com"),
@@ -71,12 +76,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${bigShoulders.variable} ${figtree.variable} h-full antialiased`}
     >
-      <body className="relative flex min-h-full flex-col bg-zinc-950 text-zinc-100">
-        <AmbientBackground />
+      <body className="relative flex min-h-full flex-col bg-night text-foreground">
         <HashScroll />
-        <ScrollProgress />
         <SiteHeader />
         <div className="flex w-full min-w-0 flex-1 flex-col">{children}</div>
         <SiteFooter />
