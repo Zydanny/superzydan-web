@@ -5,8 +5,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeftIcon, ClockIcon } from "lucide-react";
 import { MdxContent } from "@/components/blog/mdx-content";
 import { ProductList } from "@/components/blog/product-list";
+import { YouTubeEmbed } from "@/components/blog/youtube-embed";
 import { Reveal } from "@/components/motion/reveal";
-import { getAllPosts, getPost, postPath } from "@/lib/blog";
+import { getAllPosts, getPost, isReview, postPath } from "@/lib/blog";
 
 /* Every post is prerendered at build time; unknown slugs are a 404. */
 export const dynamicParams = false;
@@ -28,6 +29,7 @@ export async function generateMetadata({
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: postPath(post.slug) },
+    ...(post.draft ? { robots: { index: false, follow: false } } : {}),
     openGraph: {
       type: "article",
       title: post.title,
@@ -70,6 +72,10 @@ export default async function BlogPostPage({
   const showCover =
     post.cover && !post.cover.startsWith("https://i.ytimg.com/") && !post.body.includes(post.cover);
 
+  // Reviews lead with the video. Older posts already place it inside the body.
+  const review = isReview(post);
+  const videoOnTop = post.youtubeId && !post.body.includes(post.youtubeId) ? post.youtubeId : null;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -86,17 +92,29 @@ export default async function BlogPostPage({
       <article className="shell pt-10 pb-20 lg:pt-16">
         <div className="mx-auto max-w-3xl">
           <Link
-            href="/lifestyle"
+            href={review ? "/product-reviews" : "/lifestyle"}
             className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             <ArrowLeftIcon className="size-4" />
-            All posts
+            {review ? "All reviews" : "All posts"}
           </Link>
+
+          {post.draft ? (
+            <p className="mt-2 rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
+              Draft. Only visible locally and on preview links. Set <code>draft: false</code> to publish.
+            </p>
+          ) : null}
 
           <Reveal>
             <header className="mt-4">
               <p className="text-eyebrow flex flex-wrap items-center gap-x-3 gap-y-1 text-primary">
                 <span>{post.category}</span>
+                {post.productCategory ? (
+                  <>
+                    <span aria-hidden className="text-zinc-600">/</span>
+                    <span>{post.productCategory}</span>
+                  </>
+                ) : null}
                 <span aria-hidden className="text-zinc-600">/</span>
                 <time dateTime={post.date} className="text-zinc-400">
                   {formatDate(post.date)}
@@ -110,10 +128,17 @@ export default async function BlogPostPage({
               <h1 className="text-display mt-4 text-4xl leading-[1.05] font-extrabold tracking-tight sm:text-5xl">
                 {post.title}
               </h1>
+              {post.rating != null ? (
+                <p className="mt-4 text-lg font-semibold">
+                  My rating: <span className="text-primary">{post.rating}/10</span>
+                </p>
+              ) : null}
             </header>
           </Reveal>
 
-          {showCover && post.cover ? (
+          {videoOnTop ? <YouTubeEmbed id={videoOnTop} title={post.title} short={post.short} /> : null}
+
+          {showCover && post.cover && !videoOnTop ? (
             <Image
               src={post.cover}
               alt={post.coverAlt}
@@ -129,7 +154,10 @@ export default async function BlogPostPage({
             <MdxContent source={post.body} />
           </div>
 
-          <ProductList products={post.products} />
+          <ProductList
+            products={post.products}
+            title={post.youtubeId ? "Products in this video" : "Products in this post"}
+          />
         </div>
       </article>
 

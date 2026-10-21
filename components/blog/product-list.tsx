@@ -6,16 +6,26 @@ import type { BlogProduct } from "@/lib/blog";
  * Products mentioned in a post. No prices or Amazon photos on purpose: both go
  * stale, and Amazon only allows them when pulled live from its API.
  */
-export function ProductList({ products }: { products: BlogProduct[] }) {
+function goesToAmazon(product: BlogProduct) {
+  return product.store === "Amazon" || isAmazonUrl(product.url);
+}
+
+export function ProductList({
+  products,
+  title = "Products in this post",
+}: {
+  products: BlogProduct[];
+  title?: string;
+}) {
   if (products.length === 0) return null;
 
   const hasAffiliate = products.some((product) => isAffiliateUrl(product.url));
-  const hasAmazon = products.some((product) => isAmazonUrl(product.url));
+  const hasAmazon = products.some(goesToAmazon);
 
   return (
     <section aria-labelledby="products-heading" className="mt-14">
       <h2 id="products-heading" className="text-display text-2xl font-bold tracking-tight">
-        Products in this post
+        {title}
       </h2>
       {hasAffiliate ? (
         <p className="mt-3 text-sm text-muted-foreground">
@@ -42,7 +52,11 @@ export function ProductList({ products }: { products: BlogProduct[] }) {
                 rel={affiliate ? "sponsored nofollow noopener noreferrer" : "noopener noreferrer"}
                 className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                {isAmazonUrl(product.url) ? "Check price on Amazon" : "View product"}
+                {goesToAmazon(product)
+                  ? "Check price on Amazon"
+                  : product.store
+                    ? `View on ${product.store}`
+                    : "View product"}
                 <ArrowUpRightIcon className="size-4" />
               </a>
             </li>
