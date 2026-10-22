@@ -52,7 +52,7 @@ export const PAGES = {
     path: "/lifestyle",
     title: "SuperZydan Blog: Recipes, Gaming and Family Fun",
     description:
-      "Recipes, family game nights, Roblox events and the stuff we can't stop talking about. Every post from SuperZydan and LinkNova, newest first.",
+      "Recipes, family game nights, Roblox events and the stuff we can't stop talking about, newest first. Gear reviews have their own page.",
     updated: "2026-10-21",
   },
   vods: {

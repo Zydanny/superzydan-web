@@ -22,17 +22,35 @@ export function postBreadcrumbs(post: BlogPost, category: ReviewCategory | null)
   return trail;
 }
 
+/* Posts only record a day; Google wants a full timestamp with a zone, so pin it to noon UTC. */
+function isoDay(date: string) {
+  return `${date}T12:00:00Z`;
+}
+
 function postImage(post: BlogPost) {
   if (post.cover) return absoluteUrl(post.cover);
   return post.youtubeId ? `https://i.ytimg.com/vi/${post.youtubeId}/hqdefault.jpg` : absoluteUrl("/brand/sz-logo.webp");
 }
 
 /*
+ * The opening of a YouTube description, without its links, hashtags or
+ * timestamps: those descriptions carry shortened shop links (some still on an
+ * old affiliate tag) that don't belong in this site's data.
+ */
+function videoSummary(description: string) {
+  const firstParagraph = description.split(/\n\s*\n/)[0] ?? "";
+  return firstParagraph
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/#\w+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/*
  * Everything a post tells search engines: the article, its breadcrumb trail,
- * one VideoObject per embedded YouTube video, and for reviews a Review per
- * product. Reviews carry no rating on purpose (the owner doesn't score
- * products), which keeps them valid schema.org but not eligible for Google's
- * star snippets.
+ * one VideoObject per embedded YouTube video, and for reviews a Product with
+ * its Review. Reviews carry no rating on purpose (the owner doesn't score
+ * products), so Google won't show stars for them.
  */
 export function postJsonLd(
   post: BlogPost,
@@ -47,8 +65,8 @@ export function postJsonLd(
       "@id": `${url}#article`,
       headline: post.title.slice(0, 110),
       description: post.seoDescription,
-      datePublished: post.date,
-      dateModified: post.updated,
+      datePublished: isoDay(post.date),
+      dateModified: isoDay(post.updated),
       author: personRef,
       publisher: personRef,
       image,
@@ -61,29 +79,40 @@ export function postJsonLd(
   ];
 
   for (const id of postVideoIds(post)) {
+    const details = videos.get(id);
     nodes.push(
       videoJsonLd(
-        videos.get(id) ?? {
-          id,
-          title: post.title,
-          description: post.seoDescription,
-          uploadDate: post.date,
-        },
+        details
+          ? {
+              ...details,
+              // Some descriptions open with just a label like "Product:" above the links; use the post's own then.
+              description: videoSummary(details.description).length >= 40 ? videoSummary(details.description) : post.seoDescription,
+            }
+          : { id, title: post.title, description: post.seoDescription, uploadDate: isoDay(post.date) },
       ),
     );
   }
 
+  /*
+   * The product carries the review, not the other way round: a bare Product
+   * inside a Review fails Google's product check ("offers, review or
+   * aggregateRating should be specified"). Checked in the Rich Results Test.
+   */
   if (isReview(post)) {
     for (const name of post.reviewedProduct) {
       nodes.push({
-        "@type": "Review",
-        name: post.title,
-        reviewBody: post.excerpt || post.seoDescription,
-        datePublished: post.date,
-        url,
-        author: personRef,
-        publisher: personRef,
-        itemReviewed: { "@type": "Product", name, image },
+        "@type": "Product",
+        name,
+        image,
+        review: {
+          "@type": "Review",
+          name: post.title,
+          reviewBody: post.excerpt || post.seoDescription,
+          datePublished: isoDay(post.date),
+          url,
+          author: personRef,
+          publisher: personRef,
+        },
       });
     }
   }
