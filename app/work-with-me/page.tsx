@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { ArrowDownIcon, MailIcon } from "lucide-react";
+import { CollabPlates } from "@/components/collab-plates";
 import { CountUp } from "@/components/count-up";
 import { JsonLd } from "@/components/json-ld";
 import { NeonButton } from "@/components/neon-button";
@@ -11,7 +12,7 @@ import { SignHeading, TubeSign } from "@/components/sign-heading";
 import { getPost } from "@/lib/blog";
 import { getDiscordStats } from "@/lib/discord";
 import { breadcrumbJsonLd, PAGES, pageMetadata } from "@/lib/seo";
-import { partners, site, socialStats } from "@/lib/site";
+import { site, socialStats } from "@/lib/site";
 import { getTwitchStatus } from "@/lib/twitch";
 import { getYouTubeSubscriberCount } from "@/lib/youtube";
 
@@ -214,18 +215,7 @@ export default async function WorkWithMePage() {
           <SignHeading id="collabs-title" tone="cyan" size="md" sub="Brands I've already teamed up with.">
             Past collabs
           </SignHeading>
-          <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            {partners.map((partner) => (
-              <li key={partner.name} className="chamfer bg-neon-violet/45 p-[2px] [--cut:12px]">
-                <div className="chamfer flex h-full min-h-28 flex-col justify-between gap-3 bg-night-raised p-4 [--cut:11px] sm:p-5">
-                  <p className="font-display text-2xl leading-none font-black tracking-wide uppercase sm:text-3xl">
-                    {partner.name}
-                  </p>
-                  <p className="text-sm font-semibold text-haze">{partner.note}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <CollabPlates className="mt-10" />
 
           {examples.length > 0 ? (
             <>

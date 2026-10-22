@@ -42,8 +42,12 @@ export function DiscordCta({
             </div>
 
             {stats.members !== null || stats.online !== null ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              // Two lit numerals straight on the sign, split by one wire.
+              <div className="flex items-stretch gap-6 sm:gap-10 lg:justify-center">
                 {stats.members !== null ? <Counter label="members" value={stats.members} tone="magenta" /> : null}
+                {stats.members !== null && stats.online !== null ? (
+                  <span aria-hidden className="w-px bg-[#4a3f63]" />
+                ) : null}
                 {stats.online !== null ? <Counter label="online now" value={stats.online} tone="cyan" live /> : null}
               </div>
             ) : null}
@@ -66,21 +70,19 @@ function Counter({
   live?: boolean;
 }) {
   return (
-    <div className={`chamfer p-[2px] [--cut:12px] ${tone === "magenta" ? "bg-neon-magenta/60" : "bg-neon-cyan/60"}`}>
-      {/* Number first, then what it counts, so it reads "1,108 members". */}
-      <p className="chamfer flex h-full flex-col bg-night px-4 py-5 [--cut:11px] sm:px-6">
-        <span
-          className={`font-display text-5xl leading-none font-black tabular-nums lg:text-6xl ${
-            tone === "magenta" ? "neon-magenta" : "neon-cyan"
-          }`}
-        >
-          {count.format(value)}
-        </span>
-        <span className="mt-2 flex items-center gap-2 text-sm font-bold tracking-wide text-haze uppercase">
-          {live ? <span aria-hidden className="size-2 rounded-full bg-neon-cyan shadow-[0_0_8px_var(--neon-cyan)]" /> : null}
-          {label}
-        </span>
-      </p>
-    </div>
+    // Number first, then what it counts, so it reads "1,108 members".
+    <p className="flex flex-col">
+      <span
+        className={`font-display text-6xl leading-none font-black tabular-nums lg:text-7xl ${
+          tone === "magenta" ? "neon-magenta" : "neon-cyan"
+        }`}
+      >
+        {count.format(value)}
+      </span>
+      <span className="mt-2 flex items-center gap-2 text-sm font-bold tracking-wide text-haze uppercase">
+        {live ? <span aria-hidden className="size-2 rounded-full bg-neon-cyan shadow-[0_0_8px_var(--neon-cyan)]" /> : null}
+        {label}
+      </span>
+    </p>
   );
 }

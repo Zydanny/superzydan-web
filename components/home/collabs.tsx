@@ -1,13 +1,11 @@
-import type { CSSProperties } from "react";
 import { ArrowRightIcon } from "lucide-react";
+import { CollabPlates } from "@/components/collab-plates";
 import { NeonButton } from "@/components/neon-button";
 import { SignHeading } from "@/components/sign-heading";
-import { partners } from "@/lib/site";
 
 /*
- * The brands' way in from the home page: who I've worked with, then the Work
- * With Me page. Names are set as plates, not logos (no logo files supplied),
- * and they aren't links, so nobody lands on a shop page by accident.
+ * The brands' way in from the home page: who I've worked with as a strip of
+ * name plates, then the Work With Me page.
  */
 export function Collabs() {
   return (
@@ -28,20 +26,7 @@ export function Collabs() {
           </NeonButton>
         </div>
 
-        <ul className="grid grid-cols-2 gap-3 sm:gap-4">
-          {partners.map((partner, index) => (
-            <li key={partner.name} className="build-in" style={{ "--i": index } as CSSProperties}>
-              <div className="chamfer h-full bg-neon-violet/45 p-[2px] [--cut:12px]">
-                <div className="chamfer flex h-full min-h-28 flex-col justify-between gap-3 bg-night-raised p-4 [--cut:11px] sm:p-5">
-                  <p className="font-display text-2xl leading-none font-black tracking-wide uppercase sm:text-3xl">
-                    {partner.name}
-                  </p>
-                  <p className="text-sm font-semibold text-haze">{partner.note}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <CollabPlates className="lg:justify-end" />
       </div>
     </section>
   );

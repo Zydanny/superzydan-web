@@ -68,19 +68,20 @@ export function PostCard({
         </div>
       </div>
 
-      <p className="mt-4 flex flex-wrap items-center gap-x-2 text-sm font-bold tracking-wide text-neon-cyan uppercase">
-        <span>{postLabel(post)}</span>
-        <span aria-hidden className="text-neon-violet">/</span>
-        <span className="text-haze">{post.readTime} min read</span>
-      </p>
       <Heading
         className={cn(
-          "mt-2 font-bold text-balance transition-colors group-hover/card:text-neon-cyan",
+          "mt-4 font-bold text-balance transition-colors group-hover/card:text-neon-cyan",
           feature ? "text-2xl leading-tight lg:text-3xl" : "text-lg leading-snug",
         )}
       >
         {post.title}
       </Heading>
+      {/* What kind of post and how long: under the title, never above it. */}
+      <p className="mt-1.5 flex flex-wrap items-center gap-x-2 text-sm font-bold tracking-wide text-neon-cyan uppercase">
+        <span>{postLabel(post)}</span>
+        <span aria-hidden className="text-neon-violet">/</span>
+        <span className="text-haze">{post.readTime} min read</span>
+      </p>
       {post.excerpt ? (
         <p className={cn("mt-2 text-pretty text-haze", feature ? "line-clamp-3 text-lg" : "line-clamp-2")}>
           {post.excerpt}

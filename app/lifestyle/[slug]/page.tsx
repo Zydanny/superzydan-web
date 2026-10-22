@@ -111,21 +111,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </p>
           ) : null}
 
+          {/* Title first; what kind of post it is, when, and how long sit in the byline under it. */}
           <header className="mt-6">
-            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-bold tracking-wide uppercase">
-              <span className="font-display neon-cyan text-xl leading-none font-black tracking-[0.08em]">
-                {review ? (post.short ? "Quick Review" : "Review") : post.category}
-              </span>
-              <span aria-hidden className="text-neon-violet">/</span>
-              <time dateTime={post.date} className="text-haze">
-                {formatDate(post.date)}
-              </time>
-              <span aria-hidden className="text-neon-violet">/</span>
-              <span className="text-haze">{post.readTime} min read</span>
-            </p>
-            <h1 className="mt-4 text-4xl leading-[1.05] font-extrabold tracking-[-0.02em] text-balance sm:text-5xl">
+            <h1 className="text-4xl leading-[1.05] font-extrabold tracking-[-0.02em] text-balance sm:text-5xl">
               {post.title}
             </h1>
+            <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-bold tracking-wide text-haze uppercase">
+              <span className="text-neon-cyan">{review ? (post.short ? "Quick Review" : "Review") : post.category}</span>
+              <span aria-hidden className="text-neon-violet">/</span>
+              <span>By SuperZydan</span>
+              <span aria-hidden className="text-neon-violet">/</span>
+              <time dateTime={post.date}>{formatDate(post.date)}</time>
+              <span aria-hidden className="text-neon-violet">/</span>
+              <span>{post.readTime} min read</span>
+            </p>
           </header>
 
           {post.disclosure ? (

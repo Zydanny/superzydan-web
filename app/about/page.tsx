@@ -1,8 +1,6 @@
-import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowRightIcon } from "lucide-react";
-import { CountUp } from "@/components/count-up";
 import { DiscordMark } from "@/components/discord-mark";
 import { JsonLd } from "@/components/json-ld";
 import { NeonButton } from "@/components/neon-button";
@@ -21,6 +19,9 @@ export const revalidate = 1800;
 
 const TONES: Tone[] = ["magenta", "cyan", "violet", "magenta"];
 
+// Fixed locale so the server and the browser print the same "108K".
+const compact = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 });
+
 export default async function AboutPage() {
   const [youtube, twitch, discord] = await Promise.all([
     getYouTubeSubscriberCount(),
@@ -30,12 +31,12 @@ export default async function AboutPage() {
   const fallback = (label: string) => socialStats.find((stat) => stat.label === label)?.value ?? null;
 
   const stats = [
-    { label: "TikTok", unit: "followers", value: fallback("TikTok") },
-    { label: "YouTube", unit: "subscribers", value: youtube ?? fallback("YouTube") },
-    { label: "Instagram", unit: "followers", value: fallback("Instagram") },
-    { label: "Twitch", unit: "followers", value: twitch.followers },
-    { label: "Discord", unit: "members", value: discord.members },
-  ].filter((stat): stat is { label: string; unit: string; value: number } => stat.value !== null);
+    { label: "TikTok", where: "on TikTok", value: fallback("TikTok") },
+    { label: "YouTube", where: "on YouTube", value: youtube ?? fallback("YouTube") },
+    { label: "Instagram", where: "on Instagram", value: fallback("Instagram") },
+    { label: "Twitch", where: "on Twitch", value: twitch.followers },
+    { label: "Discord", where: "in the Discord", value: discord.members },
+  ].filter((stat): stat is { label: string; where: string; value: number } => stat.value !== null);
 
   return (
     <main id="content" className="flex-1">
@@ -65,34 +66,25 @@ export default async function AboutPage() {
       />
 
       <section aria-label="The story" className="shell shell-y">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
-          <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-pretty text-haze lg:text-xl">
-            {aboutPage.story.map((paragraph, index) => (
-              <p key={index} className={index === 0 ? "text-xl text-white lg:text-2xl" : undefined}>
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
+        <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-pretty text-haze lg:text-xl">
+          {aboutPage.story.map((paragraph, index) => (
+            <p key={index} className={index === 0 ? "text-xl text-white lg:text-2xl" : undefined}>
+              {paragraph}
+            </p>
+          ))}
           {stats.length > 0 ? (
-            <ul className="grid grid-cols-2 gap-3 self-start sm:grid-cols-3 lg:grid-cols-2">
+            // The numbers as one line of the story, not another row of stat cards.
+            <p>
+              These days that&apos;s{" "}
               {stats.map((stat, index) => (
-                <li
-                  key={stat.label}
-                  className="build-in chamfer bg-neon-violet/40 p-[2px] [--cut:12px]"
-                  style={{ "--i": index } as CSSProperties}
-                >
-                  <p className="chamfer flex h-full flex-col bg-night-raised px-4 py-4 [--cut:11px]">
-                    <span className="font-display text-4xl leading-none font-black text-white tabular-nums">
-                      <CountUp value={stat.value} />
-                    </span>
-                    <span className="mt-1.5 text-sm font-semibold text-haze">
-                      {stat.label} {stat.unit}
-                    </span>
-                  </p>
-                </li>
+                <span key={stat.label}>
+                  {index > 0 ? (index === stats.length - 1 ? " and " : ", ") : null}
+                  <strong className="font-bold text-white tabular-nums">{compact.format(stat.value)}</strong>{" "}
+                  {stat.where}
+                </span>
               ))}
-            </ul>
+              . Thanks for being part of it.
+            </p>
           ) : null}
         </div>
       </section>

@@ -111,9 +111,10 @@ export function ZyverseLanes() {
           The Zyverse
         </SignHeading>
 
-        <ul className="lanes-track mt-8 flex gap-5 px-4 lg:mt-12 lg:gap-8 lg:px-8">
+        {/* Widths and the three layouts (pinned slide, swipe row, desktop grid) live in globals.css, .lanes-track. */}
+        <ul className="lanes-track mt-8 gap-5 lg:mt-12 lg:gap-8">
           {LANES.map((lane) => (
-            <li key={lane.name} className="lane w-[min(80vw,24rem)] shrink-0 snap-start lg:w-[min(30rem,58svh)]">
+            <li key={lane.name} className="lane shrink-0 snap-start">
               <LaneCard lane={lane} />
             </li>
           ))}

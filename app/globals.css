@@ -548,17 +548,39 @@ html.lenis body {
 }
 
 /*
- * The Zyverse lanes (components/home/zyverse-lanes.tsx). By default a swipeable
- * row. With scroll timelines the section grows tall enough for the row's
- * sideways travel, the inner panel sticks under the header, and the row slides
- * left as the page scrolls through it, then the page carries on.
+ * The Zyverse lanes (components/home/zyverse-lanes.tsx), three ways:
+ * - with scroll timelines and motion allowed, the section grows tall enough for
+ *   the row's sideways travel, the inner panel sticks under the header, and the
+ *   row slides left as the page scrolls through it, then the page carries on;
+ * - otherwise on phones, a swipeable row with a visible scrollbar;
+ * - otherwise on desktop, a 3 x 2 grid, so every lane is on screen.
+ * The row starts on the same page margin as the heading above it.
  */
 .lanes-track {
+  --rail: max(1rem, calc((100vw - 80rem) / 2 + 1rem));
+  display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: 1rem;
-  scrollbar-width: none;
-  padding-bottom: 0.5rem;
+  scroll-padding-inline: var(--rail);
+  padding-inline: var(--rail);
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--neon-violet) 70%, transparent) transparent;
+}
+.lane {
+  width: min(80vw, 24rem);
+}
+@media (width >= 64rem) {
+  .lanes-track {
+    --rail: max(2rem, calc((100vw - 80rem) / 2 + 2rem));
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 3.5rem;
+    overflow: visible;
+  }
+  .lane {
+    width: auto;
+  }
 }
 
 @keyframes lane-drift {
@@ -581,6 +603,9 @@ html.lenis body {
       .lanes {
         --lane-w: calc(min(30rem, 58svh) + 2rem);
       }
+      .lane {
+        width: min(30rem, 58svh);
+      }
     }
     .lanes-pin {
       position: sticky;
@@ -591,8 +616,10 @@ html.lenis body {
       overflow: hidden;
     }
     .lanes-track {
+      display: flex;
       overflow: visible;
       width: max-content;
+      padding-bottom: 0.5rem;
       animation: lanes-slide linear both;
       animation-timeline: --lanes;
       animation-range: contain 0% contain 100%;
