@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-22T01:05:53.289Z",
+  "title": "Design System: SuperZydan",
+  "extensions": {
+    "colorMeta": {
+      "night": {
+        "role": "neutral",
+        "displayName": "Rain-Black Violet",
+        "canonical": "#08060f",
+        "oklch": "oklch(13.1% 0.021 295.1)",
+        "tonalRamp": [
+          "#0c0913",
+          "#25222d",
+          "#403e4a",
+          "#5e5b69",
+          "#817e8c",
+          "#a5a2b1",
+          "#cbc8d7",
+          "#efecfc"
+        ]
+      },
+      "night-raised": {
+        "role": "neutral",
+        "displayName": "Raised Night",
+        "canonical": "#130c22",
+        "oklch": "oklch(17.7% 0.045 296.2)",
+        "tonalRamp": [
+          "#0d061b",
+          "#261f37",
+          "#423b55",
+          "#605974",
+          "#827b98",
+          "#a79fbe",
+          "#cdc5e5",
+          "#f0ebfe"
+        ]
+      },
+      "night-panel": {
+        "role": "neutral",
+        "displayName": "Night Panel",
+        "canonical": "#1d1430",
+        "oklch": "oklch(21.9% 0.054 296.5)",
+        "tonalRamp": [
+          "#0e051f",
+          "#271e3b",
+          "#423a59",
+          "#605779",
+          "#837a9d",
+          "#a79ec3",
+          "#cdc4ea",
+          "#f0ecfd"
+        ]
+      },
+      "neon-magenta": {
+        "role": "primary",
+        "displayName": "Logo Magenta Tube",
+        "canonical": "#ff3fb4",
+        "oklch": "oklch(68.8% 0.247 348.4)",
+        "tonalRamp": [
+          "#1c000f",
+          "#45012d",
+          "#73034d",
+          "#a50870",
+          "#df0d98",
+          "#ff60bb",
+          "#fdafd6",
+          "#fee7f2"
+        ]
+      },
+      "neon-cyan": {
+        "role": "secondary",
+        "displayName": "Logo Cyan Tube",
+        "canonical": "#2fe0ff",
+        "oklch": "oklch(83.6% 0.139 213.2)",
+        "tonalRamp": [
+          "#010e11",
+          "#022931",
+          "#034854",
+          "#01697a",
+          "#0990a5",
+          "#13b8d3",
+          "#3fe1fe",
+          "#d2f6fe"
+        ]
+      },
+      "neon-violet": {
+        "role": "tertiary",
+        "displayName": "Electric Violet",
+        "canonical": "#7a3cff",
+        "oklch": "oklch(55.7% 0.263 289.3)",
+        "tonalRamp": [
+          "#0d002b",
+          "#280362",
+          "#4602a3",
+          "#6612e3",
+          "#8358ff",
+          "#a392fe",
+          "#c8c2fe",
+          "#eeecfe"
+        ]
+      },
+      "paint-orange": {
+        "role": "tertiary",
+        "displayName": "Paint Orange",
+        "canonical": "#f07a3a",
+        "oklch": "oklch(70.5% 0.164 46.4)",
+        "tonalRamp": [
+          "#180501",
+          "#3e1702",
+          "#682b05",
+          "#983f00",
+          "#cc590a",
+          "#f57f3f",
+          "#feb896",
+          "#fdeae1"
+        ]
+      },
+      "paint-yellow": {
+        "role": "tertiary",
+        "displayName": "Paint Yellow",
+        "canonical": "#f5c23a",
+        "oklch": "oklch(83.8% 0.154 86.9)",
+        "tonalRamp": [
+          "#100a00",
+          "#2e2203",
+          "#513c02",
+          "#75590a",
+          "#9f7a0d",
+          "#cb9d10",
+          "#f6c33b",
+          "#feedc6"
+        ]
+      },
+      "live": {
+        "role": "tertiary",
+        "displayName": "Live Scarlet",
+        "canonical": "#ff2d3d",
+        "oklch": "oklch(64.6% 0.240 24.1)",
+        "tonalRamp": [
+          "#1e0001",
+          "#4b0007",
+          "#7c0012",
+          "#b00a20",
+          "#ee0b2e",
+          "#fd736f",
+          "#fdb5b0",
+          "#ffe9e6"
+        ]
+      },
+      "neon-off": {
+        "role": "neutral",
+        "displayName": "Unlit Tube",
+        "canonical": "#86505c",
+        "oklch": "oklch(49.7% 0.074 5.7)",
+        "tonalRamp": [
+          "#1d0008",
+          "#40111f",
+          "#602e3a",
+          "#814b57",
+          "#a66e7a",
+          "#cd929e",
+          "#f5b7c3",
+          "#fee8ec"
+        ]
+      },
+      "starlight": {
+        "role": "neutral",
+        "displayName": "Starlight",
+        "canonical": "#f6f2ff",
+        "oklch": "oklch(96.8% 0.018 300.1)",
+        "tonalRamp": [
+          "#0c0912",
+          "#25222b",
+          "#413e48",
+          "#5f5c66",
+          "#827e8a",
+          "#a6a2ae",
+          "#ccc8d5",
+          "#f0ecf9"
+        ]
+      },
+      "haze": {
+        "role": "neutral",
+        "displayName": "Haze",
+        "canonical": "#c9bfe3",
+        "oklch": "oklch(82.4% 0.051 298.0)",
+        "tonalRamp": [
+          "#0e051d",
+          "#271e39",
+          "#433a57",
+          "#615877",
+          "#847a9b",
+          "#a89ec1",
+          "#cec4e8",
+          "#f0ebfe"
+        ]
+      },
+      "haze-muted": {
+        "role": "neutral",
+        "displayName": "Muted Haze",
+        "canonical": "#b3a8cc",
+        "oklch": "oklch(75.3% 0.052 299.1)",
+        "tonalRamp": [
+          "#0f051e",
+          "#281e3a",
+          "#443958",
+          "#625777",
+          "#847a9c",
+          "#a99ec1",
+          "#cfc4e9",
+          "#f1ebff"
+        ]
+      },
+      "ink-on-magenta": {
+        "role": "neutral",
+        "displayName": "Ink on Magenta",
+        "canonical": "#1a0612",
+        "oklch": "oklch(16.3% 0.042 345.1)",
+        "tonalRamp": [
+          "#17040f",
+          "#321b29",
+          "#503745",
+          "#6f5463",
+          "#937786",
+          "#b99bab",
+          "#e0c0d1",
+          "#fde8f3"
+        ]
+      },
+      "wire": {
+        "role": "neutral",
+        "displayName": "Wire",
+        "canonical": "#4a3f63",
+        "oklch": "oklch(39.5% 0.061 297.6)",
+        "tonalRamp": [
+          "#0f0421",
+          "#281d3d",
+          "#43385c",
+          "#61567c",
+          "#8479a1",
+          "#a99dc7",
+          "#cfc3ee",
+          "#f0ebfe"
+        ]
+      },
+      "plate-hover": {
+        "role": "neutral",
+        "displayName": "Plate Hover",
+        "canonical": "#0b1a22",
+        "oklch": "oklch(20.9% 0.026 233.2)",
+        "tonalRamp": [
+          "#020d14",
+          "#17262f",
+          "#32424b",
+          "#4f606a",
+          "#71838e",
+          "#95a8b3",
+          "#bbced9",
+          "#def2fe"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display-hero": {
+        "displayName": "Display Hero",
+        "purpose": "Home h1 only: 3.5rem, 3.75rem at 400px, 4.5rem at lg, 6rem at xl. Words stagger in."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "PageHero titles and large SignHeadings: 3.25rem, 3.75rem at 400px, 6rem at lg."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Medium SignHeadings: 2.25rem, 3.75rem at lg."
+      },
+      "tube-sign": {
+        "displayName": "Tube Sign",
+        "purpose": "TubeSign, rail labels, lane names: 1.5rem, 1.875rem at lg."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Article h2 in Figtree 800, 1.875rem from sm."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The one plain haze line under every sign, 1.25rem at lg."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Article paragraphs and descriptions in haze."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Post meta lines carrying real data (category, date, read time), plate roles, badges."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "NeonButton text; 0.875rem in the header and product lists."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sign-glow",
+        "value": "0 0 2px #fff, 0 0 8px var(--neon-magenta), 0 0 18px color-mix(in srgb, var(--neon-magenta) 70%, transparent)",
+        "purpose": "text-shadow on lit signs (neon-magenta, neon-cyan; neon-violet and neon-live use a 20px outer layer at 80% and 75%)."
+      },
+      {
+        "name": "tube-frame",
+        "value": "0 0 6px var(--tube), 0 0 18px -2px var(--tube), inset 0 0 10px -2px var(--tube)",
+        "purpose": "box-shadow on framed tube signs, with a 2px solid var(--tube) border."
+      },
+      {
+        "name": "logo-glow",
+        "value": "drop-shadow(0 0 18px rgb(255 63 180 / 0.45))",
+        "purpose": "Filter on the SZ logo on the hero stage."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid var(--neon-cyan); outline-offset: 3px",
+        "purpose": "Global :focus-visible ring; buttons offset 4px."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "State changes, arrivals, press feedback."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "Defined for moves between two on-screen states."
+      },
+      {
+        "name": "ease-drawer",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "Menu drawer opening (320ms; closes in 200ms on ease-out)."
+      },
+      {
+        "name": "tube-on",
+        "value": "900ms linear; opacity 0.25, 0.9, 0.3, 1, 0.55, then 1 from 40%",
+        "purpose": "Sign power-on: on load for page titles and hero tubes, on entry for data-neon signs (160ms stagger)."
+      },
+      {
+        "name": "tube-hum",
+        "value": "7s linear infinite after 1.2s; a dip to 0.82 at 93%",
+        "purpose": "The NIGHT tube only."
+      },
+      {
+        "name": "word-in",
+        "value": "520ms ease-out; from opacity 0.4 and 0.35em down; 70ms stagger after 250ms",
+        "purpose": "Home headline words."
+      },
+      {
+        "name": "build-in",
+        "value": "view() timeline, entry (i*8%) to entry (45% + i*8%); from 2.5rem down and transparent",
+        "purpose": "Blocks building in on scroll."
+      },
+      {
+        "name": "parallax-drift",
+        "value": "view() timeline over cover; translateY from -6% to 6% at scale 1.12",
+        "purpose": "Photos drifting inside their frames."
+      },
+      {
+        "name": "screen-on",
+        "value": "view() timeline, entry 0-60%; scaleY 0.88 to 1",
+        "purpose": "The Watch screen switching on."
+      },
+      {
+        "name": "lanes-slide",
+        "value": "named --lanes view timeline, contain 0-100%; lane photos drift ±5% at 1.14",
+        "purpose": "Pinned Zyverse lanes sliding sideways."
+      },
+      {
+        "name": "sign-brighten",
+        "value": "scroll(root) 0 to 60vh; opacity 0.35 to 1",
+        "purpose": "The desktop hero sign's glow plate."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.97) over 150ms ease-out",
+        "purpose": "Button and tap feedback."
+      },
+      {
+        "name": "video-dialog",
+        "value": "260ms in, 160ms out; from translateY(12px) scale(0.96)",
+        "purpose": "The video dialog; reduced motion keeps the fade."
+      },
+      {
+        "name": "lenis",
+        "value": "lerp 0.12, wheel and trackpad only",
+        "purpose": "Smooth wheel scroll, loaded after hydration, never with reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "xs",
+        "value": "400px"
+      },
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Solid NeonButton",
+      "kind": "button",
+      "refersTo": "button-solid",
+      "description": "The one primary action per screen: a magenta chamfered plate.",
+      "html": "<button class=\"ds-btn-solid\"><span class=\"ds-plate\"></span><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M6 3l14 9-14 9V3z\"/></svg>Watch</button>",
+      "css": ".ds-btn-solid { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; font-family: var(--font-figtree, Figtree, sans-serif); font-size: 16px; font-weight: 800; letter-spacing: 0.025em; text-transform: uppercase; border: 0; background: none; cursor: pointer; transition: transform 150ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)); --cut: 10px; color: #1a0612; } .ds-btn-solid .ds-plate, .ds-btn-solid .ds-inner { position: absolute; z-index: -1; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); transition: filter 200ms, background-color 200ms; } .ds-btn-solid .ds-plate { inset: 0; } .ds-btn-solid .ds-inner { inset: 2px; background: var(--night, #08060f); } .ds-btn-solid .ds-plate { background: var(--neon-magenta, #ff3fb4); } .ds-btn-solid:hover .ds-plate { filter: brightness(1.1); } .ds-btn-solid:active { transform: scale(0.97); } .ds-btn-solid:focus-visible { outline: 2px solid var(--neon-cyan, #2fe0ff); outline-offset: 4px; }"
+    },
+    {
+      "name": "Outline NeonButton",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The cyan secondary: a cyan plate with a night plate 2px inside.",
+      "html": "<button class=\"ds-btn-outline\"><span class=\"ds-plate\"></span><span class=\"ds-inner\"></span>Join Discord</button>",
+      "css": ".ds-btn-outline { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; font-family: var(--font-figtree, Figtree, sans-serif); font-size: 16px; font-weight: 800; letter-spacing: 0.025em; text-transform: uppercase; border: 0; background: none; cursor: pointer; transition: transform 150ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)); --cut: 10px; color: var(--neon-cyan, #2fe0ff); } .ds-btn-outline .ds-plate, .ds-btn-outline .ds-inner { position: absolute; z-index: -1; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); transition: filter 200ms, background-color 200ms; } .ds-btn-outline .ds-plate { inset: 0; } .ds-btn-outline .ds-inner { inset: 2px; background: var(--night, #08060f); } .ds-btn-outline .ds-plate { background: var(--neon-cyan, #2fe0ff); } .ds-btn-outline:hover .ds-inner { background: #0b1a22; } .ds-btn-outline:active { transform: scale(0.97); } .ds-btn-outline:focus-visible { outline: 2px solid var(--neon-cyan, #2fe0ff); outline-offset: 4px; }"
+    },
+    {
+      "name": "Violet NeonButton",
+      "kind": "button",
+      "refersTo": "button-violet",
+      "description": "The quiet tertiary plate (the header's Work with me).",
+      "html": "<button class=\"ds-btn-violet\"><span class=\"ds-plate\"></span>Work with me</button>",
+      "css": ".ds-btn-violet { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; font-family: var(--font-figtree, Figtree, sans-serif); font-size: 16px; font-weight: 800; letter-spacing: 0.025em; text-transform: uppercase; border: 0; background: none; cursor: pointer; transition: transform 150ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)); --cut: 10px; min-height: 44px; padding: 0 16px; font-size: 14px; --cut: 8px; color: #fff; } .ds-btn-violet .ds-plate, .ds-btn-violet .ds-inner { position: absolute; z-index: -1; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); transition: filter 200ms, background-color 200ms; } .ds-btn-violet .ds-plate { inset: 0; } .ds-btn-violet .ds-inner { inset: 2px; background: var(--night, #08060f); } .ds-btn-violet .ds-plate { background: var(--neon-violet, #7a3cff); } .ds-btn-violet:hover .ds-plate { filter: brightness(1.25); } .ds-btn-violet:active { transform: scale(0.97); } .ds-btn-violet:focus-visible { outline: 2px solid var(--neon-cyan, #2fe0ff); outline-offset: 4px; }"
+    },
+    {
+      "name": "SignHeading",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "A lit section heading in condensed black caps, followed by one plain lede. Nothing above it.",
+      "html": "<div class=\"ds-sign\"><h2>The Zyverse</h2><p>What you'll catch on the channel, from dad-and-son co-op to the late-night solo runs.</p></div>",
+      "css": ".ds-sign { background: var(--night, #08060f); padding: 24px; } .ds-sign h2 { margin: 0; font-family: var(--font-big-shoulders, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 900; font-size: 52px; line-height: 0.86; text-transform: uppercase; color: #ffd9ef; text-shadow: 0 0 2px #fff, 0 0 8px #ff3fb4, 0 0 18px color-mix(in srgb, #ff3fb4 70%, transparent); } .ds-sign p { margin: 12px 0 0; max-width: 36rem; font-family: var(--font-figtree, Figtree, sans-serif); font-size: 18px; color: var(--haze, #c9bfe3); }"
+    },
+    {
+      "name": "TubeSign",
+      "kind": "chip",
+      "refersTo": "tube-sign",
+      "description": "A small framed tube labelling a row, a lane or a block.",
+      "html": "<span class=\"ds-tube\">Best clips</span>",
+      "css": ".ds-tube { --tube: #2fe0ff; display: inline-block; padding: 4px 12px; border-radius: 0.6rem; border: 2px solid var(--tube); box-shadow: 0 0 6px var(--tube), 0 0 18px -2px var(--tube), inset 0 0 10px -2px var(--tube); font-family: var(--font-big-shoulders, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 900; font-size: 24px; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; color: #d9fbff; text-shadow: 0 0 2px #fff, 0 0 8px #2fe0ff, 0 0 18px color-mix(in srgb, #2fe0ff 70%, transparent); }"
+    },
+    {
+      "name": "LIVE sign",
+      "kind": "custom",
+      "refersTo": "live",
+      "description": "An unlit tube when offline; scarlet glow only while the stream is on.",
+      "html": "<span class=\"ds-live\">Live</span><span class=\"ds-live ds-on\">Live</span>",
+      "css": ".ds-live { display: inline-block; margin-right: 12px; padding: 2px 12px; border-radius: 0.6rem; border: 2px solid rgb(134 80 92 / 0.6); font-family: var(--font-big-shoulders, 'Big Shoulders', 'Arial Narrow', sans-serif); font-weight: 900; font-size: 20px; letter-spacing: 0.22em; text-transform: uppercase; color: #86505c; } .ds-live.ds-on { border-color: #ff2d3d; color: #ffe3e5; text-shadow: 0 0 2px #fff, 0 0 8px #ff2d3d, 0 0 20px color-mix(in srgb, #ff2d3d 75%, transparent); box-shadow: 0 0 6px #ff2d3d, 0 0 16px -2px #ff2d3d, inset 0 0 10px -2px #ff2d3d; }"
+    },
+    {
+      "name": "Screen",
+      "kind": "card",
+      "refersTo": "screen-frame",
+      "description": "A thumbnail bolted to the wall: a chamfered violet frame that lights cyan on hover or focus, with a magenta play chip.",
+      "html": "<a href=\"#\" class=\"ds-screen\"><span class=\"ds-frame\"><span class=\"ds-glass\"><span class=\"ds-chip\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M6 3l14 9-14 9V3z\"/></svg></span><span class=\"ds-badge\">Newest</span></span></span><span class=\"ds-title\">Father vs son lightsaber battle</span></a>",
+      "css": ".ds-screen { display: block; width: 300px; color: #f6f2ff; text-decoration: none; font-family: var(--font-figtree, Figtree, sans-serif); } .ds-frame { display: block; padding: 2px; background: rgb(122 60 255 / 0.4); --cut: 10px; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); transition: background-color 200ms; } .ds-glass { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #130c22; --cut: 9px; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); } .ds-chip { display: grid; place-items: center; width: 48px; height: 48px; background: #ff3fb4; color: #1a0612; opacity: 0.85; --cut: 6px; clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); transition: opacity 200ms; } .ds-badge { position: absolute; top: 8px; left: 8px; background: #f5c23a; color: #08060f; padding: 2px 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.025em; text-transform: uppercase; } .ds-title { display: block; margin-top: 12px; font-weight: 600; transition: color 200ms; } .ds-screen:hover .ds-frame, .ds-screen:focus-visible .ds-frame { background: #2fe0ff; } .ds-screen:hover .ds-chip { opacity: 1; } .ds-screen:hover .ds-title { color: #2fe0ff; } .ds-screen:focus-visible { outline: 2px solid var(--neon-cyan, #2fe0ff); outline-offset: 3px; }"
+    },
+    {
+      "name": "Text field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A square field with a violet border that turns cyan on focus.",
+      "html": "<label class=\"ds-field\"><span>Your email</span><input type=\"email\" placeholder=\"you@brand.com\"></label>",
+      "css": ".ds-field { display: block; font-family: var(--font-figtree, Figtree, sans-serif); } .ds-field span { font-weight: 700; color: #fff; } .ds-field input { margin-top: 8px; display: block; width: 100%; min-height: 48px; padding: 12px 16px; border: 2px solid rgb(122 60 255 / 0.5); background: #08060f; color: #fff; font-size: 16px; outline: none; transition: border-color 150ms; } .ds-field input::placeholder { color: rgb(201 191 227 / 0.7); } .ds-field input:hover { border-color: #7a3cff; } .ds-field input:focus { border-color: #2fe0ff; }"
+    },
+    {
+      "name": "Header nav",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Haze links, white on hover; the current page white with a 2px cyan underline.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" aria-current=\"page\">Home</a><a href=\"#\">Videos</a><a href=\"#\">Lifestyle</a><a href=\"#\">Reviews</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 24px; padding: 12px 16px; background: #08060f; border-bottom: 1px solid rgb(122 60 255 / 0.25); font-family: var(--font-figtree, Figtree, sans-serif); } .ds-nav a { position: relative; padding: 8px 0; font-size: 15px; font-weight: 600; color: #c9bfe3; text-decoration: none; transition: color 150ms; } .ds-nav a:hover, .ds-nav a[aria-current=\"page\"] { color: #fff; } .ds-nav a[aria-current=\"page\"]::after { content: \"\"; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: #2fe0ff; } .ds-nav a:focus-visible { outline: 2px solid #2fe0ff; outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Neon Night Street",
+    "overview": "The Zyverse is a rain-black violet street that a dad and his son own. Everything that speaks is a lit sign: page names and section headings are condensed black caps with a static tube glow, row labels are small framed tubes, thumbnails are screens bolted to the wall with cut corners, and buttons are chamfered sign plates. The ground stays dark and quiet so the signs can carry the colour. One red sign, LIVE, only burns when the Twitch stream is actually on.\n\nThe street is fun, not menacing: bright logo inks (magenta, cyan, a touch of orange and yellow paint), loose stickers for the name plates, short plain copy. Density is phone-first: one column, big type, swipeable rails, every target at least 44px. Desktop widens the same rail and lets the hero stage sit beside the headline.\n\nMotion is the switch on the wall. Signs flicker on once (opacity only), blocks build in and photos drift as they scroll (CSS scroll timelines, off the main thread), the lanes pin and slide sideways, and on desktop the SZ logo hangs as a 3D sign that leans toward the cursor. All of it is transform and opacity, all of it switches off for reduced motion, and none of it holds up the first paint.",
+    "keyCharacteristics": [
+      "Night ground (`night`), signs in magenta, cyan and violet, scarlet only for LIVE.",
+      "Big Shoulders 900 uppercase for every sign; Figtree for everything you read.",
+      "Cut-corner plates (`chamfer`) and glowing tube frames instead of rounded cards.",
+      "Glow is painted once as static `text-shadow` / `box-shadow`; motion never animates blur or shadow.",
+      "Real photos of the duo and the gear, each one checked; no stock, no Amazon product photos."
+    ],
+    "rules": [
+      {
+        "name": "The One Red Sign Rule",
+        "body": "`live` means the stream is on right now. It never decorates, never marks errors in layout, never appears when offline.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Magenta Plate Rule",
+        "body": "At most one solid magenta button per screen. Everything else is the cyan outline or the violet plate (product lists give the fill only to the post's own product).",
+        "section": "colors"
+      },
+      {
+        "name": "The Paint Speck Rule",
+        "body": "Orange and yellow are specks, a small badge, or a short note. Never a fill for a section, a button, or a heading.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sign Means Caps Rule",
+        "body": "If it is lit or framed, it is Big Shoulders 900 uppercase. Body text, card titles and article headings are never set in the display face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Plain Line Rule",
+        "body": "A sign is followed by one plain Figtree line in `haze` saying what's here. Nothing sits above a heading: no eyebrow, no kicker.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Rail Rule",
+        "body": "New sections use `shell` and `shell-y`; nothing invents its own max width or side padding.",
+        "section": "layout"
+      },
+      {
+        "name": "The Painted-Once Glow Rule",
+        "body": "Never animate `blur`, `box-shadow` or `text-shadow`. To power a sign on or off, animate its opacity or swap the static glow with `data-neon`.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do follow every sign with one plain lede in `haze` that says what the section is.",
+      "Do give each screen one solid magenta NeonButton at most; use the cyan outline for the second action and the violet plate for the quiet third.",
+      "Do keep `live` for the live stream state only, and keep the offline LIVE sign readable (`neon-off`, 3:1).",
+      "Do mark below-the-fold signs with `data-neon` and put glow in the `neon-*` / `tube-frame` utilities, never inline shadows.",
+      "Do animate only `transform` and `opacity`, start flickers from a visible state, and gate every effect behind `prefers-reduced-motion: no-preference`.",
+      "Do keep every target at least 44px (`min-h-11`; buttons 48px) and leave the 2px cyan focus ring, offset 3px, visible.",
+      "Do use real photos of the duo, the desk and the food. Check each photo or frame of LinkNova for school logos or shirts, jerseys with names, street signs, house numbers and his real name before it ships, and refer to him only as LinkNova or \"my son\".",
+      "Do use `shell`, `shell-y`, `render-later` and `DeferredImage` for new sections below the hero.",
+      "Do write copy in the owner's voice: first person, \"we\" for the duo, short and plain, no AI-stock phrasing."
+    ],
+    "donts": [
+      "Don't put eyebrow labels or kickers above headings.",
+      "Don't use glass cards, backdrop blur, or frosted panels.",
+      "Don't use gradient text; the only gradients are light (floor pools, the street line).",
+      "Don't use coloured side borders as accents on cards, notes or list items.",
+      "Don't show Amazon product photos, prices or star ratings.",
+      "Don't set body copy, card titles or article headings in Big Shoulders, or set Big Shoulders at any weight other than 900.",
+      "Don't fill a section, button or heading with orange or yellow.",
+      "Don't animate blur, shadows, width, height or position, and don't scroll-jack beyond the pinned lanes' CSS sticky.",
+      "Don't round plates or Screens; plates are chamfered, only tube signs have soft corners."
+    ]
+  }
+}
