@@ -58,11 +58,20 @@ export function SiteHeader() {
           })}
         </nav>
 
+        {/* The brands' door. Desktop only here; phones get it in the menu. */}
+        <NeonButton
+          href="/work-with-me"
+          variant="violet"
+          className="hidden min-h-11 shrink-0 px-4 text-sm whitespace-nowrap [--cut:8px] lg:inline-flex"
+        >
+          Work with me
+        </NeonButton>
+
         <NeonButton
           href={discordInvite}
           external
           variant="outline"
-          className="min-h-11 min-w-11 px-3 text-sm whitespace-nowrap [--cut:8px] sm:px-4"
+          className="min-h-11 min-w-11 shrink-0 px-3 text-sm whitespace-nowrap [--cut:8px] sm:px-4"
         >
           <DiscordMark className="size-5 sm:size-4" />
           <span className="sr-only sm:not-sr-only">Join Discord</span>
@@ -98,6 +107,16 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/work-with-me"
+                aria-current={pathname === "/work-with-me" ? "page" : undefined}
+                className={cn(
+                  "flex min-h-12 items-center px-3 text-lg font-semibold text-haze transition-colors hover:text-white",
+                  pathname === "/work-with-me" && "bg-night-raised text-white",
+                )}
+              >
+                Work With Me
+              </Link>
               <NeonButton href={discordInvite} external className="mt-4">
                 <DiscordMark className="size-4" />
                 Join the Discord

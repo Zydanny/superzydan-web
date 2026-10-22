@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "cn";
 
-type Variant = "solid" | "outline";
+type Variant = "solid" | "outline" | "violet";
 
 type Props = {
   variant?: Variant;
@@ -15,7 +15,8 @@ type Props = {
 
 /*
  * The sign-plate button. Solid is the one primary action per screen (magenta);
- * outline is the cyan secondary.
+ * outline is the cyan secondary; violet is the quiet tertiary (the header's
+ * Work with me).
  *
  * The cut-corner plate is an inner layer rather than the element itself:
  * clip-path would also clip the focus ring, and keyboard users need to see it.
@@ -32,7 +33,7 @@ export function NeonButton({
 }: Props) {
   const classes = cn(
     "group/neon relative isolate inline-flex min-h-12 items-center justify-center gap-2 px-6 text-base font-extrabold tracking-wide uppercase transition-transform duration-150 ease-(--ease-out) select-none active:scale-[0.97] focus-visible:outline-offset-4 [--cut:10px]",
-    variant === "solid" ? "text-primary-foreground" : "text-neon-cyan",
+    variant === "solid" ? "text-primary-foreground" : variant === "violet" ? "text-white" : "text-neon-cyan",
     className,
   );
 
@@ -44,10 +45,12 @@ export function NeonButton({
           "chamfer absolute inset-0 -z-10 transition-[filter] duration-200",
           variant === "solid"
             ? "bg-neon-magenta group-hover/neon:brightness-110"
-            : "bg-neon-cyan",
+            : variant === "violet"
+              ? "bg-neon-violet group-hover/neon:brightness-125"
+              : "bg-neon-cyan",
         )}
       />
-      {variant === "outline" ? (
+      {variant !== "solid" ? (
         <span
           aria-hidden
           className="chamfer absolute inset-[2px] -z-10 bg-night transition-colors duration-200 group-hover/neon:bg-[#0b1a22]"
