@@ -1,17 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 import { cn } from "cn";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { DiscordMark } from "@/components/discord-mark";
 import { NeonButton } from "@/components/neon-button";
 import { SiteLogo } from "@/components/site-logo";
@@ -19,12 +12,7 @@ import { discordInvite, navLinks } from "@/lib/site";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  /*
-   * Remember which page the menu was opened on rather than a plain boolean, so
-   * navigating anywhere else closes it without a setState-in-effect.
-   */
-  const [openedOn, setOpenedOn] = useState<string | null>(null);
-  const menuOpen = openedOn === pathname;
+  const menuRef = useRef<HTMLDialogElement>(null);
 
   return (
     <header className="sticky top-0 z-40 border-b border-neon-violet/25 bg-night">
@@ -77,27 +65,48 @@ export function SiteHeader() {
           <span className="sr-only sm:not-sr-only">Join Discord</span>
         </NeonButton>
 
-        <Sheet
-          open={menuOpen}
-          onOpenChange={(open) => setOpenedOn(open ? pathname : null)}
+        <button
+          type="button"
+          onClick={() => menuRef.current?.showModal()}
+          aria-haspopup="dialog"
+          className="grid size-11 shrink-0 cursor-pointer place-items-center text-white transition-transform duration-150 active:scale-[0.97] xl:hidden"
         >
-          <SheetTrigger
-            className="grid size-11 shrink-0 place-items-center text-white transition-transform duration-150 active:scale-[0.97] xl:hidden"
-          >
-            <MenuIcon className="size-6" />
-            <span className="sr-only">Open menu</span>
-          </SheetTrigger>
-          <SheetContent side="right" className="border-neon-violet/30 bg-night">
-            <SheetHeader>
-              <SheetTitle className="font-display text-2xl font-black tracking-wide uppercase">
-                Menu
-              </SheetTitle>
-            </SheetHeader>
-            <nav className="flex flex-col gap-1 px-4 pb-6" aria-label="Mobile">
-              {navLinks.map((item) => (
+          <MenuIcon className="size-6" />
+          <span className="sr-only">Open menu</span>
+        </button>
+
+        {/*
+          The phone menu: a native dialog, so focus is trapped and Escape closes
+          it without a library. It slides in from the right (.menu-drawer in
+          globals.css). Picking a page closes it.
+        */}
+        <dialog
+          ref={menuRef}
+          aria-label="Menu"
+          className="menu-drawer m-0 ml-auto h-dvh max-h-none w-[min(22rem,86vw)] max-w-none border-l border-neon-violet/30 bg-night p-0 text-foreground"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) event.currentTarget.close();
+          }}
+        >
+          <div className="flex h-full flex-col overflow-y-auto px-4 pt-3 pb-8" data-lenis-prevent>
+            <div className="flex items-center justify-between">
+              <p className="font-display px-3 text-2xl font-black tracking-wide uppercase">Menu</p>
+              <form method="dialog">
+                <button
+                  type="submit"
+                  className="grid size-11 cursor-pointer place-items-center text-haze transition-[color,transform] duration-150 hover:text-white active:scale-[0.97]"
+                >
+                  <XIcon className="size-6" />
+                  <span className="sr-only">Close menu</span>
+                </button>
+              </form>
+            </div>
+            <nav className="mt-4 flex flex-col gap-1" aria-label="Mobile">
+              {[...navLinks, { label: "Work With Me", href: "/work-with-me" }].map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
+                  onClick={() => menuRef.current?.close()}
                   aria-current={pathname === item.href ? "page" : undefined}
                   className={cn(
                     "flex min-h-12 items-center px-3 text-lg font-semibold text-haze transition-colors hover:text-white",
@@ -107,23 +116,13 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                href="/work-with-me"
-                aria-current={pathname === "/work-with-me" ? "page" : undefined}
-                className={cn(
-                  "flex min-h-12 items-center px-3 text-lg font-semibold text-haze transition-colors hover:text-white",
-                  pathname === "/work-with-me" && "bg-night-raised text-white",
-                )}
-              >
-                Work With Me
-              </Link>
               <NeonButton href={discordInvite} external className="mt-4">
                 <DiscordMark className="size-4" />
                 Join the Discord
               </NeonButton>
             </nav>
-          </SheetContent>
-        </Sheet>
+          </div>
+        </dialog>
       </div>
     </header>
   );
