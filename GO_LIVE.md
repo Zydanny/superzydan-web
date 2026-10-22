@@ -17,7 +17,6 @@ Write these two Vercel values down. Putting them back is the rollback.
 
 ## 1. The day before
 
-- [ ] Make sure the Cloudflare Web Analytics token is in `cloudflareAnalyticsToken` in `lib/site.ts` (it's empty now, so no visit stats load). Optional, but stats only count on the live domain.
 - [ ] In hPanel, check the app's **Environment variables**: `YOUTUBE_API_KEY`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` and `NEXT_PUBLIC_TWITCH_PARENTS` are there, and `SHOW_DRAFTS` is **not**.
 - [ ] In hPanel, check the app's latest deployment is green and its vulnerability scan shows nothing open (Next.js is on 16.4.2 for the October 2026 advisories).
 - [ ] Make sure the WordPress backups are still in `Z:\SuperZydan-Website-Redesign\` (the XML export, the SQL dump and the files archive). The XML is the only copy of the old posts.
@@ -82,12 +81,13 @@ On your phone and on desktop:
 - [ ] Open a review post and tap a product button. It lands on Amazon with `tag=superzydan1-20` in the address.
 - [ ] Send yourself a message from the Contact page. It opens your mail app with the message filled in.
 - [ ] Share the home page link in a chat app and check the preview card shows the new share image.
+- [ ] On desktop, open DevTools → Network on www and reload: `beacon.min.js` from `static.cloudflareinsights.com` loads. (It never loads on the temporary domain.)
 
 ## 5. Over the next few days
 
 - [ ] In Google Search Console, open the `superzydanofficial.com` property (add it as a Domain property if it isn't there), submit `https://www.superzydanofficial.com/sitemap.xml`, and use **URL Inspection** on the home page and one post. Both should say indexing is allowed.
 - [ ] Watch **Pages** in Search Console for a rise in "Not found (404)". Send me any old URLs that show up and I'll add redirects.
-- [ ] Check Cloudflare Web Analytics starts counting visits (only if the token is in).
+- [ ] Check Cloudflare Web Analytics starts counting visits. The beacon only loads on www, so the first visits show up after the switch.
 - [ ] After a week with no problems: in Vercel, remove the domains from the old project, then pause or delete the project. Until then it's the rollback.
 
 ## Rollback

@@ -61,7 +61,7 @@ The site runs as a Node.js web app on Hostinger, connected to this GitHub repo. 
 
 - `npm run build` uses webpack (`next build --webpack`). Turbopack's production build crashed on Hostinger: it runs PostCSS (Tailwind) in a separate Node process, and Hostinger's build environment ended that process before Turbopack could connect to it. `npm run dev` still uses Turbopack.
 
-- Visit stats come from Cloudflare Web Analytics. The token goes in `cloudflareAnalyticsToken` in `lib/site.ts`; while it's empty, no analytics script loads.
+- Visit stats come from Cloudflare Web Analytics. The token is `cloudflareAnalyticsToken` in `lib/site.ts`. The beacon only loads on `www.superzydanofficial.com`, so visits to the temporary domain, previews and localhost never count.
 - Only `www.superzydanofficial.com` gets indexed. `proxy.ts` sends the bare `superzydanofficial.com` to `www` with a permanent (308) redirect that keeps the path and query string, and gives every other host (temporary domains, previews) an `X-Robots-Tag: noindex` header without redirecting it.
 
 ## Branches and previews
