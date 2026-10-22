@@ -92,10 +92,4 @@ Cloudflare only counts visits on the site's own domain, so visits to the tempora
 
 ## Later, at go-live (don't do this yet)
 
-This is just so nothing surprises you. We'll go through it together when you say so.
-
-1. Merge `redesign` into `master` and switch the app's **Branch** to `master`.
-2. Remove `SHOW_DRAFTS` if you ever added it.
-3. Connect **www.superzydanofficial.com** (and the bare domain) to this app with **Connect domain**. hPanel may ask you to remove the old WordPress website on that domain first. The WordPress backups in `Z:\SuperZydan-Website-Redesign\` stay your only copy of the old site, so keep them.
-4. Check that `curl -I https://www.superzydanofficial.com/` shows **no** `x-robots-tag` line. The bare `superzydanofficial.com` should redirect to `www`. If it serves pages instead, they say noindex, which is still safe.
-5. Turn off the Vercel project once the live site is on Hostinger.
+The full checklist, with today's DNS records, the hPanel steps, the checks to run right after and the rollback, is in `GO_LIVE.md`. We'll go through it together when you say so.
