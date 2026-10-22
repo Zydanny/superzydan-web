@@ -1,52 +1,54 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { ShoppingBagIcon } from "lucide-react";
+import { NeonButton } from "@/components/neon-button";
 import { PageHero } from "@/components/page-hero";
 import { SetupCatalog } from "@/components/pages/setup-catalog";
-import { Section } from "@/components/section";
-import { SectionHeading } from "@/components/section-heading";
-import { ShimmerButton } from "@/components/shimmer-button";
-import { Reveal } from "@/components/motion/reveal";
-import {
-  affiliateDisclosure,
-  setupGroups,
-  setupIntro,
-  STOREFRONT_URL,
-} from "@/lib/pages";
+import { setupGroups, setupHeroPhoto, setupIntro, STOREFRONT_URL } from "@/lib/pages";
+import { PAGES, pageMetadata } from "@/lib/seo";
+import { shopLinks } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Setup",
-  description: setupIntro,
-};
+export const metadata: Metadata = pageMetadata(PAGES.setup);
 
 export default function SetupPage() {
   return (
     <main id="content" className="flex-1">
       <PageHero
-        eyebrow="Setup"
-        title="The desk that runs the chaos"
+        title="Setup"
+        tone="violet"
         description={setupIntro}
-      />
-
-      <Section>
-        <SectionHeading
-          eyebrow="Loadout"
-          title="Gaming PC, keyboard, accessories, monitors, consoles"
-          description="Every shop link is an affiliate link. Same price for you, a little support for the channel."
-        />
-        <SetupCatalog groups={setupGroups} />
-      </Section>
-
-      <Section>
-        <Reveal>
-          <div className="glass flex flex-col gap-5 rounded-2xl p-8 md:flex-row md:items-center md:justify-between">
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-              {affiliateDisclosure}
-            </p>
-            <ShimmerButton href={STOREFRONT_URL} external>
-              Amazon storefront
-            </ShimmerButton>
+        aside={
+          <div className="chamfer bg-neon-cyan/70 p-[2px] [--cut:16px]">
+            <div className="chamfer relative aspect-[4/3] overflow-hidden bg-night-raised [--cut:15px]">
+              <Image
+                src={setupHeroPhoto.src}
+                alt={setupHeroPhoto.alt}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 36rem"
+                className="object-cover"
+              />
+            </div>
           </div>
-        </Reveal>
-      </Section>
+        }
+      >
+        <div className="mt-8 flex flex-wrap gap-3">
+          <NeonButton href={STOREFRONT_URL} external>
+            <ShoppingBagIcon className="size-4" />
+            Amazon storefront
+          </NeonButton>
+          <NeonButton href={shopLinks[1].href} external variant="outline">
+            LTK picks
+          </NeonButton>
+        </div>
+        <p className="mt-5 max-w-lg text-sm text-pretty text-haze">
+          The shop links are affiliate links. As an Amazon Associate I earn from qualifying purchases.
+        </p>
+      </PageHero>
+
+      <div className="shell shell-y">
+        <SetupCatalog groups={setupGroups} />
+      </div>
     </main>
   );
 }

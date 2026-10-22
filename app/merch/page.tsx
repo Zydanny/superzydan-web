@@ -1,46 +1,31 @@
 import type { Metadata } from "next";
+import { ShoppingBagIcon } from "lucide-react";
+import { NeonButton } from "@/components/neon-button";
 import { PageHero } from "@/components/page-hero";
-import { Section } from "@/components/section";
-import { SpotlightCard } from "@/components/spotlight-card";
-import { ShimmerButton } from "@/components/shimmer-button";
 import { merchPage, STOREFRONT_URL } from "@/lib/pages";
+import { shopLinks } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Merch",
+  title: { absolute: "Merch | SuperZydan" },
   description: merchPage.blurb,
-  // Merch isn't ready, so the page stays out of search results and the nav.
+  // Merch isn't ready, so the page stays out of search results, the nav and the sitemap.
   robots: { index: false, follow: false },
 };
 
 export default function MerchPage() {
   return (
     <main id="content" className="flex-1">
-      <PageHero
-        eyebrow={merchPage.eyebrow}
-        title={merchPage.title}
-        description={merchPage.blurb}
-      />
-      <Section>
-        <SpotlightCard className="flex flex-col gap-6 p-8 md:flex-row md:items-center md:justify-between">
-          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-            No official drop yet — the merch page on the old site still says coming
-            soon. The storefront and LTK are the shop for now.
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <ShimmerButton href={STOREFRONT_URL} external>
-              Amazon storefront
-            </ShimmerButton>
-            <a
-              href="https://www.shopltk.com/explore/SuperZydan"
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              className="glass inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-medium hover:border-primary/40 hover:text-primary"
-            >
-              Browse LTK
-            </a>
-          </div>
-        </SpotlightCard>
-      </Section>
+      <PageHero title={merchPage.title} tone="magenta" description={merchPage.blurb}>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <NeonButton href={STOREFRONT_URL} external>
+            <ShoppingBagIcon className="size-4" />
+            Amazon storefront
+          </NeonButton>
+          <NeonButton href={shopLinks[1].href} external variant="outline">
+            LTK picks
+          </NeonButton>
+        </div>
+      </PageHero>
     </main>
   );
 }

@@ -10,77 +10,33 @@ import {
 export const STOREFRONT_URL = "https://www.amazon.com/shop/superzydan";
 
 export const aboutPage = {
-  eyebrow: "About Us",
-  title: "SuperZydan and LinkNova",
-  tagline: "Chaotic Gaming, Cooking & Collabs — buckle up for the Zyverse.",
-  badges: ["Father-Son Duo", "Tactical Gaming & Gear", "Roblox & Co-op"],
-  image: {
-    src: "/images/superzydan-linknova.jpg",
-    alt: "SuperZydan and LinkNova",
-  },
-  intro: [
-    "Welcome to SuperZydanOfficial.com — your hub for chaotic gaming, epic dad-son adventures, and a whole lot of fun.",
-    "What started as a father-son gaming duo — Roblox, Minecraft, and Nintendo Switch by day — has evolved into a full-blown entertainment brand. Nights go hard: Elden Ring, Bloodborne, Cyberpunk 2077, spicy cooking experiments, gym grind, tech reviews, and skits with LinkNova.",
+  story: [
+    "I'm SuperZydan, a gamer dad. It started with my son LinkNova and me playing Roblox, Minecraft and Switch co-op, and hitting record because it was too funny not to.",
+    "After bedtime it's my turn: Elden Ring, Bloodborne, Cyberpunk and Valorant, live on Twitch. Somewhere along the way the channel picked up gear reviews, kitchen experiments, gym vlogs and skits with LinkNova.",
+    "No scripts and no fake hype. If I review something, I used it. If a recipe flops, you'll see that too.",
   ],
   pillars: [
-    {
-      title: "Gaming for everyone",
-      blurb:
-        "Two-player chaos by day, sweaty streams by night. Looking at you, Sekiro rage quits.",
-    },
-    {
-      title: "Cooking with chaos",
-      blurb: "No measuring, just memories — and the occasional smoke alarm. No rules, just flavor.",
-    },
-    {
-      title: "Gym and lifestyle",
-      blurb: "Gains, fails, and the occasional protein-shake disaster.",
-    },
-    {
-      title: "Fashion and brands",
-      blurb: "JNCO jeans, collabs, and “he’s a grown man, why is he wearing that!?”",
-    },
-    {
-      title: "Comedy gold",
-      blurb: "Dad jokes, pranks, and very questionable life choices.",
-    },
+    { title: "Gaming", blurb: "Two-player chaos by day, sweaty solo streams by night. Looking at you, Sekiro rage quits." },
+    { title: "Cooking", blurb: "No measuring, just memories, and the occasional smoke alarm." },
+    { title: "Gym", blurb: "Gains, fails, and the occasional protein-shake disaster." },
+    { title: "Fashion", blurb: "JNCO jeans, collabs, and “he’s a grown man, why is he wearing that!?”" },
+    { title: "Comedy", blurb: "Dad jokes, pranks, and very questionable life choices." },
   ],
-  manifesto: {
-    title: "Turning passion into play, and play into art",
-    belief: "Creativity thrives where fun and curiosity collide.",
-    points: [
-      "Remix the expected — games become canvases, glitches become features, and failures become the best stories.",
-      "Celebrate the process — from rough drafts to polished moments, we share the messy, magical journey.",
-      "Build together — whether it’s with each other or the community, collaboration is the favorite power-up.",
-    ],
-    closer:
-      "Play isn’t just entertainment — it’s how we rediscover wonder, solve problems sideways, and connect in ways that straight lines never allow. Stay curious. Stay silly. The rest will follow.",
-  },
   timeline: [
-    { year: "Day one", title: "Father-son duo", blurb: "Roblox, Minecraft, and Switch sessions that turned into a channel." },
-    { year: "After dark", title: "The night shift", blurb: "Elden Ring, Bloodborne, Cyberpunk, and the sweaty tactical queue." },
-    { year: "Off-desk", title: "Kitchen and gym", blurb: "Recipe chaos, workout vlogs, and the occasional smoke alarm." },
-    { year: "2025", title: "DreamHack Dallas", blurb: "Live from the floor — the brand showed up in person." },
+    { when: "Day one", title: "Father and son", blurb: "Roblox, Minecraft and Switch sessions that turned into a channel." },
+    { when: "After dark", title: "The night shift", blurb: "Elden Ring, Bloodborne, Cyberpunk and the sweaty Valorant queue." },
+    { when: "Off the desk", title: "Kitchen and gym", blurb: "Recipe chaos, workout vlogs and the occasional smoke alarm." },
+    { when: "2025", title: "DreamHack Dallas", blurb: "Live from the show floor, in person." },
   ],
+  /*
+   * The mods. One earlier entry ("Founder / all channels") is left out until
+   * the owner confirms whose name it was.
+   */
   team: [
-    { name: "Kian", role: "Founder / all channels", blurb: "Very handsome fellow. Best weird Roblox avatar creator." },
-    { name: "NoSkillBrad", role: "Moderator / Twitch", blurb: "Australia. Jelly-filled donuts." },
-    { name: "GOJO / KJ", role: "Moderator / TikTok", blurb: "Has to carry him in Fortnite." },
+    { name: "NoSkillBrad", role: "Moderator, Twitch", blurb: "Australia. Jelly-filled donuts." },
+    { name: "GOJO / KJ", role: "Moderator, TikTok", blurb: "Has to carry him in Fortnite." },
   ],
-  collab:
-    "Wanna join the chaos? Whether you’re a fellow streamer, a dev with a wild game idea, or just someone who can out-rizz SuperZydan — hit the contact page. Collabs are our favorite cheat code. Warning: may involve spontaneous dance-offs or pixel-art battles. No regrets.",
 } as const;
-
-export type SetupItem = {
-  title: string;
-  subtitle: string;
-  blurb: string;
-  specs: string[];
-  badges: string[];
-  href: string;
-  cta: string;
-  wide?: boolean;
-};
 
 export type SetupProduct = {
   /** Used for homepage deep-links like `/setup#wave-3`. */
@@ -107,30 +63,31 @@ export type SetupGroup = {
 };
 
 export const setupIntro =
-  "The battlestation behind the streams — every part on the desk, with a shop link on each one. Purchasing through the links below supports the channel at no extra cost to you.";
+  "Every part on my desk, with a shop link on each one. Same price for you, a little support for the channel.";
 
 const setupPhotos = {
-  pc1: {
-    src: "/images/setup/pc-build-1.webp",
-    alt: "Custom PC build, angle one",
-  },
-  pc2: {
-    src: "/images/setup/pc-build-2.webp",
-    alt: "Custom PC build, angle two",
-  },
   desk: {
+    src: "/images/setup/pc-build-1.webp",
+    alt: "The full desk: two curved monitors, Elgato key lights, the white PC and a gaming chair",
+  },
+  pc: {
+    src: "/images/setup/pc-build-2.webp",
+    alt: "Inside the white Lian Li case: the RTX 4090 AERO, a white 360 cooler and Strimer cables glowing cyan",
+  },
+  oldKeyboard: {
     src: "/images/setup/desk-setup.webp",
-    alt: "Desk setup",
+    alt: "The previous keyboard: a 75% board with custom keycaps and a SUPERZYDAN spacebar",
   },
   keyboard: {
     src: KEYBOARD_THUMB,
-    alt: "Gateron × SIKAKEYB FNP75 HE unboxing thumbnail",
+    alt: "SuperZydan holding the boxed FNP75 HE next to the red keyboard",
   },
 } as const;
 
+export const setupHeroPhoto = setupPhotos.desk;
 export const setupGroups: SetupGroup[] = [
   {
-    photo: setupPhotos.pc1,
+    photo: setupPhotos.pc,
     categories: [
       {
         id: "gaming-pc",
@@ -171,7 +128,7 @@ export const setupGroups: SetupGroup[] = [
     ],
   },
   {
-    photo: setupPhotos.pc2,
+    photo: setupPhotos.desk,
     categories: [
       {
         id: "accessories",
@@ -196,7 +153,6 @@ export const setupGroups: SetupGroup[] = [
     ],
   },
   {
-    photo: setupPhotos.desk,
     categories: [
       {
         title: "Monitors",
@@ -215,6 +171,7 @@ export const setupGroups: SetupGroup[] = [
     ],
   },
   {
+    photo: setupPhotos.oldKeyboard,
     categories: [
       {
         title: "Previous keyboard",
@@ -230,115 +187,55 @@ export const setupGroups: SetupGroup[] = [
   },
 ];
 
-export const setupItems: SetupItem[] = [
-  {
-    title: "Custom battlestation",
-    subtitle: "Main PC",
-    blurb: "The box that runs the tactical sessions, Roblox nights, and everything in between.",
-    specs: [
-      "Intel Core i9-13900K",
-      "NVIDIA RTX 4090 AERO",
-      "64 GB G.Skill Trident DDR5 6000",
-      "GIGABYTE Z790 AORUS PRO",
-      "Samsung 990 PRO 2TB",
-      "MSI MPG A1000G",
-      "Lian Li O11 Vision White",
-    ],
-    badges: ["Custom build"],
-    href: "https://www.amazon.com/dp/B0BCF54SR1?tag=superzydan1-20",
-    cta: "Shop the CPU",
-    wide: true,
-  },
-  {
-    title: keyboardReview.productName,
-    subtitle: "Hall Effect 75%",
-    blurb: keyboardReview.setupBlurb,
-    specs: [...keyboardReview.specs],
-    badges: [],
-    href: KEYBOARD_PRODUCT_URL,
-    cta: "View the board",
-  },
-  {
-    title: "Sony Alpha 6000",
-    subtitle: "Camera",
-    blurb: "Mirrorless body with a Sigma 16mm f/1.4 and an Elgato Cam Link 4K into the stream PC.",
-    specs: ["Sony a6000", "Sigma 16mm f/1.4", "Elgato Cam Link 4K", "ULANZI desk mount"],
-    badges: ["Camera"],
-    href: "https://www.amazon.com/dp/B00I8BICB2?tag=superzydan1-20",
-    cta: "View the camera",
-  },
-];
-
-export const reviewsIntro =
-  "I’m a gaming streamer, content creator, and tech enthusiast with a passion for custom PC builds and cutting-edge electronics. Whether you’re searching for top-tier gaming gear, streaming setups, or must-have gadgets, I’ve got you covered. My wife and I also share curated picks in household essentials, apparel, and kitchen appliances.";
-
-export const reviewCategories = [
-  { label: "Electronics", href: "/lifestyle?tag=Electronics", blurb: "Gadgets, audio, and creator tools I actually use." },
-  { label: "Fashion", href: "/lifestyle", blurb: "JNCO, streetwear, and the outfits chat dunks on." },
-  { label: "Home & Kitchen", href: "/lifestyle", blurb: "The pans, gadgets, and recipe chaos." },
-  { label: "Health & Beauty", href: "/lifestyle", blurb: "Gym bag, recovery, and the stuff that survives the grind." },
-  { label: "Sports & Fitness", href: "/lifestyle", blurb: "Sweat & Progress — the real-time fitness vlog." },
-  { label: "Deals", href: STOREFRONT_URL, blurb: "Current storefront picks, collected in one place.", external: true },
-] as const;
-
-export const lifestyleIntro =
-  "Reviews, recipes, gear guides, and the back-to-school lists. Newest first.";
-
 export const merchPage = {
-  eyebrow: "Merch",
-  title: "The drop is coming",
+  title: "Merch",
   blurb:
     "Official SuperZydan merch is still in the works. Until it lands, the Amazon storefront and LTK picks are the closest thing to a shop.",
 } as const;
 
 export const contactPage = {
-  eyebrow: "Contact",
-  title: "Say hey",
-  blurb:
-    "Feedback, questions, collabs, or just a good rizz-off challenge — message below or email the LLC directly.",
   company: "SuperZydan LLC",
   email: "superzydanofficial@gmail.com",
 } as const;
 
+/*
+ * Written from what the site actually does (checked 2026-10-21). Not legal
+ * advice: the owner should review it, and update it whenever the site starts
+ * collecting something new.
+ */
 export const privacyPage = {
-  eyebrow: "Legal",
-  title: "Privacy policy",
-  updated: "May 13, 2025",
+  updated: "October 21, 2026",
   intro:
-    "Welcome to the SuperZydan official webpage. This policy explains how we collect, use, and protect your information when you visit the site, interact with content, or purchase merch. By using the site, you agree to this policy.",
+    "This page explains what happens with your information when you visit superzydanofficial.com, run by SuperZydan LLC. Short version: there are no accounts, no newsletter and nothing for sale here, so I collect very little.",
   sections: [
     {
-      title: "Information we collect",
-      body: "Personal information via contact forms, newsletters, or merch sales (name, email, shipping address). Automated data through cookies and analytics (IP, browser, device, viewing behavior). Third-party data via embedded content, including Twitch chat and viewer stats.",
+      title: "Visit stats",
+      body: "The site uses Vercel Web Analytics to count page views and see which pages people visit. It doesn't use cookies, and it doesn't build a profile of you. It records things like the page, the referring site, your country and the type of device and browser.",
     },
     {
-      title: "How we use your data",
-      body: "To send newsletters if you subscribed, process merch orders, analyze traffic so the content gets better, and display embedded Twitch streams.",
+      title: "Emails you send me",
+      body: "The contact forms don't send or store anything on this site. They open your own email app with your message filled in, and it reaches me like any other email at superzydanofficial@gmail.com. I only use what you write to reply to you.",
     },
     {
-      title: "Sharing and retention",
-      body: "We do not sell your data. It is stored with the website host, payment processors such as PayPal, and analytics providers such as Google Analytics.",
+      title: "Videos, streams and chat",
+      body: "YouTube videos, the Twitch player and the Discord chat preview come from those services. They only load when you tap to play or peek, and once they load, YouTube, Twitch and WidgetBot (which runs the Discord preview) may set their own cookies under their own privacy policies.",
     },
     {
-      title: "Cookies and tracking",
-      body: "Cookies track analytics, remember preferences such as member logins, and enable Twitch embeds. Continued use of the site implies agreement.",
+      title: "Affiliate and shop links",
+      body: "Some links go to Amazon, LTK, HexClad, GameSir, Goblin Tech Keys and HomeRun Pet as affiliate or referral links. If you click one, that store may use cookies to know you came from here, so I can earn a small commission. As an Amazon Associate I earn from qualifying purchases. What you buy is handled by the store, not by this site.",
     },
     {
-      title: "Age restrictions",
-      body: "Content is not intended for children under 13. We do not knowingly collect their data.",
+      title: "Kids",
+      body: "The site is family-friendly and my son appears in some content, but the site doesn't ask anyone for personal information. If a child under 13 has emailed me, a parent can reach out and I'll delete the email.",
     },
     {
-      title: "Updates",
-      body: "Changes will be posted here with a new Last Updated date. Continued use means you accept the revisions.",
+      title: "Selling or sharing",
+      body: "I don't sell or rent anyone's information, and I don't share emails with anyone.",
+    },
+    {
+      title: "Changes",
+      body: "If something here changes, this page gets updated along with the date at the top.",
     },
   ],
 } as const;
-
-export const communityPage = {
-  eyebrow: "Community",
-  title: "Join The Zyverse",
-  blurb:
-    "Stream pings, squad-finding, gear talk, and the chaos that never makes the VOD. One server. One click. Come hang out in the Discord.",
-} as const;
-
 export { affiliateDisclosure };

@@ -1,24 +1,25 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Section } from "@/components/section";
-import { SectionHeading } from "@/components/section-heading";
-import { SpotlightCard } from "@/components/spotlight-card";
-import { ShimmerButton } from "@/components/shimmer-button";
-import { Reveal } from "@/components/motion/reveal";
-import { StaggerGroup, StaggerItem } from "@/components/motion/reveal";
+import { ArrowRightIcon } from "lucide-react";
 import { CountUp } from "@/components/count-up";
-import { aboutPage } from "@/lib/pages";
-import { heroStats } from "@/lib/site";
+import { DiscordMark } from "@/components/discord-mark";
+import { JsonLd } from "@/components/json-ld";
+import { NeonButton } from "@/components/neon-button";
+import { PageHero } from "@/components/page-hero";
+import { SignHeading, TubeSign, type Tone } from "@/components/sign-heading";
 import { getDiscordStats } from "@/lib/discord";
+import { aboutPage } from "@/lib/pages";
+import { absoluteUrl, PAGES, pageMetadata, PERSON_ID, personJsonLd } from "@/lib/seo";
+import { discordInvite, socialStats } from "@/lib/site";
 import { getTwitchStatus } from "@/lib/twitch";
 import { getYouTubeSubscriberCount } from "@/lib/youtube";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description: aboutPage.tagline,
-};
+export const metadata: Metadata = pageMetadata(PAGES.about);
 
 export const revalidate = 1800;
+
+const TONES: Tone[] = ["magenta", "cyan", "violet", "magenta"];
 
 export default async function AboutPage() {
   const [youtube, twitch, discord] = await Promise.all([
@@ -26,195 +27,156 @@ export default async function AboutPage() {
     getTwitchStatus(),
     getDiscordStats(),
   ]);
+  const fallback = (label: string) => socialStats.find((stat) => stat.label === label)?.value ?? null;
 
   const stats = [
-    { label: "YouTube", value: youtube ?? heroStats[0].value },
-    { label: "TikTok", value: 108000 },
-    { label: "Twitch", value: twitch.followers ?? 2652 },
-    { label: "Instagram", value: 5421 },
-    { label: "Discord", value: discord.members ?? 1118 },
-  ];
+    { label: "TikTok", unit: "followers", value: fallback("TikTok") },
+    { label: "YouTube", unit: "subscribers", value: youtube ?? fallback("YouTube") },
+    { label: "Instagram", unit: "followers", value: fallback("Instagram") },
+    { label: "Twitch", unit: "followers", value: twitch.followers },
+    { label: "Discord", unit: "members", value: discord.members },
+  ].filter((stat): stat is { label: string; unit: string; value: number } => stat.value !== null);
 
   return (
     <main id="content" className="flex-1">
-      <section className="shell shell-y">
-        <div className="grid w-full items-start gap-10 lg:grid-cols-2 lg:gap-14">
-          <Reveal>
-            <div className="relative">
-              <div
+      <PageHero
+        title="About"
+        tone="magenta"
+        description="A dad, his son, and way too many hobbies for one channel."
+        aside={
+          <div className="chamfer bg-neon-magenta/70 p-[2px] [--cut:16px]">
+            <div className="chamfer relative aspect-[4/3] overflow-hidden bg-night-raised [--cut:15px]">
+              {/* The same lit stage the home hero stands them on. */}
+              <span
                 aria-hidden
-                className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,var(--glow-emerald),transparent_68%)] opacity-40 blur-3xl"
+                className="absolute inset-0 bg-[radial-gradient(70%_90%_at_50%_100%,rgb(255_63_180/0.45),rgb(122_60_255/0.25)_45%,transparent_80%)]"
               />
-              <div className="relative overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/50 shadow-2xl">
-                <div className="relative aspect-[4/5] w-full">
-                  <Image
-                    src={aboutPage.image.src}
-                    alt={aboutPage.image.alt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover object-[center_18%]"
-                    priority
-                  />
-                </div>
-              </div>
+              <Image
+                src="/images/superzydan-linknova-cutout.webp"
+                alt="SuperZydan and his son LinkNova standing back to back in matching black tees"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 36rem"
+                className="object-cover object-[50%_10%]"
+              />
             </div>
-          </Reveal>
+          </div>
+        }
+      />
 
-          <Reveal delay={0.08} className="flex min-w-0 flex-col">
-            <span className="text-eyebrow inline-flex items-center gap-2 text-primary">
-              <span className="size-1 rounded-full bg-primary shadow-[0_0_8px_var(--glow-emerald)]" />
-              {aboutPage.eyebrow}
-            </span>
-            <h1 className="text-display mt-4 text-4xl leading-[0.95] font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-              {aboutPage.title}
-            </h1>
-            <p className="mt-5 text-lg leading-relaxed text-zinc-300 lg:text-xl">
-              {aboutPage.tagline}
-            </p>
-
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {aboutPage.badges.map((badge) => (
-                <li
-                  key={badge}
-                  className="rounded-full border border-zinc-800/80 bg-zinc-900/60 px-3 py-1.5 text-xs font-medium text-zinc-300"
-                >
-                  {badge}
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8 space-y-5 text-lg leading-relaxed text-zinc-300 lg:text-xl">
-              {aboutPage.intro.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-              <p>
-                Whether you’re here for gaming tips, a good laugh, or just to watch
-                me burn virtual (and real) eggs — SuperZydan is real, unfiltered fun.
-                No scripts, no fake hype. Subscribe, smash follow, and let’s get
-                weird.
+      <section aria-label="The story" className="shell shell-y">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
+          <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-pretty text-haze lg:text-xl">
+            {aboutPage.story.map((paragraph, index) => (
+              <p key={index} className={index === 0 ? "text-xl text-white lg:text-2xl" : undefined}>
+                {paragraph}
               </p>
-            </div>
+            ))}
+          </div>
 
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {stats.slice(0, 3).map((stat) => (
-                <SpotlightCard key={stat.label} className="p-4">
-                  <p className="text-eyebrow text-muted-foreground">{stat.label}</p>
-                  <p className="text-display mt-2 text-2xl tabular-nums lg:text-3xl">
-                    <CountUp value={stat.value} format="compact" />
-                  </p>
-                </SpotlightCard>
+          {stats.length > 0 ? (
+            <dl className="grid grid-cols-2 gap-3 self-start sm:grid-cols-3 lg:grid-cols-2">
+              {stats.map((stat, index) => (
+                <div
+                  key={stat.label}
+                  className="build-in chamfer bg-neon-violet/40 p-[2px] [--cut:12px]"
+                  style={{ "--i": index } as CSSProperties}
+                >
+                  <div className="chamfer flex h-full flex-col-reverse justify-end bg-night-raised px-4 py-4 [--cut:11px]">
+                    <dt className="mt-1.5 text-sm font-semibold text-haze">
+                      {stat.label} {stat.unit}
+                    </dt>
+                    <dd className="font-display text-4xl leading-none font-black text-white tabular-nums">
+                      <CountUp value={stat.value} />
+                    </dd>
+                  </div>
+                </div>
               ))}
-              {aboutPage.timeline.slice(0, 3).map((item) => (
-                <SpotlightCard key={item.title} className="p-4">
-                  <p className="text-eyebrow text-primary">{item.year}</p>
-                  <h2 className="text-display mt-2 text-base lg:text-lg">{item.title}</h2>
-                  <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
-                    {item.blurb}
-                  </p>
-                </SpotlightCard>
-              ))}
-            </div>
-          </Reveal>
+            </dl>
+          ) : null}
         </div>
       </section>
 
-      <Section>
-        <SectionHeading eyebrow="The squad" title="Where the community lives" />
-        <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {stats.map((stat) => (
-            <StaggerItem key={stat.label}>
-              <SpotlightCard className="p-6">
-                <p className="text-eyebrow text-muted-foreground">{stat.label}</p>
-                <p className="text-display mt-4 text-3xl tabular-nums">
-                  <CountUp value={stat.value} format="compact" />
-                </p>
-              </SpotlightCard>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </Section>
+      <section aria-labelledby="story-title" className="border-y border-neon-violet/20">
+        <div className="shell shell-y">
+          <SignHeading id="story-title" tone="cyan" size="md">
+            How it happened
+          </SignHeading>
+          <ol className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+            {aboutPage.timeline.map((step, index) => (
+              <li key={step.title}>
+                <TubeSign as="p" tone={TONES[index]} className="text-lg lg:text-xl">
+                  {step.when}
+                </TubeSign>
+                <h3 className="mt-4 text-xl font-bold text-white">{step.title}</h3>
+                <p className="mt-2 text-pretty text-haze">{step.blurb}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-      <Section>
-        <SectionHeading eyebrow="The story so far" title="How the Zyverse happened" />
-        <StaggerGroup className="grid gap-4 md:grid-cols-2">
-          {aboutPage.timeline.map((item) => (
-            <StaggerItem key={item.title}>
-              <SpotlightCard className="p-6">
-                <p className="text-eyebrow text-primary">{item.year}</p>
-                <h3 className="text-display mt-3 text-xl">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {item.blurb}
-                </p>
-              </SpotlightCard>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </Section>
+      <section aria-labelledby="mix-title" className="shell shell-y">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+          <SignHeading id="mix-title" tone="violet" size="md" sub="What a week in the Zyverse looks like.">
+            The whole mix
+          </SignHeading>
+          <dl className="divide-y divide-neon-violet/20 border-y border-neon-violet/20">
+            {aboutPage.pillars.map((pillar) => (
+              <div key={pillar.title} className="grid gap-1 py-4 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-6">
+                <dt className="font-display text-2xl leading-none font-black tracking-wide text-neon-cyan uppercase">
+                  {pillar.title}
+                </dt>
+                <dd className="text-pretty text-white">{pillar.blurb}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
 
-      <Section>
-        <SectionHeading eyebrow="What you’ll find" title="The whole mix" />
-        <StaggerGroup className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {aboutPage.pillars.map((pillar) => (
-            <StaggerItem key={pillar.title}>
-              <SpotlightCard className="h-full p-6">
-                <h3 className="text-display text-lg">{pillar.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {pillar.blurb}
-                </p>
-              </SpotlightCard>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </Section>
-
-      <Section>
-        <Reveal>
-          <SpotlightCard className="p-8 md:p-10">
-            <p className="text-eyebrow text-primary">Why it matters</p>
-            <h2 className="text-display mt-3 text-3xl">{aboutPage.manifesto.title}</h2>
-            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-300 lg:text-xl">
-              {aboutPage.manifesto.belief}
-            </p>
-            <ul className="mt-6 space-y-3 text-sm leading-relaxed text-muted-foreground">
-              {aboutPage.manifesto.points.map((point) => (
-                <li key={point}>{point}</li>
+      <section aria-labelledby="crew-title" className="border-t border-neon-violet/20">
+        <div className="shell shell-y grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <SignHeading id="crew-title" tone="magenta" size="md" sub="The mods keeping chat in line.">
+              The crew
+            </SignHeading>
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+              {aboutPage.team.map((person) => (
+                <li key={person.name} className="chamfer bg-neon-violet/40 p-[2px] [--cut:12px]">
+                  <div className="chamfer h-full bg-night-raised p-5 [--cut:11px]">
+                    <p className="font-display text-2xl leading-none font-black tracking-wide uppercase">{person.name}</p>
+                    <p className="mt-2 text-sm font-bold tracking-wide text-neon-cyan uppercase">{person.role}</p>
+                    <p className="mt-3 text-pretty text-haze">{person.blurb}</p>
+                  </div>
+                </li>
               ))}
             </ul>
-            <p className="mt-6 max-w-2xl leading-relaxed">{aboutPage.manifesto.closer}</p>
-          </SpotlightCard>
-        </Reveal>
-      </Section>
+          </div>
 
-      <Section>
-        <SectionHeading eyebrow="Mods" title="The people keeping chat sane" />
-        <StaggerGroup className="grid gap-4 md:grid-cols-3">
-          {aboutPage.team.map((person) => (
-            <StaggerItem key={person.name}>
-              <SpotlightCard className="h-full p-6">
-                <h3 className="text-display text-lg">{person.name}</h3>
-                <p className="text-eyebrow mt-2 text-primary">{person.role}</p>
-                <p className="mt-3 text-sm text-muted-foreground">{person.blurb}</p>
-              </SpotlightCard>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-      </Section>
-
-      <Section>
-        <Reveal>
-          <SpotlightCard className="flex flex-col gap-6 p-8 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-xl">
-              <h2 className="text-display text-2xl">Become a collaborator</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {aboutPage.collab}
-              </p>
+          <div className="flex flex-col justify-center gap-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white">Want to hang out?</h2>
+              <p className="mt-2 text-pretty text-haze">The Discord is where the community actually lives.</p>
+              <NeonButton href={discordInvite} external className="mt-5">
+                <DiscordMark className="size-4" />
+                Join the Discord
+              </NeonButton>
             </div>
-            <ShimmerButton href="/contact">
-              Contact us
-            </ShimmerButton>
-          </SpotlightCard>
-        </Reveal>
-      </Section>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Brand or creator?</h2>
+              <p className="mt-2 text-pretty text-haze">Reach, audience and past collabs are all on one page.</p>
+              <NeonButton href="/work-with-me" variant="outline" className="mt-5">
+                Work with me
+                <ArrowRightIcon className="size-4" />
+              </NeonButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <JsonLd
+        nodes={[{ "@type": "ProfilePage", url: absoluteUrl(PAGES.about.path), mainEntity: { "@id": PERSON_ID } }, personJsonLd()]}
+      />
     </main>
   );
 }
