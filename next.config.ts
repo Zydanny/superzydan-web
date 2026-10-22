@@ -54,6 +54,7 @@ const nextConfig: NextConfig = {
    */
   outputFileTracingIncludes: {
     "/": ["./content/blog/**/*"],
+    "/backdrops/[kind]": ["./content/blog/**/*"],
     "/lifestyle/[slug]": ["./content/blog/**/*"],
     "/product-reviews": ["./content/blog/**/*"],
     "/work-with-me": ["./content/blog/**/*"],

@@ -1,0 +1,154 @@
+/*
+ * Background prototypes (components/backdrops/backdrop.tsx), shown only on
+ * the /backdrops preview routes until one is picked.
+ *
+ * Each one is a fixed layer behind the page. Motion is driven by the page's
+ * own scroll position (scroll(root), off the main thread), moves only
+ * transform, and is skipped with reduced motion, where the layer just sits in
+ * its starting pose. Phones get fewer, smaller pieces.
+ */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 1. Portal rings: big faint rings around one point, each turning its own way. */
+.portal {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: 46rem;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+}
+
+@media (width >= 64rem) {
+  .portal {
+    left: 74%;
+    top: 46%;
+    width: min(88rem, 96vw);
+  }
+}
+
+.portal-core {
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(122 60 255 / 0.12), rgb(255 63 180 / 0.04) 55%, transparent);
+}
+
+.portal-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes portal-turn {
+  to {
+    transform: rotate(var(--turn));
+  }
+}
+
+/* 2. Synthwave floor: a neon grid running from the horizon to the viewer. */
+.synth-floor {
+  position: absolute;
+  inset: auto 0 0;
+  height: 26svh;
+  overflow: hidden;
+  perspective: 14rem;
+  perspective-origin: 50% 0;
+  mask-image: linear-gradient(to bottom, transparent, black 40%);
+}
+
+.synth-plane {
+  --cell: 3.5rem;
+  position: absolute;
+  left: -80%;
+  right: -80%;
+  bottom: 0;
+  height: 300%;
+  transform-origin: 50% 100%;
+  transform: rotateX(76deg);
+  background-image:
+    linear-gradient(to right, rgb(255 63 180 / 0.36) 0 2px, transparent 2px),
+    linear-gradient(to bottom, rgb(122 60 255 / 0.42) 0 2px, transparent 2px);
+  background-size: var(--cell) var(--cell);
+  background-position: 50% 100%;
+}
+
+.synth-horizon {
+  position: absolute;
+  inset: auto 0 26svh;
+  height: 10rem;
+  translate: 0 50%;
+  background:
+    linear-gradient(to right, transparent 10%, rgb(255 63 180 / 0.28), transparent 90%) 50% 50% / 100% 1px no-repeat,
+    radial-gradient(50% 50% at 50% 50%, rgb(122 60 255 / 0.14), transparent);
+}
+
+@media (width >= 64rem) {
+  .synth-floor {
+    height: 36svh;
+    perspective: 20rem;
+  }
+  .synth-plane {
+    --cell: 4.5rem;
+  }
+  .synth-horizon {
+    bottom: 36svh;
+  }
+}
+
+@keyframes grid-roll {
+  from {
+    transform: rotateX(76deg) translateY(0);
+  }
+  to {
+    transform: rotateX(76deg) translateY(var(--cell));
+  }
+}
+
+/* 3. Controller shapes: outlines drifting up past the page at their own pace. */
+.pad-shape {
+  position: absolute;
+  width: calc(var(--size) * 0.62);
+  height: auto;
+  overflow: visible;
+}
+
+@media (width >= 64rem) {
+  .pad-shape {
+    width: var(--size);
+  }
+}
+
+@keyframes pad-float {
+  to {
+    transform: translate3d(0, var(--dy), 0) rotate(var(--spin));
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .portal-ring {
+      animation: portal-turn linear both;
+      animation-timeline: scroll(root);
+    }
+
+    /* One cell of travel repeated down the page, so the floor never runs out. */
+    .synth-plane {
+      animation: grid-roll linear both;
+      animation-iteration-count: 40;
+      animation-timeline: scroll(root);
+    }
+
+    .pad-shape {
+      animation: pad-float linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
