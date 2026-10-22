@@ -25,11 +25,11 @@ A real father-son gaming duo: SuperZydan and his son LinkNova playing Roblox, Mi
 
 - Live data the site must keep working: Twitch live status (client polls `/api/twitch/status`), Twitch clips and last stream, YouTube latest videos and subscriber count, Discord member and online counts.
 - Blog and review posts are one MDX file each in `content/blog/`, editable from GitHub on a phone. Review posts embed the video and link products through Amazon with the `superzydan1-20` tag.
-- Deployed on Vercel from `master`; previews come from the `redesign` branch.
+- Hosted as a Node.js web app on Hostinger (GitHub auto-deploy). The `redesign` branch runs on a temporary Hostinger domain for review; only `www.superzydanofficial.com` is indexed.
 
 ## Capabilities and Constraints
 
-- Next.js 16 App Router, Tailwind v4, shadcn/ui, `motion` (components in `components/motion`), `@vercel/analytics`. Ask before adding anything heavy (e.g. Three.js).
+- Next.js 16 App Router, Tailwind v4, shadcn/ui, `motion` (components in `components/motion`), Cloudflare Web Analytics (cookieless). Ask before adding anything heavy (e.g. Three.js).
 - Mobile first. Lighthouse Performance and Accessibility 90+ on mobile. Embeds (Twitch, YouTube, WidgetBot) lazy-load.
 - Motion respects `prefers-reduced-motion`, animates only transform and opacity, no scroll-jacking, no layout shift.
 - Merch page exists but is unfinished: kept out of the nav, out of search results and out of the sitemap.
