@@ -79,6 +79,9 @@
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
+  /* Height of the sticky header (logo plus its padding), for pinned panels and anchor jumps. */
+  --header-h: 5.0625rem;
+
   --background: var(--night);
   --foreground: #f6f2ff;
   --card: var(--night-raised);
@@ -111,10 +114,12 @@
   --sidebar-accent-foreground: #f6f2ff;
   --sidebar-border: rgb(201 191 227 / 12%);
   --sidebar-ring: var(--neon-cyan);
+}
 
-  /* Older sections still read these until they're redesigned. */
-  --glow-emerald: var(--neon-magenta);
-  --glow-cyan: var(--neon-cyan);
+@media (width >= 64rem) {
+  :root {
+    --header-h: 6.5rem;
+  }
 }
 
 @layer base {
@@ -123,12 +128,13 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Stops the ambient mesh from generating a horizontal scrollbar. */
+    /* A last guard against anything decorative widening the page on phones. */
     overflow-x: hidden;
   }
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+    scroll-padding-top: var(--header-h);
     -webkit-font-smoothing: antialiased;
     color-scheme: dark;
     scrollbar-color: color-mix(in srgb, var(--neon-violet) 70%, transparent) var(--night);
@@ -149,124 +155,29 @@
   }
 }
 
-/* Shared page rail: header, section, page hero, and footer. */
+/* Lenis (components/motion/smooth-scroll.tsx) takes over wheel smoothing when it runs. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Shared page rail: the same edges as the header and the home hero. */
 @utility shell {
-  @apply mx-auto w-full max-w-7xl px-6 lg:px-12;
+  @apply mx-auto w-full max-w-7xl px-4 lg:px-8;
 }
 
 /* Vertical rhythm used by page sections on the same rail. */
 @utility shell-y {
-  @apply py-12 lg:py-20;
-}
-
-/* Tight, high-contrast display type for section and hero headers. */
-@utility text-display {
-  letter-spacing: -0.035em;
-  font-weight: 600;
-  text-wrap: balance;
-}
-
-@utility text-eyebrow {
-  font-size: 0.6875rem;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-/* Glassmorphism surface used by every bento card. */
-@utility glass {
-  background-color: color-mix(in oklch, var(--card) 60%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.98 0 0 / 8%);
-}
-
-/*
-  Radiant hover border. Masking a gradient-filled overlay down to a 1px ring
-  keeps the edge crisp instead of animating an expensive blurred box-shadow.
-*/
-@utility glow-ring {
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    130deg,
-    color-mix(in oklch, var(--glow-emerald) 75%, transparent),
-    color-mix(in oklch, var(--glow-cyan) 60%, transparent) 45%,
-    transparent 75%
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-@keyframes shimmer-sweep {
-  0% {
-    transform: translateX(-120%) skewX(-18deg);
-  }
-  100% {
-    transform: translateX(320%) skewX(-18deg);
-  }
-}
-
-@keyframes mesh-drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translate3d(0, -4%, 0) scale(1.12);
-    opacity: 0.85;
-  }
-}
-
-@keyframes live-ping {
-  0% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  70%,
-  100% {
-    transform: scale(2.4);
-    opacity: 0;
-  }
-}
-
-@keyframes grid-fade {
-  0%,
-  100% {
-    opacity: 0.35;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-@utility animate-shimmer {
-  animation: shimmer-sweep 1.1s ease-out;
-}
-
-@utility animate-mesh {
-  animation: mesh-drift 14s ease-in-out infinite;
-}
-
-@utility animate-live-ping {
-  animation: live-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-/* Faint technical grid behind the hero. */
-@utility hud-grid {
-  background-image:
-    linear-gradient(to right, oklch(0.98 0 0 / 3.5%) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(0.98 0 0 / 3.5%) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 20%, transparent 75%);
-  animation: grid-fade 9s ease-in-out infinite;
+  @apply py-14 lg:py-24;
 }
 
 /*
@@ -288,6 +199,23 @@
     0 0 2px #fff,
     0 0 8px var(--neon-cyan),
     0 0 18px color-mix(in srgb, var(--neon-cyan) 70%, transparent);
+}
+
+@utility neon-violet {
+  color: #ece4ff;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px var(--neon-violet),
+    0 0 20px color-mix(in srgb, var(--neon-violet) 80%, transparent);
+}
+
+/* The glow around a tube-sign frame, in the sign's own colour (--tube). */
+@utility tube-frame {
+  border: 2px solid var(--tube);
+  box-shadow:
+    0 0 6px var(--tube),
+    0 0 18px -2px var(--tube),
+    inset 0 0 10px -2px var(--tube);
 }
 
 /* A tube that's wired up but switched off. */
@@ -430,11 +358,208 @@
   }
 }
 
+/*
+ * Scroll motion. Every effect here is driven by the scroll position itself
+ * (CSS scroll timelines run off the main thread, no listeners, no JS), moves
+ * only transform and opacity, and is skipped with reduced motion. Browsers
+ * without scroll timelines show everything in place.
+ */
+@keyframes build-in {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translateY(var(--drift, -6%)) scale(1.12);
+  }
+  to {
+    transform: translateY(calc(var(--drift, -6%) * -1)) scale(1.12);
+  }
+}
+
+/* The lanes slide left by their own overflow while the section is pinned. */
+@keyframes lanes-slide {
+  to {
+    transform: translateX(calc(-100% + var(--lanes-viewport, 100vw)));
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* A block that builds in as it scrolls into view. --i staggers siblings. */
+    .build-in {
+      animation: build-in linear both;
+      animation-timing-function: var(--ease-out);
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 8%) entry calc(45% + var(--i, 0) * 8%);
+    }
+
+    /* A photo that drifts a little slower than the page inside its frame. */
+    .parallax-photo {
+      animation: drift linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+/*
+ * The video dialog (components/video-modal.tsx): opens with a short rise and
+ * fade from 96% scale, closes quicker than it opens. Centred, so it scales from
+ * the middle. Reduced motion keeps only the fade.
+ */
+.video-dialog {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition:
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out),
+    overlay 160ms allow-discrete,
+    display 160ms allow-discrete;
+}
+.video-dialog[open] {
+  opacity: 1;
+  transform: none;
+  transition-duration: 260ms;
+}
+@starting-style {
+  .video-dialog[open] {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+.video-dialog::backdrop {
+  background: rgb(8 6 15 / 0);
+  transition:
+    background 160ms var(--ease-out),
+    overlay 160ms allow-discrete,
+    display 160ms allow-discrete;
+}
+.video-dialog[open]::backdrop {
+  background: rgb(8 6 15 / 0.85);
+}
+@starting-style {
+  .video-dialog[open]::backdrop {
+    background: rgb(8 6 15 / 0);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .animate-mesh,
-  .animate-live-ping,
-  .animate-shimmer,
-  .hud-grid,
+  .video-dialog,
+  .video-dialog[open] {
+    transform: none;
+  }
+}
+
+/*
+ * The hero sign's glow plate (components/home/hero-sign.tsx, desktop only):
+ * dim at the top of the page, brightening as the visitor scrolls down past it.
+ */
+@keyframes sign-brighten {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-sign-glow {
+  opacity: 0.6;
+}
+
+@supports (animation-timeline: scroll()) {
+  .hero-sign-glow {
+    animation: sign-brighten linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 60vh;
+  }
+}
+
+/*
+ * The Zyverse lanes (components/home/zyverse-lanes.tsx). By default a swipeable
+ * row. With scroll timelines the section grows tall enough for the row's
+ * sideways travel, the inner panel sticks under the header, and the row slides
+ * left as the page scrolls through it, then the page carries on.
+ */
+.lanes-track {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1rem;
+  scrollbar-width: none;
+  padding-bottom: 0.5rem;
+}
+
+@keyframes lane-drift {
+  from {
+    transform: translateX(5%) scale(1.14);
+  }
+  to {
+    transform: translateX(-5%) scale(1.14);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lanes {
+      --lane-w: calc(min(80vw, 24rem) + 1.25rem);
+      height: max(100svh, calc(100svh + var(--lane-count) * var(--lane-w) - 100vw + 2rem));
+      view-timeline-name: --lanes;
+    }
+    @media (width >= 64rem) {
+      .lanes {
+        --lane-w: calc(min(30rem, 58svh) + 2rem);
+      }
+    }
+    .lanes-pin {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+      /* Clear the sticky header so the heading never slides under it. */
+      padding-top: calc(var(--header-h) + 1rem);
+      overflow: hidden;
+    }
+    .lanes-track {
+      overflow: visible;
+      width: max-content;
+      animation: lanes-slide linear both;
+      animation-timeline: --lanes;
+      animation-range: contain 0% contain 100%;
+    }
+    .lane-photo {
+      animation: lane-drift linear both;
+      animation-timeline: --lanes;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+}
+
+/*
+ * Neon signs switch on as they reach the screen (components/motion/neon-signs.tsx
+ * marks them off, then on). Without JS, or with reduced motion, they're simply lit.
+ */
+[data-neon="off"] {
+  opacity: 0.2;
+}
+[data-neon="on"] {
+  animation: tube-on 900ms linear both;
+  animation-delay: var(--neon-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-neon] {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .animate-tube-on,
   .animate-tube-hum,
   .animate-word-in,

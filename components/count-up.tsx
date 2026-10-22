@@ -1,14 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  animate,
-  motion,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-} from "motion/react";
 
 /*
  * Locale is pinned to en-US on purpose: relying on the runtime default would
@@ -22,16 +14,17 @@ const plainFormatter = new Intl.NumberFormat("en-US");
 
 function formatValue(value: number, format: "compact" | "plain") {
   const rounded = Math.round(value);
-  return format === "compact"
-    ? compactFormatter.format(rounded)
-    : plainFormatter.format(rounded);
+  return format === "compact" ? compactFormatter.format(rounded) : plainFormatter.format(rounded);
 }
 
+/* Fast start, long soft landing: the number races up and eases into place. */
+const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - 2 ** (-10 * t));
+
 /*
- * Counts up once the element scrolls into view. The count lives in a motion
- * value rather than React state, so the animation writes straight to the DOM
- * without re-rendering on every frame. The motion value starts at the final
- * number, which is what the server renders, so hydration always matches.
+ * Counts up once, the first time the number is on screen. The server renders
+ * the final number (so hydration always matches and no-JS shows the real
+ * figure); the count writes straight to the text node, no re-renders. No
+ * animation with reduced motion.
  */
 export function CountUp({
   value,
@@ -45,35 +38,35 @@ export function CountUp({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  /*
-   * "some": start the moment any of the number is on screen. A partial
-   * threshold left numbers cut by the fold reading 0 until scrolled further.
-   */
-  const inView = useInView(ref, { once: true, amount: "some" });
-  const reduceMotion = useReducedMotion();
-
-  const count = useMotionValue(value);
-  const text = useTransform(count, (latest) => formatValue(latest, format));
 
   useEffect(() => {
-    if (reduceMotion) {
-      count.set(value);
-      return;
-    }
-    if (!inView) {
-      count.set(0);
-      return;
-    }
-    const controls = animate(count, value, {
-      duration,
-      ease: [0.16, 1, 0.3, 1],
+    const node = ref.current;
+    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let frame = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return;
+      observer.disconnect();
+      const start = performance.now();
+      const tick = (now: number) => {
+        const t = Math.min(1, (now - start) / (duration * 1000));
+        node.textContent = formatValue(value * easeOutExpo(t), format);
+        if (t < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
     });
-    return () => controls.stop();
-  }, [count, inView, value, duration, reduceMotion]);
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      node.textContent = formatValue(value, format);
+    };
+  }, [value, format, duration]);
 
   return (
-    <motion.span ref={ref} className={className}>
-      {text}
-    </motion.span>
+    <span ref={ref} className={className}>
+      {formatValue(value, format)}
+    </span>
   );
 }

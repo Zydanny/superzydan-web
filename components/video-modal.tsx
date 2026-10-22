@@ -1,83 +1,80 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
 import { XIcon } from "lucide-react";
 import type { VideoMeta } from "@/lib/site";
 
 /*
- * Lightweight preview dialog. The portal is only created after mount, so the
- * server never renders modal markup and hydration stays clean.
+ * The video player dialog: a native <dialog>, so focus is trapped, Escape
+ * closes it and the page behind goes inert for free. It fades and rises in
+ * with CSS (@starting-style, .video-dialog in globals.css), centred, and
+ * closes faster than it opens. The portal is only created after mount, so the
+ * server never renders modal markup.
  */
-export function VideoModal({
-  video,
-  onClose,
-}: {
-  video: VideoMeta | null;
-  onClose: () => void;
-}) {
-  const closeRef = useRef<HTMLButtonElement>(null);
+const noop = () => () => {};
+
+export function VideoModal({ video, onClose }: { video: VideoMeta | null; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const hydrated = useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (video && !dialog.open) dialog.showModal();
+    if (!video && dialog.open) dialog.close();
     if (!video) return;
 
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", onKeyDown);
-    closeRef.current?.focus();
-
+    // Hold the page still behind the player (this also pauses smooth scrolling).
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKeyDown);
+      root.style.overflow = previous;
     };
-  }, [video, onClose]);
+  }, [video, hydrated]);
 
-  // No document during prerender; a closed modal renders nothing either way,
-  // so the in-place markup matches on the server and after hydration.
-  if (typeof document === "undefined") return null;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    // Escape and the close button both end up here.
+    dialog.addEventListener("close", onClose);
+    return () => dialog.removeEventListener("close", onClose);
+  }, [onClose, hydrated]);
+
+  // The dialog only exists in the browser; rendering it during hydration would mismatch the server HTML.
+  if (!hydrated) return null;
 
   return createPortal(
-    <AnimatePresence>
-      {video ? (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={onClose}
-          />
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={video.title}
-            initial={{ opacity: 0, scale: 0.95, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: 8 }}
-            transition={{ type: "spring", stiffness: 260, damping: 26 }}
-            className="glass relative w-full max-w-4xl overflow-hidden rounded-2xl p-2 shadow-2xl"
-          >
-            <div className="flex items-center justify-between gap-4 px-3 py-2">
-              <p className="truncate text-sm font-medium">{video.title}</p>
+    <dialog
+      ref={dialogRef}
+      aria-label={video?.title ?? "Video"}
+      className="video-dialog m-auto w-[min(100%-2rem,56rem)] bg-transparent p-0 text-foreground"
+      onClick={(event) => {
+        // A click on the backdrop lands on the dialog element itself.
+        if (event.target === event.currentTarget) event.currentTarget.close();
+      }}
+    >
+      <div className="chamfer bg-neon-cyan p-[2px] [--cut:14px]">
+        <div className="chamfer bg-night-raised p-2 [--cut:13px]">
+          <div className="flex items-center justify-between gap-4 px-2 py-1.5">
+            <p className="truncate font-semibold">{video?.title}</p>
+            <form method="dialog">
               <button
-                ref={closeRef}
-                type="button"
-                onClick={onClose}
-                aria-label="Close preview"
-                className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                type="submit"
+                aria-label="Close video"
+                className="grid size-11 shrink-0 place-items-center text-haze transition-[color,transform] duration-150 hover:text-white active:scale-[0.97]"
               >
-                <XIcon className="size-4" />
+                <XIcon className="size-5" />
               </button>
-            </div>
-            <div className="aspect-video w-full overflow-hidden rounded-xl bg-black">
+            </form>
+          </div>
+          <div className="aspect-video w-full overflow-hidden bg-black">
+            {video ? (
               <iframe
                 key={video.id}
                 src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`}
@@ -86,11 +83,11 @@ export function VideoModal({
                 allowFullScreen
                 className="size-full border-0"
               />
-            </div>
-          </motion.div>
-        </motion.div>
-      ) : null}
-    </AnimatePresence>,
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </dialog>,
     document.body,
   );
 }

@@ -2,6 +2,7 @@ import { Fragment, type CSSProperties } from "react";
 import Image from "next/image";
 import { CountUp } from "@/components/count-up";
 import { HeroActions, LiveSign } from "@/components/home/hero-live";
+import { HeroSign } from "@/components/home/hero-sign";
 import { socialStats, type VideoMeta } from "@/lib/site";
 
 const HEADLINE = [
@@ -182,16 +183,19 @@ function Stage() {
       {/* Beside the logo on phones so the logo can sit high; centred above it on desktop. */}
       <LiveSign className="absolute top-1 left-0 z-10 lg:left-1/2 lg:-translate-x-1/2" />
 
-      <Image
-        src="/brand/sz-logo.webp"
-        alt="SuperZydan graffiti logo"
-        width={560}
-        height={619}
-        preload
-        fetchPriority="high"
-        sizes="(min-width: 1024px) 272px, 168px"
-        className="absolute top-1 left-1/2 w-[8.5rem] -translate-x-1/2 drop-shadow-[0_0_18px_rgb(255_63_180/0.45)] min-[400px]:w-[9.5rem] lg:top-12 lg:w-[17rem]"
-      />
+      {/* Desktop upgrades this to a tilting 3D sign once the page has loaded; phones keep it as is. */}
+      <HeroSign className="absolute top-1 left-1/2 w-[8.5rem] -translate-x-1/2 min-[400px]:w-[9.5rem] lg:top-12 lg:w-[17rem]">
+        <Image
+          src="/brand/sz-logo.webp"
+          alt="SuperZydan graffiti logo"
+          width={560}
+          height={619}
+          preload
+          fetchPriority="high"
+          sizes="(min-width: 1024px) 272px, 168px"
+          className="h-auto w-full drop-shadow-[0_0_18px_rgb(255_63_180/0.45)]"
+        />
+      </HeroSign>
 
       <Image
         src="/images/superzydan-linknova-cutout.webp"

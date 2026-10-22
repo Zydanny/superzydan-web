@@ -3,9 +3,11 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Big_Shoulders, Figtree } from "next/font/google";
 import { HashScroll } from "@/components/hash-scroll";
+import { NeonSigns } from "@/components/motion/neon-signs";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { site } from "@/lib/site";
+import { PAGES, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 // Condensed signage caps for headlines and the neon signs.
@@ -25,47 +27,34 @@ const figtree = Figtree({
 });
 
 
+/*
+ * Defaults only. Every page sets its own whole title, snippet and canonical URL
+ * through lib/seo.ts; the template is a safety net for any page that doesn't.
+ */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://superzydanofficial.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "SuperZydan | Official Creator Hub",
+    default: PAGES.home.title,
     template: "%s | SuperZydan",
   },
-  description:
-    site.description ||
-    "Gaming, tactical shooter tech, custom keyboards, PC builds, and creator content.",
-  keywords: [
-    "SuperZydan",
-    "Gaming",
-    "Valorant",
-    "Hall Effect Keyboards",
-    "PC Setup",
-    "Twitch Streamer",
-    "Tech Reviews",
-  ],
-  authors: [{ name: "SuperZydan" }],
+  description: PAGES.home.description,
+  authors: [{ name: "SuperZydan", url: SITE_URL }],
   creator: "SuperZydan",
   openGraph: {
-    title: "SuperZydan | Official Creator Hub",
-    description:
-      site.description ||
-      "Gaming, tactical shooter tech, custom keyboards, PC builds, and creator content.",
-    url: "https://superzydanofficial.com",
+    title: PAGES.home.title,
+    description: PAGES.home.description,
+    url: "/",
     siteName: "SuperZydan",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SuperZydan | Official Creator Hub",
-    description:
-      site.description ||
-      "Gaming, tactical shooter tech, custom keyboards, PC builds, and creator content.",
+    title: PAGES.home.title,
+    description: PAGES.home.description,
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  // Preview deployments are for review, not search.
+  robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -80,6 +69,8 @@ export default function RootLayout({
     >
       <body className="relative flex min-h-full flex-col bg-night text-foreground">
         <HashScroll />
+        <SmoothScroll />
+        <NeonSigns />
         <SiteHeader />
         <div className="flex w-full min-w-0 flex-1 flex-col">{children}</div>
         <SiteFooter />
