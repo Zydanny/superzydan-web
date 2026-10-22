@@ -104,26 +104,26 @@ export default async function WorkWithMePage() {
               Reach
             </h2>
             <p className="mt-2 text-sm text-haze">Live counts where the platforms share them.</p>
-            <dl className="mt-5 grid grid-cols-2 gap-3">
+            <ul className="mt-5 grid grid-cols-2 gap-3">
               {reach.map((entry, index) => (
-                <div
+                <li
                   key={entry.platform}
                   className={`chamfer p-[2px] [--cut:12px] ${index === 0 ? "col-span-2" : ""}`}
                   style={{ background: `color-mix(in srgb, var(--neon-${entry.tone}) 55%, transparent)` } as CSSProperties}
                 >
-                  <div className="chamfer flex h-full flex-col-reverse justify-end bg-night-raised px-4 py-4 [--cut:11px]">
-                    <dt className="mt-2 text-sm font-semibold text-haze">
-                      <span className="font-bold text-white">{entry.platform}</span> {entry.unit}
-                    </dt>
-                    <dd
+                  <p className="chamfer flex h-full flex-col bg-night-raised px-4 py-4 [--cut:11px]">
+                    <span
                       className={`font-display leading-none font-black tabular-nums neon-${entry.tone} ${index === 0 ? "text-6xl" : "text-4xl"}`}
                     >
                       <CountUp value={entry.value} />
-                    </dd>
-                  </div>
-                </div>
+                    </span>
+                    <span className="mt-2 text-sm font-semibold text-haze">
+                      <span className="font-bold text-white">{entry.platform}</span> {entry.unit}
+                    </span>
+                  </p>
+                </li>
               ))}
-            </dl>
+            </ul>
           </section>
         }
       >
@@ -145,15 +145,15 @@ export default async function WorkWithMePage() {
             <SignHeading id="audience-title" tone="cyan" size="md" sub="My TikTok audience, the biggest of the bunch.">
               Who watches
             </SignHeading>
-            <dl className="mt-10 grid gap-6">
+            <ul className="mt-10 grid gap-6">
               {AUDIENCE.map((entry) => (
-                <div key={entry.label}>
-                  <div className="flex items-baseline justify-between gap-4">
-                    <dt className="font-semibold text-white">{entry.label}</dt>
-                    <dd className="font-display neon-cyan text-4xl leading-none font-black tabular-nums">
+                <li key={entry.label}>
+                  <p className="flex items-baseline justify-between gap-4">
+                    <span className="font-semibold text-white">{entry.label}</span>
+                    <span className="font-display neon-cyan text-4xl leading-none font-black tabular-nums">
                       {entry.value}%
-                    </dd>
-                  </div>
+                    </span>
+                  </p>
                   {/* The meter is the figure above drawn to scale; it adds nothing a screen reader needs. */}
                   <div aria-hidden className="mt-3 h-3 bg-night-raised">
                     <div
@@ -161,9 +161,9 @@ export default async function WorkWithMePage() {
                       style={{ width: `${entry.value}%` }}
                     />
                   </div>
-                </div>
+                </li>
               ))}
-            </dl>
+            </ul>
           </div>
           <div className="grid content-start gap-10">
             <div>

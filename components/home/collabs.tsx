@@ -11,7 +11,7 @@ import { partners } from "@/lib/site";
  */
 export function Collabs() {
   return (
-    <section aria-labelledby="collabs-title" className="shell shell-y">
+    <section aria-labelledby="collabs-title" className="render-later shell shell-y">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center lg:gap-16">
         <div>
           <SignHeading

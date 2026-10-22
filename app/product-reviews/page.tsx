@@ -47,7 +47,7 @@ export default async function ProductReviewsPage() {
             Newest reviews
           </SignHeading>
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-12">
-            <PostCard post={first} feature />
+            <PostCard post={first} feature priority />
             <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-1">
               {rest.slice(0, 2).map((post) => (
                 <li key={post.slug}>
@@ -56,10 +56,10 @@ export default async function ProductReviewsPage() {
               ))}
             </ul>
           </div>
-          <ul className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="render-later mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {rest.slice(2).map((post) => (
               <li key={post.slug} className="build-in">
-                <PostCard post={post} />
+                <PostCard post={post} deferred />
               </li>
             ))}
           </ul>

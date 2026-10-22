@@ -75,24 +75,24 @@ export default async function AboutPage() {
           </div>
 
           {stats.length > 0 ? (
-            <dl className="grid grid-cols-2 gap-3 self-start sm:grid-cols-3 lg:grid-cols-2">
+            <ul className="grid grid-cols-2 gap-3 self-start sm:grid-cols-3 lg:grid-cols-2">
               {stats.map((stat, index) => (
-                <div
+                <li
                   key={stat.label}
                   className="build-in chamfer bg-neon-violet/40 p-[2px] [--cut:12px]"
                   style={{ "--i": index } as CSSProperties}
                 >
-                  <div className="chamfer flex h-full flex-col-reverse justify-end bg-night-raised px-4 py-4 [--cut:11px]">
-                    <dt className="mt-1.5 text-sm font-semibold text-haze">
-                      {stat.label} {stat.unit}
-                    </dt>
-                    <dd className="font-display text-4xl leading-none font-black text-white tabular-nums">
+                  <p className="chamfer flex h-full flex-col bg-night-raised px-4 py-4 [--cut:11px]">
+                    <span className="font-display text-4xl leading-none font-black text-white tabular-nums">
                       <CountUp value={stat.value} />
-                    </dd>
-                  </div>
-                </div>
+                    </span>
+                    <span className="mt-1.5 text-sm font-semibold text-haze">
+                      {stat.label} {stat.unit}
+                    </span>
+                  </p>
+                </li>
               ))}
-            </dl>
+            </ul>
           ) : null}
         </div>
       </section>

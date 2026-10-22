@@ -192,6 +192,8 @@ function Stage() {
           height={619}
           preload
           fetchPriority="high"
+          // Decode with the first paint instead of after it, so the hero's LCP lands with FCP.
+          decoding="sync"
           sizes="(min-width: 1024px) 272px, 168px"
           className="h-auto w-full drop-shadow-[0_0_18px_rgb(255_63_180/0.45)]"
         />
@@ -205,6 +207,7 @@ function Stage() {
         // Biggest image in the first viewport on phones, so usually the LCP.
         preload
         fetchPriority="high"
+        decoding="sync"
         sizes="(min-width: 1024px) 420px, 200px"
         className="absolute bottom-0 left-1/2 h-[66%] w-auto -translate-x-1/2 [mask-image:linear-gradient(to_bottom,#000_50%,transparent_66%)] lg:h-[58%] lg:[mask-image:linear-gradient(to_bottom,#000_78%,transparent)]"
       />

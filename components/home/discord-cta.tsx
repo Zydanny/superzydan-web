@@ -22,7 +22,7 @@ export function DiscordCta({
   const Heading = headingLevel;
 
   return (
-    <section aria-labelledby="discord-title" className="shell shell-y">
+    <section aria-labelledby="discord-title" className="render-later shell shell-y">
       <div className="chamfer bg-neon-cyan/70 p-[2px] [--cut:18px]">
         <div className="chamfer relative overflow-hidden bg-night-raised px-5 py-12 [--cut:17px] sm:px-10 lg:px-16 lg:py-16">
           {/* Light pooling up from the bottom edge, painted once. */}
@@ -48,10 +48,10 @@ export function DiscordCta({
             </div>
 
             {stats.members !== null || stats.online !== null ? (
-              <dl className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {stats.members !== null ? <Counter label="members" value={stats.members} tone="magenta" /> : null}
                 {stats.online !== null ? <Counter label="online now" value={stats.online} tone="cyan" live /> : null}
-              </dl>
+              </div>
             ) : null}
           </div>
         </div>
@@ -73,19 +73,20 @@ function Counter({
 }) {
   return (
     <div className={`chamfer p-[2px] [--cut:12px] ${tone === "magenta" ? "bg-neon-magenta/60" : "bg-neon-cyan/60"}`}>
-      <div className="chamfer flex h-full flex-col-reverse justify-end bg-night px-4 py-5 [--cut:11px] sm:px-6">
-        <dt className="mt-2 flex items-center gap-2 text-sm font-bold tracking-wide text-haze uppercase">
-          {live ? <span aria-hidden className="size-2 rounded-full bg-neon-cyan shadow-[0_0_8px_var(--neon-cyan)]" /> : null}
-          {label}
-        </dt>
-        <dd
+      {/* Number first, then what it counts, so it reads "1,108 members". */}
+      <p className="chamfer flex h-full flex-col bg-night px-4 py-5 [--cut:11px] sm:px-6">
+        <span
           className={`font-display text-5xl leading-none font-black tabular-nums lg:text-6xl ${
             tone === "magenta" ? "neon-magenta" : "neon-cyan"
           }`}
         >
           {count.format(value)}
-        </dd>
-      </div>
+        </span>
+        <span className="mt-2 flex items-center gap-2 text-sm font-bold tracking-wide text-haze uppercase">
+          {live ? <span aria-hidden className="size-2 rounded-full bg-neon-cyan shadow-[0_0_8px_var(--neon-cyan)]" /> : null}
+          {label}
+        </span>
+      </p>
     </div>
   );
 }

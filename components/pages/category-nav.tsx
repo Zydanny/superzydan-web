@@ -26,6 +26,8 @@ export function CategoryNav({ reviews, current }: { reviews: BlogPost[]; current
             <li key={category.slug} className="shrink-0 snap-start">
               <Link
                 href={reviewCategoryPath(category)}
+                // Fourteen chips sit in the first screen; prefetching them all would compete with the page's own images.
+                prefetch={false}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "group/cat chamfer flex min-h-11 items-center gap-2 p-[2px] [--cut:8px]",

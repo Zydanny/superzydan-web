@@ -11,7 +11,7 @@ export function LatestPosts({ posts }: { posts: BlogPost[] }) {
   if (!first) return null;
 
   return (
-    <section aria-labelledby="posts-title" className="shell shell-y">
+    <section aria-labelledby="posts-title" className="render-later shell shell-y">
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <SignHeading id="posts-title" tone="magenta" size="md" sub="Reviews, recipes and whatever we got into this week.">
           Fresh posts

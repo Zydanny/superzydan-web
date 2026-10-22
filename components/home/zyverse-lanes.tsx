@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react";
+import { DeferredImage } from "@/components/deferred-image";
 import { SignHeading, TubeSign, type Tone } from "@/components/sign-heading";
 import { twitchChannel } from "@/lib/site";
 
@@ -98,7 +98,7 @@ export function ZyverseLanes() {
     <section
       id="zyverse"
       aria-labelledby="zyverse-title"
-      className="lanes relative"
+      className="lanes render-later relative"
       style={{ "--lane-count": LANES.length } as CSSProperties}
     >
       <div className="lanes-pin flex flex-col justify-center py-14 lg:py-20">
@@ -137,7 +137,7 @@ function LaneCard({ lane }: { lane: Lane }) {
                 aria-hidden
                 className="absolute inset-0 bg-[radial-gradient(70%_90%_at_50%_100%,rgb(255_63_180/0.45),rgb(122_60_255/0.25)_45%,transparent_80%)]"
               />
-              <Image
+              <DeferredImage
                 src={lane.image.src}
                 alt={lane.image.alt}
                 fill
@@ -146,7 +146,7 @@ function LaneCard({ lane }: { lane: Lane }) {
               />
             </>
           ) : (
-            <Image
+            <DeferredImage
               src={lane.image.src}
               alt={lane.image.alt}
               fill

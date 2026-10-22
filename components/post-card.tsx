@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "cn";
+import { DeferredImage } from "@/components/deferred-image";
 import type { BlogPost } from "@/lib/blog";
 import { isReview } from "@/lib/blog";
 
@@ -17,15 +18,22 @@ function postLabel(post: BlogPost) {
 export function PostCard({
   post,
   feature = false,
+  priority = false,
+  deferred = false,
   headingLevel = "h3",
   className,
 }: {
   post: BlogPost;
   feature?: boolean;
+  /** Load the picture straight away: for the first card on a page, usually its largest image. */
+  priority?: boolean;
+  /** Hold the picture until the visitor starts scrolling (for grids just under the first screen). */
+  deferred?: boolean;
   headingLevel?: "h2" | "h3";
   className?: string;
 }) {
   const Heading = headingLevel;
+  const Picture = deferred ? DeferredImage : Image;
 
   return (
     <Link href={`/lifestyle/${post.slug}`} className={cn("group/card block", className)}>
@@ -42,10 +50,13 @@ export function PostCard({
           )}
         >
           {post.cover ? (
-            <Image
+            <Picture
               src={post.cover}
               alt={post.coverAlt}
               fill
+              preload={priority}
+              fetchPriority={priority ? "high" : undefined}
+              loading={priority ? "eager" : undefined}
               sizes={feature ? "(min-width: 1024px) 44rem, 100vw" : "(min-width: 1024px) 24rem, (min-width: 640px) 50vw, 100vw"}
               className="object-cover transition-transform duration-300 ease-(--ease-out) group-hover/card:scale-[1.03]"
             />

@@ -175,6 +175,17 @@ html.lenis body {
   @apply mx-auto w-full max-w-7xl px-4 lg:px-8;
 }
 
+/*
+ * For sections below the first screen: the browser skips laying them out (and
+ * so doesn't start their lazy images) until they're near the screen, which
+ * keeps the first paint's bandwidth for the hero. The size hint is a guess the
+ * browser replaces with the real height once it has seen the section.
+ */
+@utility render-later {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 /* Vertical rhythm used by page sections on the same rail. */
 @utility shell-y {
   @apply py-14 lg:py-24;
@@ -458,6 +469,60 @@ html.lenis body {
 }
 
 /*
+ * The phone menu (components/site-header.tsx): slides in from the right edge on
+ * the drawer curve, slides back out faster. Reduced motion just fades.
+ */
+.menu-drawer {
+  transform: translateX(100%);
+  transition:
+    transform 200ms var(--ease-out),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+.menu-drawer[open] {
+  transform: none;
+  transition-duration: 320ms;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+@starting-style {
+  .menu-drawer[open] {
+    transform: translateX(100%);
+  }
+}
+.menu-drawer::backdrop {
+  background: rgb(8 6 15 / 0);
+  transition:
+    background 200ms var(--ease-out),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+.menu-drawer[open]::backdrop {
+  background: rgb(8 6 15 / 0.7);
+}
+@starting-style {
+  .menu-drawer[open]::backdrop {
+    background: rgb(8 6 15 / 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-drawer,
+  .menu-drawer[open] {
+    transform: none;
+    opacity: 0;
+    transition-property: opacity, overlay, display;
+  }
+  .menu-drawer[open] {
+    opacity: 1;
+  }
+  @starting-style {
+    .menu-drawer[open] {
+      transform: none;
+      opacity: 0;
+    }
+  }
+}
+
+/*
  * The hero sign's glow plate (components/home/hero-sign.tsx, desktop only):
  * dim at the top of the page, brightening as the visitor scrolls down past it.
  */
@@ -544,8 +609,11 @@ html.lenis body {
  * Neon signs switch on as they reach the screen (components/motion/neon-signs.tsx
  * marks them off, then on). Without JS, or with reduced motion, they're simply lit.
  */
+/* Wired up but switched off: the lettering stays readable, the glow isn't there yet. */
 [data-neon="off"] {
-  opacity: 0.2;
+  text-shadow: none;
+  box-shadow: none;
+  border-color: rgb(201 191 227 / 0.25);
 }
 [data-neon="on"] {
   animation: tube-on 900ms linear both;

@@ -33,11 +33,11 @@ export default async function LifestylePage() {
       </PageHero>
 
       <section aria-label="Posts" className="shell shell-y">
-        {first ? <PostCard post={first} feature headingLevel="h2" className="max-w-4xl" /> : null}
-        <ul className="mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {first ? <PostCard post={first} feature priority headingLevel="h2" className="max-w-4xl" /> : null}
+        <ul className="render-later mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {rest.map((post) => (
             <li key={post.slug} className="build-in">
-              <PostCard post={post} headingLevel="h2" />
+              <PostCard post={post} headingLevel="h2" deferred />
             </li>
           ))}
         </ul>

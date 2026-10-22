@@ -19,7 +19,7 @@ const DESK = [
  */
 export function DeskTeaser() {
   return (
-    <section aria-labelledby="desk-title" className="shell shell-y">
+    <section aria-labelledby="desk-title" className="render-later shell shell-y">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16">
         <div className="chamfer build-in bg-neon-cyan/70 p-[2px] [--cut:16px] lg:order-last">
           <div className="chamfer relative aspect-[4/3] overflow-hidden bg-night-raised [--cut:15px]">

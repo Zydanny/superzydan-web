@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRightIcon, ArrowUpRightIcon, PlayIcon } from "lucide-react";
 import { cn } from "cn";
 import { useTwitchStatus } from "@/components/twitch-status-provider";
+import { DeferredImage } from "@/components/deferred-image";
 import { VideoModal } from "@/components/video-modal";
 import { twitchChannel, twitchUsername, type VideoMeta } from "@/lib/site";
 import type { TwitchClip } from "@/lib/twitch";
@@ -32,7 +33,7 @@ export function Watch({ videos, clips }: { videos: VideoMeta[]; clips: TwitchCli
   const [playing, setPlaying] = useState<VideoMeta | null>(null);
 
   return (
-    <section id="watch" aria-labelledby="watch-title" className="scroll-mt-24 py-14 lg:py-24">
+    <section id="watch" aria-labelledby="watch-title" className="render-later scroll-mt-24 py-14 lg:py-24">
       <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
         <div>
           <h2
@@ -61,7 +62,7 @@ export function Watch({ videos, clips }: { videos: VideoMeta[]; clips: TwitchCli
                   onClick={() => setPlaying(video)}
                   className="group/card block w-full cursor-pointer text-left"
                 >
-                  <Screen
+                  <Screen deferred
                     src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
                     badge={index === 0 ? "Newest" : undefined}
                   />
@@ -91,7 +92,7 @@ export function Watch({ videos, clips }: { videos: VideoMeta[]; clips: TwitchCli
                   rel="noopener noreferrer"
                   className="group/card block"
                 >
-                  <Screen src={clip.thumbnail} />
+                  <Screen deferred src={clip.thumbnail} />
                   <p className="mt-3 line-clamp-2 font-semibold text-pretty transition-colors group-hover/card:text-neon-cyan">
                     {clip.title}
                   </p>
@@ -194,7 +195,7 @@ function StreamSlot() {
           className="group/card relative before:absolute before:-top-10 before:left-[14%] before:h-10 before:w-px before:bg-[#4a3f63] after:absolute after:-top-10 after:right-[14%] after:h-10 after:w-px after:bg-[#4a3f63] lg:before:-top-14 lg:before:h-14 lg:after:-top-14 lg:after:h-14 block"
           aria-label={`Watch the replay: ${last.title}`}
         >
-          <Screen src={last.thumbnail} large />
+          <Screen deferred src={last.thumbnail} large />
         </a>
       ) : null}
       <div>
@@ -293,11 +294,15 @@ export function Screen({
   src,
   badge,
   large = false,
+  deferred = false,
 }: {
   src: string | null;
   badge?: string;
   large?: boolean;
+  /** Wait for the page to finish loading before fetching the picture (for screens just below the hero). */
+  deferred?: boolean;
 }) {
+  const Picture = deferred ? DeferredImage : Image;
   return (
     <div
       className={cn(
@@ -312,7 +317,7 @@ export function Screen({
         )}
       >
         {src ? (
-          <Image
+          <Picture
             src={src}
             alt=""
             fill
