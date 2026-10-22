@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Big_Shoulders, Figtree } from "next/font/google";
 import { HashScroll } from "@/components/hash-scroll";
 import { NeonSigns } from "@/components/motion/neon-signs";
+import { PortalRings } from "@/components/motion/portal-rings";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -71,6 +72,7 @@ export default function RootLayout({
         <HashScroll />
         <SmoothScroll />
         <NeonSigns />
+        <PortalRings />
         <SiteHeader />
         <div className="flex w-full min-w-0 flex-1 flex-col">{children}</div>
         <SiteFooter />
