@@ -203,14 +203,14 @@ export const reviewsChannelUrl = "https://www.youtube.com/@superzydanreviews";
 export const affiliateDisclosure =
   "Some links on this site are affiliate or referral links, including Amazon, LTK, Goblin Tech Keys and HomeRun Pet. If you buy through them I may earn a small commission or credit at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. I appreciate you!";
 
-/* Past collabs. `note` is the one line under the name; keep it to what actually happened. */
+/*
+ * Past collabs. `note` is the one line under the name; keep it to what actually happened.
+ * `href` is the brand's own official site, never an affiliate or referral link.
+ * DreamHack's /dallas/ page now redirects to another city, so it links the main site.
+ */
 export const partners = [
-  { name: "DreamHack Dallas 2025", note: "In person", href: "https://dreamhack.com/dallas/" },
-  {
-    name: "HexClad",
-    note: "Cookware",
-    href: "https://www.amazon.com/stores/page/84D63786-37D7-4ED6-B9B8-496C46020D43?tag=superzydan1-20",
-  },
-  { name: "GameSir", note: "Controllers", href: "https://www.amazon.com/s?k=GAMESIR&tag=superzydan1-20" },
-  { name: "Goblin Tech Keys", note: "Custom keycaps", href: "https://goblintechkeys.com/?ref=p8hHC0WDNtCKEx" },
+  { name: "DreamHack Dallas 2025", note: "In person", href: "https://dreamhack.com/" },
+  { name: "HexClad", note: "Cookware", href: "https://hexclad.com/" },
+  { name: "GameSir", note: "Controllers", href: "https://gamesir.com/" },
+  { name: "Goblin Tech Keys", note: "Custom keycaps", href: "https://www.goblintechkeys.com/" },
 ] as const;
