@@ -37,7 +37,7 @@ function postImage(post: BlogPost) {
  * timestamps: those descriptions carry shortened shop links (some still on an
  * old affiliate tag) that don't belong in this site's data.
  */
-function videoSummary(description: string) {
+export function videoSummary(description: string) {
   const firstParagraph = description.split(/\n\s*\n/)[0] ?? "";
   return firstParagraph
     .replace(/https?:\/\/\S+/g, "")

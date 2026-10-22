@@ -208,6 +208,7 @@ export type VideoDetails = {
   uploadDate: string;
   /** ISO 8601 duration like PT7M43S. */
   duration?: string;
+  viewCount?: number;
 };
 
 export function videoJsonLd(video: VideoDetails) {
@@ -224,6 +225,15 @@ export function videoJsonLd(video: VideoDetails) {
     ...(video.duration ? { duration: video.duration } : {}),
     embedUrl: `https://www.youtube.com/embed/${video.id}`,
     contentUrl: `https://www.youtube.com/watch?v=${video.id}`,
+    ...(video.viewCount !== undefined
+      ? {
+          interactionStatistic: {
+            "@type": "InteractionCounter",
+            interactionType: { "@type": "WatchAction" },
+            userInteractionCount: video.viewCount,
+          },
+        }
+      : {}),
     author: personRef,
   };
 }

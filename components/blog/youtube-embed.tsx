@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { PlayIcon } from "lucide-react";
 import { cn } from "cn";
+import { DeferredImage } from "@/components/deferred-image";
 
 /* Seconds from a YouTube `t` value: "433", "433s" or "7m13s". */
 function parseSeconds(value: string): number | null {
@@ -38,14 +39,21 @@ export function YouTubeEmbed({
   id,
   title = "YouTube video",
   short = false,
+  large = false,
+  deferred = false,
   className,
 }: {
   id: string;
   title?: string;
   /** Vertical Shorts render 9:16 and narrower. */
   short?: boolean;
+  /** Full-width players use the HD thumbnail instead of the 480px one. */
+  large?: boolean;
+  /** Wait for the visitor's first move before fetching the thumbnail (for players near the top of a page). */
+  deferred?: boolean;
   className?: string;
 }) {
+  const Thumbnail = deferred ? DeferredImage : Image;
   // null until the viewer asks for the video; then the second it starts from.
   const [start, setStart] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -129,11 +137,11 @@ export function YouTubeEmbed({
           onClick={() => playFrom(0)}
           className="group absolute inset-0 size-full cursor-pointer focus-visible:outline-none"
         >
-          <Image
-            src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+          <Thumbnail
+            src={`https://i.ytimg.com/vi/${id}/${large ? "maxresdefault" : "hqdefault"}.jpg`}
             alt=""
             fill
-            sizes={short ? "320px" : "(max-width: 768px) 100vw, 768px"}
+            sizes={short ? "320px" : large ? "(max-width: 80rem) 100vw, 1216px" : "(max-width: 768px) 100vw, 768px"}
             className="object-cover transition-transform duration-300 ease-(--ease-out) group-hover:scale-[1.03] motion-reduce:transition-none"
           />
           <span className="absolute inset-0 bg-night/25 transition-colors duration-200 group-hover:bg-night/5" />

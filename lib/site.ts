@@ -159,6 +159,27 @@ export const youtubeVideos: VideoMeta[] = [
 ];
 
 /*
+ * The home page's video spotlight, right after Watch. Swap this to feature a
+ * different video: `title` is only the fallback when the YouTube API is
+ * down (the live title, view count and length come from the API), and `post`
+ * is the slug of the post the button opens (leave it out for no button).
+ */
+export const featuredVideo: {
+  id: string;
+  title: string;
+  sign: string;
+  blurb: string;
+  post?: { slug: string; label: string };
+} = {
+  id: "VfNLvw444Ws",
+  title: "They LIED About IRL Streaming Backpacks! (My $200 Setup BEATS a $3000 Rig)",
+  sign: "Start here",
+  blurb:
+    "Everybody acts like you need a $3,000 backpack to stream IRL. I put one up against the $550 kit I actually carry, then built a starter setup for under $200 with the phone you already have.",
+  post: { slug: "budget-irl-streaming-setup", label: "Full gear list" },
+};
+
+/*
  * The only Amazon Associates tracking ID the site uses. lib/affiliate.ts puts
  * it on every amazon.com link, replacing any other tag.
  */

@@ -105,6 +105,7 @@ type ApiVideo = {
   id: string;
   snippet?: { title?: string; description?: string; publishedAt?: string; liveBroadcastContent?: string };
   contentDetails?: { duration?: string };
+  statistics?: { viewCount?: string };
   player?: { embedWidth?: string | number; embedHeight?: string | number };
 };
 
@@ -228,8 +229,8 @@ export async function getReviewsChannelUploads(): Promise<ChannelUpload[]> {
 }
 
 /*
- * Title, description, upload time and length for specific videos, for the
- * VideoObject structured data on posts. One quota unit per 50 videos. Empty
+ * Title, description, upload time, length and views for specific videos, for
+ * the VideoObject structured data and the home page's video spotlight. One quota unit per 50 videos. Empty
  * without a key or when the API fails; callers fall back to the post's own data.
  */
 export async function getVideoDetails(ids: string[]): Promise<Map<string, VideoDetails>> {
@@ -240,17 +241,19 @@ export async function getVideoDetails(ids: string[]): Promise<Map<string, VideoD
   try {
     for (let i = 0; i < ids.length; i += 50) {
       const batch = await fetchJson(
-        `${API}/videos?part=snippet,contentDetails&id=${ids.slice(i, i + 50).join(",")}&key=${key}`,
+        `${API}/videos?part=snippet,contentDetails,statistics&id=${ids.slice(i, i + 50).join(",")}&key=${key}`,
       );
       for (const video of (batch?.items ?? []) as ApiVideo[]) {
         const { title, description, publishedAt } = video.snippet ?? {};
         if (!title || !publishedAt) continue;
+        const views = Number(video.statistics?.viewCount);
         details.set(video.id, {
           id: video.id,
           title: title.trim(),
           description: description ?? "",
           uploadDate: publishedAt,
           ...(video.contentDetails?.duration ? { duration: video.contentDetails.duration } : {}),
+          ...(Number.isFinite(views) ? { viewCount: views } : {}),
         });
       }
     }
