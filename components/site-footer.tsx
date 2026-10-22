@@ -75,7 +75,7 @@ export function SiteFooter() {
 
       <div className="border-t border-neon-violet/20">
         <div className="shell flex flex-col gap-4 py-7 text-sm text-haze lg:flex-row lg:items-start lg:justify-between lg:gap-12">
-          <p className="max-w-3xl text-pretty">{affiliateDisclosure}</p>
+          <p className="max-w-xl text-pretty">{affiliateDisclosure}</p>
           <p className="shrink-0">© {new Date().getFullYear()} SuperZydan LLC</p>
         </div>
       </div>

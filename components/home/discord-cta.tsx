@@ -25,12 +25,6 @@ export function DiscordCta({
     <section aria-labelledby="discord-title" className="render-later shell shell-y">
       <div className="chamfer bg-neon-cyan/70 p-[2px] [--cut:18px]">
         <div className="chamfer relative overflow-hidden bg-night-raised px-5 py-12 [--cut:17px] sm:px-10 lg:px-16 lg:py-16">
-          {/* Light pooling up from the bottom edge, painted once. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(60%_80%_at_50%_100%,rgb(47_224_255/0.18),transparent)]"
-          />
-
           <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
             <div>
               <Heading

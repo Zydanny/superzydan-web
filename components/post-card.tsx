@@ -75,7 +75,7 @@ export function PostCard({
       </p>
       <Heading
         className={cn(
-          "mt-2 font-bold text-pretty transition-colors group-hover/card:text-neon-cyan",
+          "mt-2 font-bold text-balance transition-colors group-hover/card:text-neon-cyan",
           feature ? "text-2xl leading-tight lg:text-3xl" : "text-lg leading-snug",
         )}
       >

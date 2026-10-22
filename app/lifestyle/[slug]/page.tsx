@@ -102,7 +102,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <main id="content" className="flex-1">
       <article className="shell pt-8 pb-16 lg:pt-12 lg:pb-24">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-[38rem]">
           <Breadcrumbs crumbs={crumbs} />
 
           {post.draft ? (

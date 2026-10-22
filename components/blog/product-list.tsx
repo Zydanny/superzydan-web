@@ -139,7 +139,7 @@ export function ProductList({
                       {alternative.tested ? "I've tested this" : "Haven't tested it"}
                     </span>
                   </div>
-                  <p className="mt-2 text-pretty text-haze">{alternative.why}</p>
+                  <p className="mt-2 max-w-prose text-pretty text-haze">{alternative.why}</p>
                   {alternative.othersSay ? (
                     <p className="mt-2 text-sm text-pretty text-haze">
                       {alternative.othersSay.text}{" "}
