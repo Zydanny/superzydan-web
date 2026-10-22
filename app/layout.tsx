@@ -54,8 +54,8 @@ export const metadata: Metadata = {
     title: PAGES.home.title,
     description: PAGES.home.description,
   },
-  // Preview deployments are for review, not search.
-  robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : { index: true, follow: true },
+  // Hosts other than the live domain also get an X-Robots-Tag: noindex from proxy.ts.
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({

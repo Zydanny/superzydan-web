@@ -5,7 +5,7 @@ import { absoluteUrl, PAGES } from "@/lib/seo";
 
 /*
  * Every published page and post with its last real change. Drafts never reach
- * here (getAllPosts drops them outside previews, and previews aren't indexed),
+ * here (getAllPosts drops them outside review builds, and this filters them again),
  * and Merch stays out until it's ready.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

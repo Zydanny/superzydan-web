@@ -107,7 +107,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {post.draft ? (
             <p className="mt-3 border border-paint-yellow/50 bg-paint-yellow/10 px-4 py-3 text-sm text-paint-yellow">
-              Draft. Only visible locally and on preview links. Set <code>draft: false</code> to publish.
+              Draft. Only visible locally and on review builds. Set <code>draft: false</code> to publish.
             </p>
           ) : null}
 

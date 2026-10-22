@@ -85,7 +85,7 @@ export type BlogPost = {
    * Two for a head-to-head. Empty for my own products (Google ignores self-reviews).
    */
   reviewedProduct: string[];
-  /** Drafts show in `npm run dev` and on Vercel preview links, never on the live site. */
+  /** Drafts show in `npm run dev` and on SHOW_DRAFTS=true builds, never on the live site. */
   draft: boolean;
   /** Markdown/MDX body without the frontmatter. */
   body: string;
@@ -232,8 +232,11 @@ function parsePost(file: string, raw: string): BlogPost {
   };
 }
 
-/* Local dev and Vercel preview links: drafts and owner-only notes show here, never on the live site. */
-export const isPreviewBuild = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "preview";
+/*
+ * Local dev, and builds made with SHOW_DRAFTS=true (a temporary review site
+ * only): drafts and owner-only notes show here, never on the live site.
+ */
+export const isPreviewBuild = process.env.NODE_ENV === "development" || process.env.SHOW_DRAFTS === "true";
 
 /* Every visible post, newest first. Cached per request. */
 export const getAllPosts = cache(async (): Promise<BlogPost[]> => {
