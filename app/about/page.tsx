@@ -126,42 +126,23 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section aria-labelledby="crew-title" className="border-t border-neon-violet/20">
-        <div className="shell shell-y grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <section aria-label="Where to next" className="border-t border-neon-violet/20">
+        <div className="shell shell-y grid gap-12 sm:grid-cols-2 lg:gap-16">
           <div>
-            <SignHeading id="crew-title" tone="magenta" size="md" sub="The mods keeping chat in line.">
-              The crew
-            </SignHeading>
-            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-              {aboutPage.team.map((person) => (
-                <li key={person.name} className="chamfer bg-neon-violet/40 p-[2px] [--cut:12px]">
-                  <div className="chamfer h-full bg-night-raised p-5 [--cut:11px]">
-                    <p className="font-display text-2xl leading-none font-black tracking-wide uppercase">{person.name}</p>
-                    <p className="mt-2 text-sm font-bold tracking-wide text-neon-cyan uppercase">{person.role}</p>
-                    <p className="mt-3 text-pretty text-haze">{person.blurb}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <h2 className="text-2xl font-bold text-white">Want to hang out?</h2>
+            <p className="mt-2 text-pretty text-haze">The Discord is where the community actually lives.</p>
+            <NeonButton href={discordInvite} external className="mt-5">
+              <DiscordMark className="size-4" />
+              Join the Discord
+            </NeonButton>
           </div>
-
-          <div className="flex flex-col justify-center gap-8">
-            <div>
-              <h2 className="text-2xl font-bold text-white">Want to hang out?</h2>
-              <p className="mt-2 text-pretty text-haze">The Discord is where the community actually lives.</p>
-              <NeonButton href={discordInvite} external className="mt-5">
-                <DiscordMark className="size-4" />
-                Join the Discord
-              </NeonButton>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white">Brand or creator?</h2>
-              <p className="mt-2 text-pretty text-haze">Reach, audience and past collabs are all on one page.</p>
-              <NeonButton href="/work-with-me" variant="outline" className="mt-5">
-                Work with me
-                <ArrowRightIcon className="size-4" />
-              </NeonButton>
-            </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Brand or creator?</h2>
+            <p className="mt-2 text-pretty text-haze">Reach, audience and past collabs are all on one page.</p>
+            <NeonButton href="/work-with-me" variant="outline" className="mt-5">
+              Work with me
+              <ArrowRightIcon className="size-4" />
+            </NeonButton>
           </div>
         </div>
       </section>

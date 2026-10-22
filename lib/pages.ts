@@ -28,14 +28,6 @@ export const aboutPage = {
     { when: "Off the desk", title: "Kitchen and gym", blurb: "Recipe chaos, workout vlogs and the occasional smoke alarm." },
     { when: "2025", title: "DreamHack Dallas", blurb: "Live from the show floor, in person." },
   ],
-  /*
-   * The mods. One earlier entry ("Founder / all channels") is left out until
-   * the owner confirms whose name it was.
-   */
-  team: [
-    { name: "NoSkillBrad", role: "Moderator, Twitch", blurb: "Australia. Jelly-filled donuts." },
-    { name: "GOJO / KJ", role: "Moderator, TikTok", blurb: "Has to carry him in Fortnite." },
-  ],
 } as const;
 
 export type SetupProduct = {
