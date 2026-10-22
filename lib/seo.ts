@@ -102,7 +102,7 @@ export const PAGES = {
     title: "Privacy Policy | SuperZydan",
     description:
       "How superzydanofficial.com handles your data: analytics, embedded videos and chat, affiliate links and how to reach us with questions.",
-    updated: "2026-10-21",
+    updated: "2026-10-22",
   },
 } satisfies Record<string, PageSeo>;
 

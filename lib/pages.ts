@@ -191,18 +191,18 @@ export const contactPage = {
 } as const;
 
 /*
- * Written from what the site actually does (checked 2026-10-21). Not legal
+ * Written from what the site actually does (checked 2026-10-22). Not legal
  * advice: the owner should review it, and update it whenever the site starts
  * collecting something new.
  */
 export const privacyPage = {
-  updated: "October 21, 2026",
+  updated: "October 22, 2026",
   intro:
     "This page explains what happens with your information when you visit superzydanofficial.com, run by SuperZydan LLC. Short version: there are no accounts, no newsletter and nothing for sale here, so I collect very little.",
   sections: [
     {
       title: "Visit stats",
-      body: "The site uses Cloudflare Web Analytics to count page views and see which pages people visit. It doesn't use cookies or store anything in your browser, and it doesn't fingerprint you or build a profile of you. It records things like the page (without anything after a ? in the address), the referring site, your country, the type of device and browser, and how fast the page loaded. Cloudflare's own privacy policy covers how they handle that data.",
+      body: "The site uses Cloudflare Web Analytics to count page views and see which pages people visit. It doesn't use cookies or store anything in your browser, and it doesn't fingerprint you or build a profile of you. It records things like the page (without anything after a ? in the address), the referring site, your country, the type of device and browser, and how fast the page loaded. Cloudflare's own privacy policy covers how they handle that data. The site is hosted by Hostinger, which keeps standard server logs (like IP addresses) for security.",
     },
     {
       title: "Emails you send me",
