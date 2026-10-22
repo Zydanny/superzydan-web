@@ -202,7 +202,7 @@ export const privacyPage = {
   sections: [
     {
       title: "Visit stats",
-      body: "The site uses Vercel Web Analytics to count page views and see which pages people visit. It doesn't use cookies, and it doesn't build a profile of you. It records things like the page, the referring site, your country and the type of device and browser.",
+      body: "The site uses Cloudflare Web Analytics to count page views and see which pages people visit. It doesn't use cookies or store anything in your browser, and it doesn't fingerprint you or build a profile of you. It records things like the page (without anything after a ? in the address), the referring site, your country, the type of device and browser, and how fast the page loaded. Cloudflare's own privacy policy covers how they handle that data.",
     },
     {
       title: "Emails you send me",

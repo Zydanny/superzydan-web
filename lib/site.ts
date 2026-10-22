@@ -3,6 +3,14 @@ export const site = {
   email: "superzydanofficial@gmail.com",
 } as const;
 
+/*
+ * Cloudflare Web Analytics (cookieless page-view counts). Paste the token from
+ * Cloudflare dashboard -> Analytics & Logs -> Web Analytics -> your site ->
+ * "Manage site" -> the JS snippet's "token" value. It's public (it ships in
+ * every page), so it's fine to commit. Empty means no analytics script loads.
+ */
+export const cloudflareAnalyticsToken = ""; // TODO: paste the Cloudflare Web Analytics token here
+
 export const navLinks = [
   { label: "About", href: "/about" },
   { label: "Lifestyle", href: "/lifestyle" },

@@ -1,7 +1,7 @@
-import { Analytics } from "@vercel/analytics/react";
 import type React from "react";
 import type { Metadata } from "next";
 import { Big_Shoulders, Figtree } from "next/font/google";
+import { CloudflareAnalytics } from "@/components/cloudflare-analytics";
 import { HashScroll } from "@/components/hash-scroll";
 import { NeonSigns } from "@/components/motion/neon-signs";
 import { PortalRings } from "@/components/motion/portal-rings";
@@ -76,7 +76,7 @@ export default function RootLayout({
         <SiteHeader />
         <div className="flex w-full min-w-0 flex-1 flex-col">{children}</div>
         <SiteFooter />
-        <Analytics />
+        <CloudflareAnalytics />
       </body>
     </html>
   );

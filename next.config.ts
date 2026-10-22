@@ -53,6 +53,13 @@ const nextConfig: NextConfig = {
    * to ship with them. Fully static pages read them at build time only.
    */
   outputFileTracingIncludes: {
+    /*
+     * Hostinger builds with output: "standalone", which copies only traced
+     * files. The tracer's sharp rule still looks for sharp/lib/index.js, gone
+     * since sharp 0.35, so the native image libraries get left behind and image
+     * optimization quietly turns off. Ship sharp's platform packages whole.
+     */
+    "/*": ["./node_modules/@img/**/*"],
     "/": ["./content/blog/**/*"],
     "/lifestyle/[slug]": ["./content/blog/**/*"],
     "/product-reviews": ["./content/blog/**/*"],
