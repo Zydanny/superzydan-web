@@ -1,13 +1,10 @@
 export const site = {
   name: "superzydanofficial.com",
   email: "superzydanofficial@gmail.com",
-  tagline: "Go Beyond the Surface",
-  description:
-    "Your hub for chaotic gaming, epic dad-son adventures, tactical streams, tech reviews, and a whole lot of fun.",
 } as const;
 
 export const navLinks = [
-  { label: "About Us", href: "/about" },
+  { label: "About", href: "/about" },
   { label: "Lifestyle", href: "/lifestyle" },
   { label: "VODs", href: "/vods" },
   { label: "Product Reviews", href: "/product-reviews" },
@@ -36,19 +33,17 @@ export const DISCORD_CHANNEL_ID =
 
 export const socialLinks = [
   { label: "TikTok", href: "https://www.tiktok.com/@SuperZydan" },
-  { label: "Amazon Shop", href: "https://www.amazon.com/shop/superzydan" },
   { label: "YouTube", href: "https://www.youtube.com/superzydan" },
-  { label: "Instagram", href: "https://www.instagram.com/superzydan/" },
   { label: "Twitch", href: "https://www.twitch.tv/superzydan/" },
+  { label: "Instagram", href: "https://www.instagram.com/superzydan/" },
   { label: "Discord", href: discordInvite },
-  { label: "LTK", href: "https://www.shopltk.com/explore/SuperZydan" },
+  { label: "Facebook", href: "https://www.facebook.com/superzydanofficial" },
 ] as const;
 
-export const heroLinks = [
-  { label: "Streaming", href: "#stream" },
-  { label: "Setup", href: "/setup" },
-  { label: "Lifestyle", href: "/lifestyle" },
-  { label: "Reviews", href: "/product-reviews" },
+/* Where people can shop my picks. Both are affiliate storefronts. */
+export const shopLinks = [
+  { label: "Amazon storefront", href: "https://www.amazon.com/shop/superzydan" },
+  { label: "LTK", href: "https://www.shopltk.com/explore/SuperZydan" },
 ] as const;
 
 export const twitchUsername = "superzydan";
@@ -123,15 +118,6 @@ export const socialStats: SocialStat[] = [
 ];
 
 /*
- * Fallback figures. YouTube is replaced by the live API value when
- * YOUTUBE_API_KEY is configured; TikTok has no public API, so it stays manual.
- */
-export const heroStats: { label: string; value: number; format: "compact" | "plain" }[] = [
-  { label: "YouTube subs", value: 19500, format: "compact" },
-  { label: "TikTok followers", value: 108000, format: "compact" },
-];
-
-/*
  * `duration` and `views` are optional: the card renders those pills only when a
  * value is present. Fill them from the YouTube Data API rather than by hand so
  * the numbers stay accurate.
@@ -186,197 +172,16 @@ export const REVIEWS_YOUTUBE_CHANNEL_ID = "UCUvfzwFAAZp2oV-bG0PWk9Q";
 export const reviewsChannelUrl = "https://www.youtube.com/@superzydanreviews";
 
 export const affiliateDisclosure =
-  "Some links on this site are affiliate or referral links, including Amazon, HexClad, GameSir and Goblin Tech Keys. If you buy through them I may earn a small commission or credit at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. I appreciate you!";
+  "Some links on this site are affiliate or referral links, including Amazon, LTK, HexClad, GameSir, Goblin Tech Keys and HomeRun Pet. If you buy through them I may earn a small commission or credit at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. I appreciate you!";
 
-/*
- * Gear showcase. Items flagged `pending` have no confirmed spec sheet yet and
- * render as a "spec TBC" slot rather than showing placeholder numbers as fact.
- */
-export type GearItem = {
-  title: string;
-  subtitle: string;
-  blurb: string;
-  specs: string[];
-  badges: string[];
-  href: string;
-  cta: string;
-  tag: string;
-  /** Optional card art — used for the live review boards. */
-  image?: string;
-  /** True when the spec sheet is not confirmed yet; renders as a "Spec TBC" slot. */
-  pending: boolean;
-};
-
-export type GearCategory = {
-  id: string;
-  label: string;
-  icon: string;
-  items: GearItem[];
-};
-
-export const gearCategories: GearCategory[] = [
-  {
-    id: "keyboards",
-    label: "Keyboards",
-    icon: "keyboard",
-    items: [
-      {
-        title: "Gateron × SIKAKEYB FNP75 HE",
-        subtitle: "Hall Effect 75%",
-        blurb:
-          "The daily driver. Red, Rapid Trigger, triple spacebar, Magnetic Jade Ultras. I bought it myself — full unboxing and switch test on the blog.",
-        specs: [
-          "75% Hall Effect",
-          "8K polling",
-          "Rapid Trigger",
-          "Magnetic Jade Ultra",
-        ],
-        badges: [],
-        href: "/lifestyle/gateron-sikakeyb-fnp75-he",
-        cta: "Read the review",
-        tag: "On the desk",
-        image: "/images/gateron-sikakeyb-fnp75-he.jpg",
-        pending: false,
-      },
-    ],
-  },
-  {
-    id: "audio",
-    label: "Audio",
-    icon: "headphones",
-    items: [
-      {
-        title: "Hollyland Lark M2",
-        subtitle: "Wireless lavalier mics",
-        blurb:
-          "The little magnetic mics I clip on for vlogs and on-the-go videos. I bought them myself. Unboxing, sound test and thoughts are in the review.",
-        specs: [
-          "Wireless lavalier",
-          "All-in-one charging case",
-          "USB-C and Lightning receivers",
-        ],
-        badges: [],
-        href: "/lifestyle/hollylandlarkm2",
-        cta: "Read the review",
-        tag: "On the desk",
-        image: "/blog/hollylandlarkm2/case-with-open-shot.webp",
-        pending: false,
-      },
-      {
-        title: "Elgato Wave 3 White",
-        subtitle: "Mic chain",
-        blurb:
-          "Wave 3 on a Wave Mic Arm — white to match the rest of the desk. Same chain from the setup page.",
-        specs: ["Elgato Wave 3 White", "Wave Mic Arm"],
-        badges: ["Broadcast"],
-        href: "/setup#wave-3",
-        cta: "See it on the setup",
-        tag: "On the desk",
-        pending: false,
-      },
-      {
-        title: "HyperX Cloud Alpha",
-        subtitle: "Headset",
-        blurb: "The monitoring cans on the desk — shop link and the rest of the audio chain live on Setup.",
-        specs: ["HyperX Cloud Alpha"],
-        badges: ["Monitoring"],
-        href: "/setup#cloud-alpha",
-        cta: "See it on the setup",
-        tag: "On the desk",
-        pending: false,
-      },
-    ],
-  },
-  {
-    id: "pc",
-    label: "PC Specs",
-    icon: "cpu",
-    items: [
-      {
-        title: "Custom battlestation",
-        subtitle: "Main PC",
-        blurb:
-          "i9-13900K and a 4090 AERO in a Lian Li O11 Vision. Full parts list, shop links, and more photos on the setup page.",
-        specs: [
-          "Intel i9-13900K",
-          "RTX 4090 AERO",
-          "64 GB DDR5 6000",
-          "Z790 AORUS PRO",
-          "990 PRO 2TB",
-          "O11 Vision White",
-        ],
-        badges: ["Custom build"],
-        href: "/setup#gaming-pc",
-        cta: "Open the full spec sheet",
-        tag: "On the desk",
-        image:
-          "/images/setup/pc-build-2.webp",
-        pending: false,
-      },
-    ],
-  },
-  {
-    id: "streaming",
-    label: "Streaming Gear",
-    icon: "video",
-    items: [
-      {
-        title: "Sony Alpha 6000",
-        subtitle: "Camera chain",
-        blurb:
-          "Mirrorless body, Sigma 16mm f/1.4, Cam Link 4K, and a ULANZI desk mount into the stream PC.",
-        specs: [
-          "Sony a6000",
-          "Sigma 16mm f/1.4",
-          "Elgato Cam Link 4K",
-          "ULANZI desk mount",
-        ],
-        badges: ["Camera"],
-        href: "/setup#sony-a6000",
-        cta: "See it on the setup",
-        tag: "On the desk",
-        image:
-          "/images/setup/pc-build-1.webp",
-        pending: false,
-      },
-      {
-        title: "Elgato broadcast kit",
-        subtitle: "Capture and lights",
-        blurb:
-          "4K60 Pro MK.2, Stream Deck MK.2, Key Light, and Key Light Air — the rest of the stream desk from Setup.",
-        specs: [
-          "4K60 Pro MK.2",
-          "Stream Deck MK.2",
-          "Key Light",
-          "Key Light Air",
-        ],
-        badges: ["Streaming"],
-        href: "/setup#stream-deck",
-        cta: "See it on the setup",
-        tag: "On the desk",
-        pending: false,
-      },
-    ],
-  },
-];
-
-/* Card shape for blog posts; built from content/blog by lib/blog.ts. */
-export type VlogPost = {
-  title: string;
-  excerpt: string;
-  tag: string;
-  readTime: number;
-  status: string;
-  /** Null when the post has no usable image; the card renders a fallback. */
-  thumbnail: string | null;
-  url: string;
-  /** On-site review. Opens in the same tab instead of a new window. */
-  internal?: boolean;
-};
-
+/* Past collabs. `note` is the one line under the name; keep it to what actually happened. */
 export const partners = [
-  { name: "DreamHack Dallas 2025", href: "https://dreamhack.com/dallas/" },
-  { name: "HexClad", href: "https://www.amazon.com/stores/page/84D63786-37D7-4ED6-B9B8-496C46020D43?tag=superzydan1-20" },
-  { name: "GameSir", href: "https://www.amazon.com/s?k=GAMESIR&tag=superzydan1-20" },
-  { name: "Goblin Tech Keys", href: "https://goblintechkeys.com/?ref=p8hHC0WDNtCKEx" },
+  { name: "DreamHack Dallas 2025", note: "In person", href: "https://dreamhack.com/dallas/" },
+  {
+    name: "HexClad",
+    note: "Cookware",
+    href: "https://www.amazon.com/stores/page/84D63786-37D7-4ED6-B9B8-496C46020D43?tag=superzydan1-20",
+  },
+  { name: "GameSir", note: "Controllers", href: "https://www.amazon.com/s?k=GAMESIR&tag=superzydan1-20" },
+  { name: "Goblin Tech Keys", note: "Custom keycaps", href: "https://goblintechkeys.com/?ref=p8hHC0WDNtCKEx" },
 ] as const;

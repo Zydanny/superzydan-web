@@ -289,7 +289,7 @@ function Rail({
  * A thumbnail mounted like a screen on the wall: cut corners, a violet frame
  * that lights cyan on hover or keyboard focus.
  */
-function Screen({
+export function Screen({
   src,
   badge,
   large = false,

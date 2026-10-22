@@ -1,22 +1,26 @@
-import { AmazonStorefront } from "@/components/home/amazon-storefront";
+import type { Metadata } from "next";
+import { Collabs } from "@/components/home/collabs";
+import { DeskTeaser } from "@/components/home/desk-teaser";
 import { DiscordCta } from "@/components/home/discord-cta";
-import { GearReviews } from "@/components/home/gear-reviews";
+import { LatestPosts } from "@/components/home/latest-posts";
 import { NeonHero } from "@/components/home/neon-hero";
-import { Partners } from "@/components/home/partners";
-import { SocialStats } from "@/components/home/social-stats";
-import { VlogFeed } from "@/components/home/vlog-feed";
 import { Watch } from "@/components/home/watch";
+import { ZyverseLanes } from "@/components/home/zyverse-lanes";
+import { JsonLd } from "@/components/json-ld";
 import { TwitchStatusProvider } from "@/components/twitch-status-provider";
+import { getAllPosts } from "@/lib/blog";
 import { getDiscordStats } from "@/lib/discord";
+import { PAGES, pageMetadata, personJsonLd, websiteJsonLd } from "@/lib/seo";
 import { youtubeVideos } from "@/lib/site";
 import { getTwitchClips, getTwitchStatus } from "@/lib/twitch";
-import { getVlogPosts } from "@/lib/blog";
 import { getLatestChannelVideos, getYouTubeSubscriberCount } from "@/lib/youtube";
+
+export const metadata: Metadata = pageMetadata(PAGES.home);
 
 /*
  * Re-render every 15 min so YouTube uploads and the subscriber count stay
  * current. Next requires this to be a literal it can read statically, so
- * it cannot be imported from the lib files — keep in sync with
+ * it cannot be imported from the lib files. Keep in sync with
  * YOUTUBE_REVALIDATE_SECONDS in lib/youtube.ts.
  *
  * Twitch live status is the exception: it needs to flip within a minute, so
@@ -25,17 +29,10 @@ import { getLatestChannelVideos, getYouTubeSubscriberCount } from "@/lib/youtube
 export const revalidate = 900;
 
 export default async function Home() {
-  const [
-    liveVideos,
-    subscriberCount,
-    posts,
-    twitchStatus,
-    discordStats,
-    twitchClips,
-  ] = await Promise.all([
+  const [liveVideos, subscriberCount, posts, twitchStatus, discordStats, twitchClips] = await Promise.all([
     getLatestChannelVideos(4),
     getYouTubeSubscriberCount(),
-    getVlogPosts(6),
+    getAllPosts(),
     getTwitchStatus(),
     getDiscordStats(),
     getTwitchClips(4),
@@ -52,17 +49,13 @@ export default async function Home() {
           discordMembers={discordStats.members}
         />
         <Watch videos={videos} clips={twitchClips} />
+        <ZyverseLanes />
+        <Collabs />
+        <DeskTeaser />
+        <LatestPosts posts={posts.slice(0, 3)} />
         <DiscordCta stats={discordStats} />
-        <SocialStats
-          youtubeSubscribers={subscriberCount}
-          twitchFollowers={twitchStatus.followers}
-          discordMembers={discordStats.members}
-        />
-        <GearReviews />
-        <AmazonStorefront />
-        <VlogFeed posts={posts} />
-        <Partners />
       </main>
+      <JsonLd nodes={[personJsonLd(), websiteJsonLd()]} />
     </TwitchStatusProvider>
   );
 }

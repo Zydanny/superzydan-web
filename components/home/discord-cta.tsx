@@ -1,123 +1,91 @@
-import { ArrowUpRightIcon, CheckIcon } from "lucide-react";
-import { CountUp } from "@/components/count-up";
 import { DiscordMark } from "@/components/discord-mark";
-import { Parallax } from "@/components/motion/parallax";
-import { Reveal } from "@/components/motion/reveal";
-import { Section } from "@/components/section";
+import { NeonButton } from "@/components/neon-button";
 import type { DiscordStats } from "@/lib/discord";
 
-const perks = [
-  "Stream pings the second we go live",
-  "Squad up for tactical lobbies and Roblox nights",
-  "Early looks at gear reviews and setup changes",
-  "Recipe drops, giveaways, and general chaos",
-];
+// Fixed locale so the server and the browser print the same number.
+const count = new Intl.NumberFormat("en-US");
 
 /*
- * Deliberately loud: Discord blurple against the site's emerald/cyan palette
- * so this block reads as the community anchor rather than another card in the
- * grid. Counts come live from the invite endpoint — no API key needed.
+ * The closing sign on the home page: one big lit JOIN THE DISCORD, the live
+ * member and online counts as lit counters, one button. Shares its look with
+ * the Community page.
  */
-export function DiscordCta({ stats }: { stats: DiscordStats }) {
+export function DiscordCta({
+  stats,
+  headingLevel = "h2",
+  line = "Stream pings the second we go live, squad-ups for Roblox and Minecraft nights, and the chaos that never makes the video.",
+}: {
+  stats: DiscordStats;
+  headingLevel?: "h1" | "h2";
+  line?: string;
+}) {
+  const Heading = headingLevel;
+
   return (
-    <Section id="discord">
-      <Reveal>
-        <div className="relative overflow-hidden rounded-3xl border border-[#5865F2]/35 bg-[#5865F2]/[0.07] p-8 backdrop-blur-md md:p-12">
-          {/* Blurple bloom, plus a faint mark bleeding off the corner. */}
+    <section aria-labelledby="discord-title" className="shell shell-y">
+      <div className="chamfer bg-neon-cyan/70 p-[2px] [--cut:18px]">
+        <div className="chamfer relative overflow-hidden bg-night-raised px-5 py-12 [--cut:17px] sm:px-10 lg:px-16 lg:py-16">
+          {/* Light pooling up from the bottom edge, painted once. */}
           <div
             aria-hidden
-            className="animate-mesh pointer-events-none absolute -top-24 -right-16 size-96 rounded-full bg-[radial-gradient(circle,#5865F2,transparent_65%)] opacity-25 blur-3xl"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(60%_80%_at_50%_100%,rgb(47_224_255/0.18),transparent)]"
           />
-          <Parallax
-            distance={26}
-            className="pointer-events-none absolute -bottom-12 -left-8"
-          >
-            <DiscordMark className="size-56 text-[#5865F2] opacity-[0.07]" />
-          </Parallax>
 
-          <div className="relative grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+          <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-center lg:gap-16">
             <div>
-              <span className="text-eyebrow inline-flex items-center gap-2 text-[#a5aeff]">
-                <DiscordMark className="size-4" />
-                {stats.name ?? "Discord community"}
-              </span>
-
-              <h2 className="text-display mt-4 text-3xl md:text-4xl lg:text-5xl">
-                Come hang out in the Discord
-              </h2>
-
-              <p className="mt-4 max-w-lg leading-relaxed text-muted-foreground">
-                This is where the community actually lives — stream pings, squad
-                finding, gear talk, and the kind of nonsense that doesn&apos;t make it
-                into a video. Free to join, no gatekeeping.
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <a
-                  href={stats.inviteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex h-13 items-center gap-2.5 rounded-xl bg-[#5865F2] px-7 text-base font-semibold text-white shadow-[0_0_44px_-12px_#5865F2] transition-all hover:bg-[#4752c4] hover:shadow-[0_0_60px_-10px_#5865F2]"
-                >
-                  <DiscordMark className="size-5" />
-                  Join the Discord
-                  <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-
-                {stats.members !== null ? (
-                  <p className="text-sm text-muted-foreground">
-                    Join{" "}
-                    <span className="font-semibold text-foreground">
-                      <CountUp value={stats.members} format="plain" />
-                    </span>{" "}
-                    members already inside
-                  </p>
-                ) : null}
-              </div>
+              <Heading
+                id="discord-title"
+                data-neon
+                className="font-display neon-cyan text-[3.25rem] leading-[0.86] font-black text-balance uppercase min-[400px]:text-6xl lg:text-8xl"
+              >
+                Join the Discord
+              </Heading>
+              <p className="mt-5 max-w-lg text-lg text-pretty text-haze lg:text-xl">{line}</p>
+              <NeonButton href={stats.inviteUrl} external className="mt-8">
+                <DiscordMark className="size-5" />
+                Join the Discord
+              </NeonButton>
             </div>
 
-            <div className="flex flex-col gap-6">
-              {stats.members !== null || stats.online !== null ? (
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-[#5865F2]/25 bg-background/40 p-5">
-                    <p className="text-display text-3xl md:text-4xl">
-                      {stats.members !== null ? (
-                        <CountUp value={stats.members} format="plain" />
-                      ) : (
-                        "—"
-                      )}
-                    </p>
-                    <p className="text-eyebrow mt-2 text-muted-foreground">Members</p>
-                  </div>
-
-                  <div className="rounded-2xl border border-[#5865F2]/25 bg-background/40 p-5">
-                    <p className="text-display inline-flex items-center gap-2 text-3xl md:text-4xl">
-                      <span className="size-2.5 rounded-full bg-primary shadow-[0_0_10px_var(--glow-emerald)]" />
-                      {stats.online !== null ? (
-                        <CountUp value={stats.online} format="plain" />
-                      ) : (
-                        "—"
-                      )}
-                    </p>
-                    <p className="text-eyebrow mt-2 text-muted-foreground">Online now</p>
-                  </div>
-                </div>
-              ) : null}
-
-              <ul className="space-y-3">
-                {perks.map((perk) => (
-                  <li key={perk} className="flex items-start gap-3 text-sm">
-                    <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#5865F2]/20 text-[#a5aeff]">
-                      <CheckIcon className="size-3" />
-                    </span>
-                    <span className="text-muted-foreground">{perk}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {stats.members !== null || stats.online !== null ? (
+              <dl className="grid grid-cols-2 gap-3 sm:gap-4">
+                {stats.members !== null ? <Counter label="members" value={stats.members} tone="magenta" /> : null}
+                {stats.online !== null ? <Counter label="online now" value={stats.online} tone="cyan" live /> : null}
+              </dl>
+            ) : null}
           </div>
         </div>
-      </Reveal>
-    </Section>
+      </div>
+    </section>
+  );
+}
+
+function Counter({
+  label,
+  value,
+  tone,
+  live = false,
+}: {
+  label: string;
+  value: number;
+  tone: "magenta" | "cyan";
+  live?: boolean;
+}) {
+  return (
+    <div className={`chamfer p-[2px] [--cut:12px] ${tone === "magenta" ? "bg-neon-magenta/60" : "bg-neon-cyan/60"}`}>
+      <div className="chamfer flex h-full flex-col-reverse justify-end bg-night px-4 py-5 [--cut:11px] sm:px-6">
+        <dt className="mt-2 flex items-center gap-2 text-sm font-bold tracking-wide text-haze uppercase">
+          {live ? <span aria-hidden className="size-2 rounded-full bg-neon-cyan shadow-[0_0_8px_var(--neon-cyan)]" /> : null}
+          {label}
+        </dt>
+        <dd
+          className={`font-display text-5xl leading-none font-black tabular-nums lg:text-6xl ${
+            tone === "magenta" ? "neon-magenta" : "neon-cyan"
+          }`}
+        >
+          {count.format(value)}
+        </dd>
+      </div>
+    </div>
   );
 }
