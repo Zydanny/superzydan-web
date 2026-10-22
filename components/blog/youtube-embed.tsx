@@ -99,11 +99,18 @@ export function YouTubeEmbed({
     <div
       ref={containerRef}
       className={cn(
-        "not-prose relative my-8 overflow-hidden rounded-2xl border border-border bg-muted",
-        short ? "mx-auto aspect-[9/16] w-full max-w-xs" : "aspect-video w-full",
+        // A screen on the wall, like the Watch section: cut corners, a lit edge.
+        "chamfer relative my-8 bg-neon-cyan/70 p-[2px] [--cut:14px]",
+        short ? "mx-auto w-full max-w-xs" : "w-full",
         className,
       )}
     >
+      <div
+        className={cn(
+          "chamfer relative overflow-hidden bg-night-raised [--cut:13px]",
+          short ? "aspect-[9/16]" : "aspect-video",
+        )}
+      >
       {start !== null ? (
         <iframe
           ref={iframeRef}
@@ -127,16 +134,17 @@ export function YouTubeEmbed({
             alt=""
             fill
             sizes={short ? "320px" : "(max-width: 768px) 100vw, 768px"}
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+            className="object-cover transition-transform duration-300 ease-(--ease-out) group-hover:scale-[1.03] motion-reduce:transition-none"
           />
-          <span className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/10" />
-          <span className="absolute inset-0 rounded-2xl ring-primary ring-inset group-focus-visible:ring-4" />
-          <span className="absolute top-1/2 left-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform group-hover:scale-110 group-focus-visible:scale-110 motion-reduce:transition-none">
+          <span className="absolute inset-0 bg-night/25 transition-colors duration-200 group-hover:bg-night/5" />
+          <span className="absolute inset-0 ring-neon-cyan ring-inset group-focus-visible:ring-4" />
+          <span className="chamfer absolute top-1/2 left-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center bg-neon-magenta text-primary-foreground transition-transform duration-150 ease-(--ease-out) [--cut:8px] group-active:scale-[0.97] lg:size-20">
             <PlayIcon className="ml-1 size-7 fill-current" />
           </span>
           <span className="sr-only">Play video: {title}</span>
         </button>
       )}
+      </div>
     </div>
   );
 }

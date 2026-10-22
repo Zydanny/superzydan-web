@@ -1,55 +1,25 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowUpRightIcon } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
-import { VlogFeed } from "@/components/home/vlog-feed";
-import { GearBento } from "@/components/pages/gear-bento";
+import { CategoryNav } from "@/components/pages/category-nav";
 import { QuickTakes } from "@/components/pages/quick-takes";
-import { Section } from "@/components/section";
-import { SectionHeading } from "@/components/section-heading";
-import { SpotlightCard } from "@/components/spotlight-card";
-import { ShimmerButton } from "@/components/shimmer-button";
-import { Reveal } from "@/components/motion/reveal";
-import { StaggerGroup, StaggerItem } from "@/components/motion/reveal";
-import {
-  affiliateDisclosure,
-  reviewCategories,
-  reviewsIntro,
-  setupItems,
-  STOREFRONT_URL,
-} from "@/lib/pages";
+import { NeonButton } from "@/components/neon-button";
+import { PostCard } from "@/components/post-card";
+import { SignHeading } from "@/components/sign-heading";
 import { AMAZON_ASSOCIATE_STATEMENT, isAffiliateUrl } from "@/lib/affiliate";
-import { getReviewPosts, toVlogPost } from "@/lib/blog";
-import { keyboardReview } from "@/lib/reviews";
+import { getReviewPosts } from "@/lib/blog";
+import { PAGES, pageMetadata } from "@/lib/seo";
 import { reviewsChannelUrl } from "@/lib/site";
 import { getReviewsChannelUploads } from "@/lib/youtube";
 
-export const metadata: Metadata = {
-  title: "Product Reviews",
-  description: reviewsIntro,
-};
+export const metadata: Metadata = pageMetadata(PAGES.productReviews);
 
-const featured = setupItems.filter((item) =>
-  ["Custom battlestation", keyboardReview.productName, "Sony Alpha 6000"].includes(
-    item.title,
-  ),
-);
+/* The reviews channel feed changes; refresh with the home page's cadence. */
+export const revalidate = 900;
 
-export default async function ProductReviewsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ category?: string | string[] }>;
-}) {
-  const [reviews, uploads, params] = await Promise.all([
-    getReviewPosts(),
-    getReviewsChannelUploads(),
-    searchParams,
-  ]);
+const NEWEST = 9;
 
-  // The filter pills use the product category, so ?category=Keyboards links straight to one.
-  const cards = reviews.map((post) => ({ ...toVlogPost(post), tag: post.productCategory ?? "Other" }));
-  const requested = Array.isArray(params.category) ? params.category[0] : params.category;
-  const initialTag = requested && cards.some((card) => card.tag === requested) ? requested : "All";
+export default async function ProductReviewsPage() {
+  const [reviews, uploads] = await Promise.all([getReviewPosts(), getReviewsChannelUploads()]);
 
   // Shorts without a write-up of their own, newest first. A Short embedded in a post's body counts as written.
   const written = new Set(
@@ -57,112 +27,73 @@ export default async function ProductReviewsPage({
   );
   const quickTakes = uploads.filter((upload) => upload.short && !written.has(upload.id));
   const quickTakesHaveAmazon = quickTakes.some((upload) => upload.productUrl && isAffiliateUrl(upload.productUrl));
+  const [first, ...rest] = reviews.slice(0, NEWEST);
 
   return (
     <main id="content" className="flex-1">
       <PageHero
-        eyebrow="Product Reviews"
-        title="Gear I actually put on the desk"
-        description={reviewsIntro}
-      />
+        title="Product Reviews"
+        tone="cyan"
+        description="Gear, gadgets and kitchen stuff I've actually used, on video. What I think, the good and the bad, and where to get it. My wife and I pick the home and kitchen stuff together."
+      >
+        <div className="mt-8">
+          <CategoryNav reviews={reviews} />
+        </div>
+      </PageHero>
 
-      {cards.length > 0 ? (
-        <VlogFeed
-          posts={cards}
-          initialTag={initialTag}
-          eyebrow="Reviews"
-          title="Every review, newest first"
-          description="The video, what I actually think, and where to get it. Pick a category to narrow it down."
-        />
+      {first ? (
+        <section aria-labelledby="newest-title" className="shell shell-y">
+          <SignHeading id="newest-title" tone="magenta" size="md" sub="Pick a category above for everything in it.">
+            Newest reviews
+          </SignHeading>
+          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-12">
+            <PostCard post={first} feature />
+            <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-1">
+              {rest.slice(0, 2).map((post) => (
+                <li key={post.slug}>
+                  <PostCard post={post} />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <ul className="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.slice(2).map((post) => (
+              <li key={post.slug} className="build-in">
+                <PostCard post={post} />
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
 
       {quickTakes.length > 0 ? (
-        <Section>
-          <SectionHeading
-            eyebrow="Quick Takes"
-            title="Short and to the point"
-            description="Shorts from SuperZydan Reviews. Tap one to watch it on YouTube."
-          />
-          {quickTakesHaveAmazon ? (
-            <p className="-mt-4 mb-6 text-sm text-muted-foreground">
-              The shop links are affiliate links. If you buy through them I may earn a small commission at no extra
-              cost to you. {AMAZON_ASSOCIATE_STATEMENT}
-            </p>
-          ) : null}
-          <QuickTakes shorts={quickTakes} />
-          <Reveal>
-            <div className="mt-8">
-              <ShimmerButton href={reviewsChannelUrl} external>
-                Watch the reviews channel
-              </ShimmerButton>
+        <section aria-labelledby="quick-title" className="border-t border-neon-violet/20">
+          <div className="shell shell-y">
+            <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
+              <SignHeading
+                id="quick-title"
+                tone="violet"
+                size="md"
+                sub="Shorts from SuperZydan Reviews. Tap one to watch it on YouTube."
+              >
+                Quick Takes
+              </SignHeading>
+              <NeonButton href={reviewsChannelUrl} external variant="outline">
+                The reviews channel
+              </NeonButton>
             </div>
-          </Reveal>
-        </Section>
-      ) : null}
-
-      <Section>
-        <SectionHeading
-          eyebrow="Featured"
-          title="PC, Hall Effect board, camera"
-          description="The three pieces people ask about most — specs and affiliate links on every card."
-        />
-        <GearBento items={featured} />
-      </Section>
-
-      <Section>
-        <SectionHeading
-          eyebrow="Browse"
-          title="What we cover"
-          description="Lifestyle posts and storefront picks, grouped the way the old shop pages were."
-        />
-        <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {reviewCategories.map((category) => {
-            const card = (
-              <SpotlightCard className="group/card flex h-full flex-col p-6">
-                <div className="flex items-start justify-between">
-                  <h3 className="text-display text-lg">{category.label}</h3>
-                  <ArrowUpRightIcon className="size-4 text-muted-foreground transition-all group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-hover/card:text-primary" />
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {category.blurb}
-                </p>
-              </SpotlightCard>
-            );
-
-            return (
-              <StaggerItem key={category.label}>
-                {"external" in category && category.external ? (
-                  <a
-                    href={category.href}
-                    target="_blank"
-                    rel="noopener noreferrer sponsored"
-                    className="block h-full"
-                  >
-                    {card}
-                  </a>
-                ) : (
-                  <Link href={category.href} className="block h-full">
-                    {card}
-                  </Link>
-                )}
-              </StaggerItem>
-            );
-          })}
-        </StaggerGroup>
-      </Section>
-
-      <Section>
-        <Reveal>
-          <div className="glass flex flex-col gap-5 rounded-2xl p-8 md:flex-row md:items-center md:justify-between">
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-              {affiliateDisclosure}
-            </p>
-            <ShimmerButton href={STOREFRONT_URL} external>
-              Shop the storefront
-            </ShimmerButton>
+            {quickTakesHaveAmazon ? (
+              <p className="mt-6 max-w-3xl text-sm text-pretty text-haze">
+                The shop links are affiliate links. If you buy through them I may earn a small commission at no extra
+                cost to you. {AMAZON_ASSOCIATE_STATEMENT}
+              </p>
+            ) : null}
+            <div className="mt-8">
+              <QuickTakes shorts={quickTakes} />
+            </div>
           </div>
-        </Reveal>
-      </Section>
+        </section>
+      ) : null}
     </main>
   );
 }

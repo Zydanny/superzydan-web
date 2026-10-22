@@ -48,14 +48,15 @@ const nextConfig: NextConfig = {
     ],
   },
   /*
-   * These pages read the post files at runtime: /lifestyle and /product-reviews
-   * render per request (they read ?tag= and ?category=), and the home page
-   * regenerates every 15 minutes. Post pages are prerendered and don't need this.
+   * Pages that regenerate on the server (they refresh live YouTube, Twitch or
+   * Discord data) read the post files again when they do, so the files have
+   * to ship with them. Fully static pages read them at build time only.
    */
   outputFileTracingIncludes: {
     "/": ["./content/blog/**/*"],
-    "/lifestyle": ["./content/blog/**/*"],
+    "/lifestyle/[slug]": ["./content/blog/**/*"],
     "/product-reviews": ["./content/blog/**/*"],
+    "/work-with-me": ["./content/blog/**/*"],
   },
   async redirects() {
     return legacyPostSlugs.map((slug) => ({
