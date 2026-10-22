@@ -17,9 +17,9 @@ Write these two Vercel values down. Putting them back is the rollback.
 
 ## 1. The day before
 
-- [ ] Decide what happens to the bare domain. On Vercel, `superzydanofficial.com` redirects to `www`. The app doesn't do that on its own, so on Hostinger the bare domain would show the site with a noindex header instead of redirecting. That's safe for Google but splits links. Either ask me to add the redirect to `proxy.ts` (a small change, tested on the temporary site first), or set up a redirect in hPanel if it offers one for this app.
 - [ ] Make sure the Cloudflare Web Analytics token is in `cloudflareAnalyticsToken` in `lib/site.ts` (it's empty now, so no visit stats load). Optional, but stats only count on the live domain.
 - [ ] In hPanel, check the app's **Environment variables**: `YOUTUBE_API_KEY`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` and `NEXT_PUBLIC_TWITCH_PARENTS` are there, and `SHOW_DRAFTS` is **not**.
+- [ ] In hPanel, check the app's latest deployment is green and its vulnerability scan shows nothing open (Next.js is on 16.4.2 for the October 2026 advisories).
 - [ ] Make sure the WordPress backups are still in `Z:\SuperZydan-Website-Redesign\` (the XML export, the SQL dump and the files archive). The XML is the only copy of the old posts.
 
 ## 2. Put the redesign on master
@@ -56,10 +56,10 @@ curl -sI https://www.superzydanofficial.com/
 - [ ] There is **no** `x-robots-tag` line. If there is one, the live domain would drop out of Google: tell me straight away.
 
 ```bash
-curl -sI https://superzydanofficial.com/
+curl -sI "https://superzydanofficial.com/lifestyle/hollylandlarkm2?utm_source=test"
 ```
 
-- [ ] Either a 301/308 to `https://www.superzydanofficial.com/` (if the redirect from step 1 is in), or a 200 with `x-robots-tag: noindex, nofollow`. Both are safe. A 200 with no `x-robots-tag` is not: tell me.
+- [ ] `HTTP/1.1 308` with `location: https://www.superzydanofficial.com/lifestyle/hollylandlarkm2?utm_source=test`. The app sends this itself (`proxy.ts`), keeping the path and query string. If you get a 200 instead, hPanel isn't passing the bare domain to the app: tell me. If it's a 200 with no `x-robots-tag` line, tell me straight away.
 
 ```bash
 curl -s https://www.superzydanofficial.com/robots.txt
