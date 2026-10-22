@@ -51,7 +51,7 @@ export default async function ReviewCategoryPage({ params }: { params: Promise<{
         <ul className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post, index) => (
             <li key={post.slug} className={index > 2 ? "build-in" : undefined}>
-              <PostCard post={post} headingLevel="h2" />
+              <PostCard post={post} headingLevel="h2" priority={index === 0} deferred={index > 0} />
             </li>
           ))}
         </ul>

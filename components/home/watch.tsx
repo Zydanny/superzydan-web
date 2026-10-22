@@ -295,12 +295,15 @@ export function Screen({
   badge,
   large = false,
   deferred = false,
+  priority = false,
 }: {
   src: string | null;
   badge?: string;
   large?: boolean;
   /** Wait for the page to finish loading before fetching the picture (for screens just below the hero). */
   deferred?: boolean;
+  /** The page's main picture: fetch it first. */
+  priority?: boolean;
 }) {
   const Picture = deferred ? DeferredImage : Image;
   return (
@@ -321,6 +324,9 @@ export function Screen({
             src={src}
             alt=""
             fill
+            preload={priority}
+            fetchPriority={priority ? "high" : undefined}
+            loading={priority ? "eager" : undefined}
             sizes={large ? "(min-width: 1024px) 700px, 100vw" : "(min-width: 1024px) 300px, 78vw"}
             className="object-cover transition-transform duration-300 ease-(--ease-out) group-hover/card:scale-[1.03]"
           />

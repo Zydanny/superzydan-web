@@ -664,34 +664,79 @@ html.lenis body {
 }
 
 /*
- * The portal rings behind every page (components/motion/portal-rings.tsx): a
- * fixed layer under the content. Each ring turns by its own --turn over the
- * first 9000px of scroll, a set distance rather than the page's length so a
- * short page doesn't spin them faster. Off with reduced motion, where the
- * rings simply hang still.
+ * The portal rings (components/motion/portal-rings.tsx). In the hero they
+ * frame the stage: on the right on desktop, centred behind the photo on
+ * phones. Once the hero scrolls away they shrink to the page edge and then
+ * drift across to the other edge and back as the reader goes down, waiting at
+ * each edge and dipping while they cross so they don't sit behind the copy.
+ * Each ring also turns by its own --turn over the first 9000px of scroll.
+ *
+ * Layers: .portal-layer (the screen) > .portal-drift (edge to edge) >
+ * .portal (hero pose to edge pose) > .portal-ring (turning).
+ *
+ * Without scroll timelines, or with reduced motion, the layer sits in the
+ * page instead of on the screen: still rings in the hero that scroll away
+ * with it, so nothing ends up behind later sections.
+ *
+ * The rings stay hidden (and so unpainted) for the first moment, then fade
+ * in: painting the big ring layers would otherwise hold up the first paint.
  */
 .portal-layer {
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  inset: 0 0 auto;
+  height: 100svh;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  /* Where the rings wait at the right edge (centre past the screen edge), and how far they travel to the left one. */
+  --edge-x: calc(100vw + 3rem);
+  --edge-scale: 0.6;
+  --edge-opacity: 0.45;
+  animation: portal-in 900ms var(--ease-out) 700ms both;
+}
+
+@keyframes portal-in {
+  from {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-layer {
+    animation-duration: 1ms;
+  }
+}
+
+.portal-drift {
+  position: absolute;
+  inset: 0;
 }
 
 .portal {
   position: absolute;
   left: 50%;
-  top: 34%;
+  top: 36%;
   width: 46rem;
   aspect-ratio: 1;
   translate: -50% -50%;
+  /* From the hero pose to the right edge, half way down the screen. */
+  --settle-x: calc(var(--edge-x) - 50vw);
+  --settle-y: 14vh;
 }
 
 @media (width >= 64rem) {
+  .portal-layer {
+    --edge-x: calc(100vw + 4rem);
+    --edge-scale: 0.5;
+    --edge-opacity: 0.85;
+  }
   .portal {
-    left: 74%;
-    top: 46%;
+    left: 72%;
+    top: 52%;
     width: min(88rem, 96vw);
+    --settle-x: calc(var(--edge-x) - 72vw);
+    --settle-y: -2vh;
   }
 }
 
@@ -715,8 +760,54 @@ html.lenis body {
   }
 }
 
+@keyframes portal-settle {
+  to {
+    transform: translate(var(--settle-x), var(--settle-y)) scale(var(--edge-scale));
+    opacity: var(--edge-opacity);
+  }
+}
+
+/* One crossing; run alternately it goes over and comes back. */
+@keyframes portal-cross {
+  0%,
+  30% {
+    transform: none;
+    opacity: 1;
+    animation-timing-function: var(--ease-in-out);
+  }
+  50% {
+    opacity: 0.25;
+  }
+  70%,
+  100% {
+    transform: translateX(calc(100vw - 2 * var(--edge-x)));
+    opacity: 1;
+  }
+}
+
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
+    .portal-layer {
+      position: fixed;
+      inset: 0;
+      height: auto;
+    }
+
+    .portal {
+      animation: portal-settle linear both;
+      animation-timing-function: var(--ease-in-out);
+      animation-timeline: scroll(root);
+      animation-range: 15vh 95vh;
+    }
+
+    .portal-drift {
+      animation: portal-cross linear both;
+      animation-direction: alternate;
+      animation-iteration-count: 6;
+      animation-timeline: scroll(root);
+      animation-range: 110vh calc(110vh + 10800px);
+    }
+
     .portal-ring {
       animation: portal-turn linear both;
       animation-timeline: scroll(root);

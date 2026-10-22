@@ -25,14 +25,18 @@ export function VodGrid({ videos }: { videos: VideoMeta[] }) {
             {group.title}
           </TubeSign>
           <ul className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {group.items.map((video) => (
+            {group.items.map((video, index) => (
               <li key={video.id}>
                 <button
                   type="button"
                   onClick={() => setPlaying(video)}
                   className="group/card block w-full cursor-pointer text-left"
                 >
-                  <Screen src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} />
+                  <Screen
+                    src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
+                    priority={groupIndex === 0 && index === 0}
+                    deferred={groupIndex > 0 || index > 0}
+                  />
                   <span className="mt-3 line-clamp-2 block font-semibold text-pretty transition-colors group-hover/card:text-neon-cyan">
                     {video.title}
                   </span>
