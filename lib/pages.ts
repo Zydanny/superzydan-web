@@ -206,15 +206,15 @@ export const privacyPage = {
     },
     {
       title: "Emails you send me",
-      body: "The contact forms don't send or store anything on this site. They open your own email app with your message filled in, and it reaches me like any other email at superzydanofficial@gmail.com. I only use what you write to reply to you.",
+      body: "The contact forms don't send or store anything on this site. They open your own email app with your message filled in, and it reaches me like any other email at superzydanofficial@gmail.com. I only use what you write to reply to you. Anyone can ask me to delete an email they sent, not just parents.",
     },
     {
       title: "Videos, streams and chat",
-      body: "YouTube videos, the Twitch player and the Discord chat preview come from those services. They only load when you tap to play or peek, and once they load, YouTube, Twitch and WidgetBot (which runs the Discord preview) may set their own cookies under their own privacy policies.",
+      body: "YouTube videos, the Twitch player and the Discord chat preview come from those services. Video and stream thumbnails are served from this site, so your browser doesn't contact YouTube or Twitch until you tap. The players themselves only load when you tap to play or peek, and once they load, YouTube, Twitch and WidgetBot (which runs the Discord preview) may set their own cookies under their own privacy policies.",
     },
     {
       title: "Affiliate and shop links",
-      body: "Some links go to Amazon, LTK, HexClad, GameSir, Goblin Tech Keys and HomeRun Pet as affiliate or referral links. If you click one, that store may use cookies to know you came from here, so I can earn a small commission. As an Amazon Associate I earn from qualifying purchases. What you buy is handled by the store, not by this site.",
+      body: "Some links go to Amazon, LTK, Goblin Tech Keys and HomeRun Pet as affiliate or referral links. If you click one, that store may use cookies to know you came from here, so I can earn a small commission. As an Amazon Associate I earn from qualifying purchases. What you buy is handled by the store, not by this site.",
     },
     {
       title: "Kids",

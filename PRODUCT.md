@@ -33,7 +33,7 @@ A real father-son gaming duo: SuperZydan and his son LinkNova playing Roblox, Mi
 - Mobile first. Lighthouse Performance and Accessibility 90+ on mobile. Embeds (Twitch, YouTube, WidgetBot) lazy-load.
 - Motion respects `prefers-reduced-motion`, animates only transform and opacity, no scroll-jacking, no layout shift.
 - Merch page exists but is unfinished: kept out of the nav, out of search results and out of the sitemap.
-- Amazon Associates rules: product links only from the video description, the storefront or the owner; no Amazon prices, star ratings or product photos; "As an Amazon Associate I earn from qualifying purchases." near Amazon links; links marked `rel="sponsored nofollow"`. One disclosure line also covers the other affiliate and referral links (HexClad, GameSir, Goblin Tech Keys, HomeRun Pet). Never Levanta links.
+- Amazon Associates rules: product links only from the video description, the storefront or the owner; no Amazon prices, star ratings or product photos; "As an Amazon Associate I earn from qualifying purchases." near Amazon links; links marked `rel="sponsored nofollow"`. One disclosure line also covers the other affiliate and referral links (LTK, Goblin Tech Keys, HomeRun Pet). HexClad and GameSir are linked only through Amazon, so the Amazon line covers them. Never Levanta links.
 - Undecided: contact-form service for Work With Me (ask before signing up for anything; mailto fallback), media kit file.
 
 ## Brand Commitments

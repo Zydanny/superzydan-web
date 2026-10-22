@@ -193,7 +193,7 @@ export const REVIEWS_YOUTUBE_CHANNEL_ID = "UCUvfzwFAAZp2oV-bG0PWk9Q";
 export const reviewsChannelUrl = "https://www.youtube.com/@superzydanreviews";
 
 export const affiliateDisclosure =
-  "Some links on this site are affiliate or referral links, including Amazon, LTK, HexClad, GameSir, Goblin Tech Keys and HomeRun Pet. If you buy through them I may earn a small commission or credit at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. I appreciate you!";
+  "Some links on this site are affiliate or referral links, including Amazon, LTK, Goblin Tech Keys and HomeRun Pet. If you buy through them I may earn a small commission or credit at no extra cost to you. As an Amazon Associate I earn from qualifying purchases. I appreciate you!";
 
 /* Past collabs. `note` is the one line under the name; keep it to what actually happened. */
 export const partners = [
