@@ -59,6 +59,8 @@ Amazon links always use the tracking ID in `AMAZON_ASSOCIATE_TAG` (`lib/site.ts`
 
 The site runs as a Node.js web app on Hostinger, connected to this GitHub repo. `HOSTINGER_SETUP.md` has the hPanel steps. Every push to the connected branch rebuilds and restarts it (`npm run build`, then the Next.js server). Image optimization (sharp), page revalidation, the `/api/twitch/status` route and `proxy.ts` all work there without extra setup.
 
+- `npm run build` uses webpack (`next build --webpack`). Turbopack's production build crashed on Hostinger: it runs PostCSS (Tailwind) in a separate Node process, and Hostinger's build environment ended that process before Turbopack could connect to it. `npm run dev` still uses Turbopack.
+
 - Visit stats come from Cloudflare Web Analytics. The token goes in `cloudflareAnalyticsToken` in `lib/site.ts`; while it's empty, no analytics script loads.
 - Only `www.superzydanofficial.com` gets indexed. Every other host (temporary domains, the bare domain, previews) gets an `X-Robots-Tag: noindex` header from `proxy.ts`.
 
