@@ -3,7 +3,7 @@ import path from "node:path";
 import { cache } from "react";
 import YAML from "yaml";
 import { isAmazonProductPage, productLinkProblem, withAssociateTag } from "@/lib/affiliate";
-import { AMAZON_ASSOCIATE_TAG, type VlogPost } from "@/lib/site";
+import { AMAZON_ASSOCIATE_TAG } from "@/lib/site";
 
 /*
  * Blog posts live in content/blog/<slug>.mdx: YAML frontmatter between `---`
@@ -54,9 +54,15 @@ export type Disclosure = keyof typeof DISCLOSURES;
 
 export type BlogPost = {
   title: string;
+  /** The search-result title: under 60 characters, written for what people search. Falls back to `title`. */
+  seoTitle: string;
+  /** The search-result snippet: under 155 characters. Falls back to `excerpt`. */
+  seoDescription: string;
   slug: string;
   /** YYYY-MM-DD. */
   date: string;
+  /** YYYY-MM-DD of the last real content change, for the sitemap. Falls back to `date`. */
+  updated: string;
   category: string;
   excerpt: string;
   /** Local path under public/ or an i.ytimg.com thumbnail. Null when the post has no art. */
@@ -74,6 +80,11 @@ export type BlogPost = {
   alternatives: BlogAlternative[];
   /** Shown above the alternatives when the reviewed product isn't sold anymore. */
   availabilityNote?: string;
+  /**
+   * Reviews only: the plain product name(s) for the Review structured data.
+   * Two for a head-to-head. Empty for my own products (Google ignores self-reviews).
+   */
+  reviewedProduct: string[];
   /** Drafts show in `npm run dev` and on Vercel preview links, never on the live site. */
   draft: boolean;
   /** Markdown/MDX body without the frontmatter. */
@@ -173,6 +184,11 @@ function parsePost(file: string, raw: string): BlogPost {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     throw new Error(`content/blog/${file}: date must look like 2025-08-16`);
   }
+  const rawUpdated = data.updated instanceof Date ? data.updated.toISOString().slice(0, 10) : data.updated;
+  const updated = optionalString(rawUpdated) ?? date;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(updated)) {
+    throw new Error(`content/blog/${file}: updated must look like 2025-08-16`);
+  }
 
   const slug = path.basename(file, ".mdx");
   const words = body.replace(/<[^>]+>|[#*_>`[\]()!-]/g, " ").split(/\s+/).filter(Boolean).length;
@@ -181,12 +197,18 @@ function parsePost(file: string, raw: string): BlogPost {
   const productCategory = optionalString(data.productCategory);
   const availabilityNote = optionalString(data.availabilityNote);
 
+  const title = requireString(data, "title", file);
+  const excerpt = typeof data.excerpt === "string" ? data.excerpt : "";
+
   return {
-    title: requireString(data, "title", file),
+    title,
+    seoTitle: optionalString(data.seoTitle) ?? title,
+    seoDescription: optionalString(data.seoDescription) ?? excerpt,
     slug,
     date,
+    updated,
     category,
-    excerpt: typeof data.excerpt === "string" ? data.excerpt : "",
+    excerpt,
     cover: typeof data.cover === "string" && data.cover ? data.cover : null,
     coverAlt: typeof data.coverAlt === "string" ? data.coverAlt : requireString(data, "title", file),
     readTime:
@@ -202,6 +224,9 @@ function parsePost(file: string, raw: string): BlogPost {
       parseAlternative(entry, index, file),
     ),
     ...(availabilityNote ? { availabilityNote } : {}),
+    reviewedProduct: (Array.isArray(data.reviewedProduct) ? data.reviewedProduct : [data.reviewedProduct])
+      .map(optionalString)
+      .filter((name): name is string => Boolean(name)),
     draft,
     body,
   };
@@ -238,21 +263,33 @@ export function postPath(slug: string) {
   return `/lifestyle/${slug}`;
 }
 
-/* Shape the existing feed cards expect. */
-export function toVlogPost(post: BlogPost): VlogPost {
-  return {
-    title: post.title,
-    excerpt: post.excerpt,
-    tag: post.category,
-    readTime: post.readTime,
-    status: "Published",
-    thumbnail: post.cover,
-    url: postPath(post.slug),
-    internal: true,
-  };
+/* Every YouTube video on a post: the review video first, then any embedded in the body. */
+export function postVideoIds(post: BlogPost): string[] {
+  const embedded = [...post.body.matchAll(/<YouTube id="([\w-]{11})"/g)].map((match) => match[1]);
+  return [...new Set([post.youtubeId, ...embedded].filter((id): id is string => Boolean(id)))];
 }
 
-export async function getVlogPosts(limit?: number): Promise<VlogPost[]> {
-  const posts = (await getAllPosts()).map(toVlogPost);
-  return limit ? posts.slice(0, limit) : posts;
+/*
+ * Posts to read next: the same product category first, then the same kind of
+ * post (review or not) in the same category, then the newest of the same kind.
+ */
+export async function getRelatedPosts(post: BlogPost, count = 3): Promise<BlogPost[]> {
+  const others = (await getAllPosts()).filter((other) => other.slug !== post.slug);
+  const review = isReview(post);
+  const tiers = [
+    others.filter((other) => post.productCategory && other.productCategory === post.productCategory),
+    others.filter((other) => other.category === post.category),
+    others.filter((other) => isReview(other) === review),
+    others,
+  ];
+
+  const picked: BlogPost[] = [];
+  for (const tier of tiers) {
+    for (const other of tier) {
+      if (picked.length === count) return picked;
+      if (!picked.includes(other)) picked.push(other);
+    }
+  }
+  return picked;
 }
+

@@ -1,4 +1,5 @@
 import { withAssociateTag } from "@/lib/affiliate";
+import type { VideoDetails } from "@/lib/seo";
 import { REVIEWS_YOUTUBE_CHANNEL_ID, type VideoMeta } from "@/lib/site";
 
 export const YOUTUBE_CHANNEL_ID = "UCdnz6bn82ihEWxpsbvWC80w";
@@ -195,22 +196,6 @@ export async function getLatestChannelVideos(limit = 12): Promise<VideoMeta[]> {
   }
 }
 
-/*
- * Live-tab VODs only. Kept for stream-focused surfaces; the homepage hero uses
- * getLatestChannelVideos so a new edited upload can outrank a recent stream.
- */
-export async function getLatestStreamVods(limit = 4): Promise<VideoMeta[]> {
-  try {
-    const candidates = (await fetchChannelFeed())
-      .filter((entry) => !isPortraitOrShort(entry) && isLiveVod(entry.title))
-      .map(toVideoMeta);
-
-    return uniqueByTitle(candidates).slice(0, limit);
-  } catch {
-    return [];
-  }
-}
-
 export type ChannelUpload = {
   id: string;
   title: string;
@@ -240,6 +225,39 @@ export async function getReviewsChannelUploads(): Promise<ChannelUpload[]> {
   } catch {
     return [];
   }
+}
+
+/*
+ * Title, description, upload time and length for specific videos, for the
+ * VideoObject structured data on posts. One quota unit per 50 videos. Empty
+ * without a key or when the API fails; callers fall back to the post's own data.
+ */
+export async function getVideoDetails(ids: string[]): Promise<Map<string, VideoDetails>> {
+  const details = new Map<string, VideoDetails>();
+  const key = process.env.YOUTUBE_API_KEY;
+  if (!key || ids.length === 0) return details;
+
+  try {
+    for (let i = 0; i < ids.length; i += 50) {
+      const batch = await fetchJson(
+        `${API}/videos?part=snippet,contentDetails&id=${ids.slice(i, i + 50).join(",")}&key=${key}`,
+      );
+      for (const video of (batch?.items ?? []) as ApiVideo[]) {
+        const { title, description, publishedAt } = video.snippet ?? {};
+        if (!title || !publishedAt) continue;
+        details.set(video.id, {
+          id: video.id,
+          title: title.trim(),
+          description: description ?? "",
+          uploadDate: publishedAt,
+          ...(video.contentDetails?.duration ? { duration: video.contentDetails.duration } : {}),
+        });
+      }
+    }
+  } catch {
+    /* Structured data falls back to the post's own title and date. */
+  }
+  return details;
 }
 
 /*
