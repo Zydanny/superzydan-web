@@ -14,8 +14,8 @@ const noSubscribe = () => () => {};
  * follows client-side navigation on its own, so one tag in the layout covers
  * every page. Skipped in development and until the token is filled in.
  *
- * It only loads on www.superzydanofficial.com, so visits to the temporary
- * hosting domain, previews and localhost never count. Pages are prerendered,
+ * It only loads on superzydanofficial.com (www redirects there first), so
+ * visits to the temporary hosting domain, previews and localhost never count. Pages are prerendered,
  * so the host is read in the browser: the server render has no host and
  * leaves the beacon out, and it's added once the page hydrates.
  */

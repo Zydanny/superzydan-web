@@ -8,7 +8,7 @@ export const site = {
  * Cloudflare dashboard -> Analytics & Logs -> Web Analytics -> your site ->
  * "Manage site" -> the JS snippet's "token" value. It's public (it ships in
  * every page), so it's fine to commit. Empty means no analytics script loads.
- * The beacon only loads on www.superzydanofficial.com (components/cloudflare-analytics.tsx).
+ * The beacon only loads on superzydanofficial.com (components/cloudflare-analytics.tsx).
  */
 export const cloudflareAnalyticsToken = "4aef8e4973114e2f8c6912f8b98a6d2d";
 

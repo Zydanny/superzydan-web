@@ -7,7 +7,8 @@ import { reviewsChannelUrl, twitchChannel } from "@/lib/site";
  * layout's "%s | SuperZydan" template is bypassed) so each one can be checked
  * against the 60-character limit as written.
  */
-export const SITE_URL = "https://www.superzydanofficial.com";
+/* The bare domain is canonical: Hostinger's Node.js app holds one domain, and www redirects here (proxy.ts). */
+export const SITE_URL = "https://superzydanofficial.com";
 
 export function absoluteUrl(path = "/") {
   return new URL(path, SITE_URL).toString();
