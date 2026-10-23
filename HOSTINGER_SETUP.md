@@ -88,7 +88,7 @@ You don't need to move DNS to Cloudflare for this.
 3. Copy only the token from the snippet: the value after `"token":`.
 4. Paste it between the quotes in `cloudflareAnalyticsToken` in `lib/site.ts`, then commit and push to `redesign` (from GitHub on your phone works too). Or send it to me and I'll do it.
 
-Done: the token is in `lib/site.ts`. The beacon only loads on www.superzydanofficial.com, so visits to the temporary domain and to your computer never count. Stats start once the live domain points at Hostinger.
+Done: the token is in `lib/site.ts`. The beacon only loads on superzydanofficial.com (www redirects there), so visits to the temporary domain and to your computer never count.
 
 ## Later, at go-live (don't do this yet)
 

@@ -25,7 +25,7 @@ A real father-son gaming duo: SuperZydan and his son LinkNova playing Roblox, Mi
 
 - Live data the site must keep working: Twitch live status (client polls `/api/twitch/status`), Twitch clips and last stream, YouTube latest videos and subscriber count, Discord member and online counts.
 - Blog and review posts are one MDX file each in `content/blog/`, editable from GitHub on a phone. Review posts embed the video and link products through Amazon with the `superzydan1-20` tag.
-- Hosted as a Node.js web app on Hostinger (GitHub auto-deploy). The `redesign` branch runs on a temporary Hostinger domain for review; only `www.superzydanofficial.com` is indexed.
+- Hosted as a Node.js web app on Hostinger (GitHub auto-deploy). Branches run on a temporary Hostinger domain for review; only `superzydanofficial.com` (no www) is indexed, and `www` redirects there.
 
 ## Capabilities and Constraints
 

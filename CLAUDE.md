@@ -5,6 +5,7 @@
 ## Branches, builds and commits
 
 - `master` is the live site. Work on a branch, push it, and check it on the Hostinger site connected to that branch (phone and desktop) before merging into `master`. Never push to `master` without the owner's OK.
+- The canonical address is `https://superzydanofficial.com` (no www, `SITE_URL` in `lib/seo.ts`). Hostinger serves it; `www` points at Vercel, which builds `master` too and only answers with a 308 to the bare domain (`proxy.ts`). Keep that Vercel project until `www` has a redirect somewhere else. Never hard-code `www.superzydanofficial.com` URLs; use `absoluteUrl()` from `lib/seo.ts`. `GO_LIVE.md` has the current DNS.
 - `npm run lint` and `npm run build` must both pass before every push. The build uses webpack (`next build --webpack`); Turbopack's production build crashes on Hostinger. See "Hosting" in `README.md` and don't switch it back.
 - Stage files by name. Never `git add .` or `git add -A`.
 - Never commit backups (the WordPress XML, SQL or tar files), `.env.local`, logs or screenshots. Check `git status` before every commit.

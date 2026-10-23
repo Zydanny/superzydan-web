@@ -1,121 +1,113 @@
 # Go-live: superzydanofficial.com from Vercel to Hostinger
 
-This moves the live domain from the Vercel project to the Hostinger Node.js web app that runs the redesign today on https://ivory-mallard-370119.hostingersite.com. Do it in order, and don't start until the redesign has been checked on the temporary site and you've said it's ready.
+This moves the live domain from the Vercel project to the Hostinger Node.js web app that ran the redesign on https://ivory-mallard-370119.hostingersite.com. Steps 1 to 3 are done; what's left is under "Where things stand now".
 
-## Where things stand now (23 October 2026): split between Hostinger and Vercel
+## Where things stand now (23 October 2026)
 
-Steps 1 to 3 are done, but Hostinger's SSL only covers `superzydanofficial.com`, not `www`. Its servers handed out the bare domain's certificate for `www`, so browsers showed a warning there. Until Hostinger issues a certificate for `www`, the domain is split:
+**The main address is https://superzydanofficial.com (no www).** Hostinger's Node.js app can hold only one domain, and its SSL never reliably covered `www`. So the bare domain is canonical and served by Hostinger, and `www` only redirects to it:
 
 | Record | Name | Points to | Serves |
 | --- | --- | --- | --- |
-| ALIAS | `@` (superzydanofficial.com) | `superzydanofficial.com.cdn.hstgr.net` | Hostinger: a 308 to `www`, keeping the path and query |
-| CNAME | `www` | `80fcb165234b9028.vercel-dns-017.com` | Vercel: the redesign from `master`, with Vercel's certificate |
+| ALIAS | `@` (superzydanofficial.com) | `superzydanofficial.com.cdn.hstgr.net` | Hostinger: the site, indexed |
+| CNAME | `www` | `80fcb165234b9028.vercel-dns-017.com` | Vercel: a 308 to `https://superzydanofficial.com`, keeping the path and query, with Vercel's certificate |
 
-Visitors see the redesign everywhere, and Google sees one indexed copy on `www`. While it's split:
+The app does all of this itself in `proxy.ts`, on whichever host runs it: `www` gets the 308, the bare domain is indexable, and every other host (the temporary Hostinger domain, Vercel previews) gets `X-Robots-Tag: noindex`. Canonical tags, Open Graph, structured data, the sitemap and robots.txt all use `https://superzydanofficial.com`.
 
-- **Keep the Vercel project and its domains.** Step 5's "remove the domains from Vercel" waits until `www` is on Hostinger.
-- **A push to `master` goes live on `www` through Vercel.** Hostinger builds whichever branch its app is set to (`master` after step 2); for now it only answers the bare domain with the redirect.
-- **Cloudflare Web Analytics already counts** visits on `www`, since the beacon checks the hostname, not the host.
+While `www` lives on Vercel:
 
-To finish the move:
+- **Keep the Vercel project, its `www` domain and its link to `master`.** Every push to `master` deploys there too, and that build is what sends the redirect.
+- **Hostinger builds `master`** (step 2) and serves the bare domain.
+- **The Cloudflare beacon loads only on `superzydanofficial.com`.** Visitors who arrive on `www` are counted after the redirect.
 
-- [ ] In hPanel, make sure `www.superzydanofficial.com` is connected to the Node.js app (not only `superzydanofficial.com`), then open the SSL settings and issue or reinstall the certificate for `www`.
-- [ ] Check the certificate before touching DNS. This asks one of Hostinger's servers for `www` directly and should print `DNS:www.superzydanofficial.com` (on 23 October it still printed only `DNS:superzydanofficial.com`):
+Left to decide later: whether `www` stays a redirect on Vercel or moves to a redirect set up in hPanel (for example a separate website or subdomain redirect on `www`, not the Node.js app). If it moves, check the new `www` certificate first:
 
-  ```bash
-  echo | openssl s_client -connect superzydanofficial.com.cdn.hstgr.net:443 -servername www.superzydanofficial.com 2>/dev/null | openssl x509 -noout -ext subjectAltName
-  ```
+```bash
+echo | openssl s_client -connect www.superzydanofficial.com.cdn.hstgr.net:443 -servername www.superzydanofficial.com 2>/dev/null | openssl x509 -noout -ext subjectAltName
+```
 
-- [ ] Only then change the `www` CNAME to `www.superzydanofficial.com.cdn.hstgr.net` and run step 4 again.
+It must print `DNS:www.superzydanofficial.com` before the CNAME changes. On 23 October, Hostinger's servers gave out a `www` certificate on only about 1 in 6 connections.
 
 ## DNS before the switch (22 October 2026)
 
-The domain's DNS is already at Hostinger (nameservers `ns1.dns-parking.com` and `ns2.dns-parking.com`), so every change below happens in hPanel. Nothing changes at a registrar.
+The domain's DNS is already at Hostinger (nameservers `ns1.dns-parking.com` and `ns2.dns-parking.com`), so every change happens in hPanel. Nothing changes at a registrar.
 
 | Record | Name | Points to | Used by |
 | --- | --- | --- | --- |
 | A | `@` (superzydanofficial.com) | `216.198.79.1` | Vercel |
 | CNAME | `www` | `80fcb165234b9028.vercel-dns-017.com` | Vercel |
 
-There are no MX or TXT records, so no email runs on this domain and nothing mail-related changes. The default TTL is 600 seconds, so a change reaches most people within about 10 minutes.
+There are no MX or TXT records, so no email runs on this domain. The default TTL is 600 seconds, so a change reaches most people within about 10 minutes. Putting these two records back is the rollback.
 
-Write these two Vercel values down. Putting them back is the rollback.
+## 1. The day before (done)
 
-## 1. The day before
-
-- [ ] In hPanel, check the app's **Environment variables**: `YOUTUBE_API_KEY`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` and `NEXT_PUBLIC_TWITCH_PARENTS` are there, and `SHOW_DRAFTS` is **not**.
-- [ ] In hPanel, check the app's latest deployment is green and its vulnerability scan shows nothing open (Next.js is on 16.4.2 for the October 2026 advisories).
-- [ ] Make sure the WordPress backups are still in `Z:\SuperZydan-Website-Redesign\` (the XML export, the SQL dump and the files archive). The XML is the only copy of the old posts.
+- [x] In hPanel, check the app's **Environment variables**: `YOUTUBE_API_KEY`, `TWITCH_CLIENT_ID`, `TWITCH_CLIENT_SECRET` and `NEXT_PUBLIC_TWITCH_PARENTS` are there, and `SHOW_DRAFTS` is **not**.
+- [x] In hPanel, check the app's latest deployment is green and its vulnerability scan shows nothing open (Next.js is on 16.4.2 for the October 2026 advisories).
+- [x] Make sure the WordPress backups are still in `Z:\SuperZydan-Website-Redesign\` (the XML export, the SQL dump and the files archive). The XML is the only copy of the old posts.
 
 ## 2. Put the redesign on master
 
-- [ ] Tell me to merge `redesign` into `master` and push. (Vercel rebuilds the live site from `master` too. That's fine: the domain still points at Vercel, and the redesign works there.)
-- [ ] In hPanel, open the Node.js app, go to its build settings and change **Branch** from `redesign` to `master`. Save, then wait for the deployment in **Deployments** to finish green.
-- [ ] Open https://ivory-mallard-370119.hostingersite.com and click through Home, a post and Product Reviews to confirm the `master` build is the one serving.
+- [x] Merge `redesign` into `master` and push.
+- [ ] In hPanel, open the Node.js app, go to its build settings and make sure **Branch** is `master`. Save, then wait for the deployment in **Deployments** to finish green.
 
-## 3. Connect the domain in hPanel
+## 3. Connect the domain in hPanel (done)
 
-- [ ] In hPanel, go to **Websites**. The old WordPress website still holds superzydanofficial.com. hPanel won't attach the domain to the app while it does. If it offers to move the old site to a temporary domain, pick that. If the only choice is to delete it, check the backups are there first, then delete it.
-- [ ] Open the Node.js app's dashboard and choose **Connect domain** (it may say **Change domain**). Enter **superzydanofficial.com** and, if it asks separately, **www.superzydanofficial.com**.
-- [ ] hPanel then shows the DNS records the app needs. Because the DNS is at Hostinger, it usually offers to update them for you. Let it, or set them by hand in **Domains → superzydanofficial.com → DNS / Nameservers**:
-  - Delete the A record `@ → 216.198.79.1` (Vercel).
-  - Delete the CNAME `www → 80fcb165234b9028.vercel-dns-017.com` (Vercel).
-  - Add exactly the records hPanel's connect screen lists for `@` and `www`. Don't copy the temporary domain's records; use the values that screen gives you.
-- [ ] Wait for the SSL certificate. Hostinger issues a free one for each connected name once the DNS points at it. That can take from a few minutes to about an hour. On 22 October it issued one for `superzydanofficial.com` only, so check `www` with the `openssl` command under "Where things stand now" before moving its CNAME.
+- [x] Free superzydanofficial.com from the old WordPress website in hPanel.
+- [x] Connect **superzydanofficial.com** to the Node.js app with **Connect domain**.
+- [x] DNS: `@` is an ALIAS to `superzydanofficial.com.cdn.hstgr.net`. `www` is a CNAME to Vercel (see the table at the top).
+- [x] Hostinger's free SSL certificate covers `superzydanofficial.com`.
 
-## 4. Right after the switch
+## 4. Checks after any DNS or hosting change
 
-Run these from any computer (Git Bash or Terminal). The first two can take up to 10 minutes to change.
+Run these from any computer (Git Bash or Terminal). DNS changes can take up to 10 minutes to show.
 
 ```bash
-nslookup www.superzydanofficial.com 1.1.1.1
-```
-
-- [ ] `www` no longer shows `vercel-dns-017.com` or `216.198.79.1`.
-
-```bash
-curl -sI https://www.superzydanofficial.com/
+curl -sI https://superzydanofficial.com/
 ```
 
 - [ ] `HTTP/1.1 200`, and the reply includes `platform: hostinger`.
-- [ ] There is **no** `x-robots-tag` line. If there is one, the live domain would drop out of Google: tell me straight away.
+- [ ] There is **no** `x-robots-tag` line. If there is one, the site would drop out of Google: tell me straight away.
 
 ```bash
-curl -sI "https://superzydanofficial.com/lifestyle/hollylandlarkm2?utm_source=test"
+curl -sI "https://www.superzydanofficial.com/lifestyle/hollylandlarkm2?x=1"
 ```
 
-- [ ] `HTTP/1.1 308` with `location: https://www.superzydanofficial.com/lifestyle/hollylandlarkm2?utm_source=test`. The app sends this itself (`proxy.ts`), keeping the path and query string. If you get a 200 instead, hPanel isn't passing the bare domain to the app: tell me. If it's a 200 with no `x-robots-tag` line, tell me straight away.
+- [ ] `308` with `location: https://superzydanofficial.com/lifestyle/hollylandlarkm2?x=1`, and no certificate error from curl.
 
 ```bash
-curl -s https://www.superzydanofficial.com/robots.txt
+curl -s https://superzydanofficial.com/robots.txt
 ```
 
-- [ ] It ends with `Sitemap: https://www.superzydanofficial.com/sitemap.xml`. On the temporary domain Hostinger's CDN replaces robots.txt with its own; if the live domain shows `User-agent: Googlebot` / `Disallow: /`, tell me right away, because that blocks Google.
+- [ ] It ends with `Sitemap: https://superzydanofficial.com/sitemap.xml`. If it shows `User-agent: Googlebot` / `Disallow: /` (Hostinger's CDN does that on temporary domains), tell me right away, because that blocks Google.
 
 ```bash
-curl -sI https://www.superzydanofficial.com/hollylandlarkm2/
+curl -s https://superzydanofficial.com/sitemap.xml | grep -c "<loc>https://superzydanofficial.com/"
+```
+
+- [ ] The same number as the posts and pages on the site (69 on 23 October), and no `www` addresses in it.
+
+```bash
+curl -sI https://superzydanofficial.com/hollylandlarkm2/
 ```
 
 - [ ] A 308 to `/hollylandlarkm2`, which then redirects to `/lifestyle/hollylandlarkm2`. Old blog links still land on their posts.
 
 On your phone and on desktop:
 
-- [ ] The padlock shows on both `superzydanofficial.com` and `www.superzydanofficial.com`, with no certificate warning.
-- [ ] Home loads the redesign (not the old Vercel site). Try a private window if your browser cached the old one.
+- [ ] The padlock shows on `superzydanofficial.com`, and typing `www.superzydanofficial.com` lands there with no certificate warning.
 - [ ] The YouTube videos, Twitch status and Discord counts show real numbers, not fallbacks.
-- [ ] Tap a Twitch embed on VODs and check that it plays. The live domain is built in, so it needs no setting.
+- [ ] Tap a Twitch embed on VODs and check that it plays. Both names are built in, so it needs no setting.
 - [ ] Open a review post and tap a product button. It lands on Amazon with `tag=superzydan1-20` in the address.
 - [ ] Send yourself a message from the Contact page. It opens your mail app with the message filled in.
 - [ ] Share the home page link in a chat app and check the preview card shows the new share image.
-- [ ] On desktop, open DevTools → Network on www and reload: `beacon.min.js` from `static.cloudflareinsights.com` loads. (It never loads on the temporary domain.)
+- [ ] On desktop, open DevTools → Network on `superzydanofficial.com` and reload: `beacon.min.js` from `static.cloudflareinsights.com` loads. (It never loads on the temporary domain.)
 
 ## 5. Over the next few days
 
-- [ ] In Google Search Console, open the `superzydanofficial.com` property (add it as a Domain property if it isn't there), submit `https://www.superzydanofficial.com/sitemap.xml`, and use **URL Inspection** on the home page and one post. Both should say indexing is allowed.
-- [ ] Watch **Pages** in Search Console for a rise in "Not found (404)". Send me any old URLs that show up and I'll add redirects.
-- [ ] Check Cloudflare Web Analytics starts counting visits. The beacon only loads on www, so the first visits show up after the switch.
-- [ ] After a week with no problems: in Vercel, remove the domains from the old project, then pause or delete the project. Until then it's the rollback.
+- [ ] In Google Search Console, open the `superzydanofficial.com` Domain property (add it if it isn't there; a Domain property covers both names), submit `https://superzydanofficial.com/sitemap.xml`, and use **URL Inspection** on the home page and one post. Both should say indexing is allowed, with the bare domain as the Google-selected canonical once Google recrawls.
+- [ ] Watch **Pages** in Search Console. "Page with redirect" for `www` addresses is expected. Send me any old URLs that show "Not found (404)" and I'll add redirects.
+- [ ] Check Cloudflare Web Analytics is counting visits on `superzydanofficial.com`.
+- [ ] Keep the Vercel project while it serves the `www` redirect. Only remove it after `www` has a redirect somewhere else.
 
 ## Rollback
 
-If the live site breaks and it can't be fixed quickly, put the two Vercel records back in hPanel's DNS (A `@ → 216.198.79.1`, CNAME `www → 80fcb165234b9028.vercel-dns-017.com`) and remove the records the app added. Within about 10 minutes the domain serves Vercel again, which now builds the redesign from `master`.
+If the bare domain breaks on Hostinger and it can't be fixed quickly, point `@` back at Vercel with an A record to `216.198.79.1` (and remove the ALIAS). Vercel builds the same `master`, and the app treats the bare domain as canonical wherever it runs. In Vercel's domain settings, make sure the bare domain serves the site rather than redirecting to `www`, or the two redirects would loop.

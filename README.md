@@ -57,12 +57,13 @@ Amazon links always use the tracking ID in `AMAZON_ASSOCIATE_TAG` (`lib/site.ts`
 
 ## Hosting
 
-The site runs as a Node.js web app on Hostinger, connected to this GitHub repo. `HOSTINGER_SETUP.md` has the hPanel steps. Every push to the connected branch rebuilds and restarts it (`npm run build`, then the Next.js server). Image optimization (sharp), page revalidation, the `/api/twitch/status` route and `proxy.ts` all work there without extra setup.
+The site runs as a Node.js web app on Hostinger at https://superzydanofficial.com, connected to this GitHub repo. `HOSTINGER_SETUP.md` has the hPanel steps. Every push to the connected branch rebuilds and restarts it (`npm run build`, then the Next.js server). Image optimization (sharp), page revalidation, the `/api/twitch/status` route and `proxy.ts` all work there without extra setup.
 
 - `npm run build` uses webpack (`next build --webpack`). Turbopack's production build crashed on Hostinger: it runs PostCSS (Tailwind) in a separate Node process, and Hostinger's build environment ended that process before Turbopack could connect to it. `npm run dev` still uses Turbopack.
 
-- Visit stats come from Cloudflare Web Analytics. The token is `cloudflareAnalyticsToken` in `lib/site.ts`. The beacon only loads on `www.superzydanofficial.com`, so visits to the temporary domain, previews and localhost never count.
-- Only `www.superzydanofficial.com` gets indexed. `proxy.ts` sends the bare `superzydanofficial.com` to `www` with a permanent (308) redirect that keeps the path and query string, and gives every other host (temporary domains, previews) an `X-Robots-Tag: noindex` header without redirecting it.
+- Visit stats come from Cloudflare Web Analytics. The token is `cloudflareAnalyticsToken` in `lib/site.ts`. The beacon only loads on `superzydanofficial.com`, so visits to the temporary domain, previews and localhost never count.
+- The canonical address is `https://superzydanofficial.com` (no www), set as `SITE_URL` in `lib/seo.ts`; canonical tags, Open Graph, structured data, the sitemap and robots.txt all follow it. Only that host gets indexed. `proxy.ts` sends `www.superzydanofficial.com` to it with a permanent (308) redirect that keeps the path and query string, and gives every other host (temporary domains, previews) an `X-Robots-Tag: noindex` header without redirecting it.
+- The bare domain runs on Hostinger. Hostinger's Node.js app holds only one domain, so `www` points at the Vercel project, which builds `master` too and only answers with that redirect. `GO_LIVE.md` has the current DNS.
 
 ## Branches and previews
 
