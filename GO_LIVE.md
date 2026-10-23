@@ -2,7 +2,33 @@
 
 This moves the live domain from the Vercel project to the Hostinger Node.js web app that runs the redesign today on https://ivory-mallard-370119.hostingersite.com. Do it in order, and don't start until the redesign has been checked on the temporary site and you've said it's ready.
 
-## What the DNS looks like today (22 October 2026)
+## Where things stand now (23 October 2026): split between Hostinger and Vercel
+
+Steps 1 to 3 are done, but Hostinger's SSL only covers `superzydanofficial.com`, not `www`. Its servers handed out the bare domain's certificate for `www`, so browsers showed a warning there. Until Hostinger issues a certificate for `www`, the domain is split:
+
+| Record | Name | Points to | Serves |
+| --- | --- | --- | --- |
+| ALIAS | `@` (superzydanofficial.com) | `superzydanofficial.com.cdn.hstgr.net` | Hostinger: a 308 to `www`, keeping the path and query |
+| CNAME | `www` | `80fcb165234b9028.vercel-dns-017.com` | Vercel: the redesign from `master`, with Vercel's certificate |
+
+Visitors see the redesign everywhere, and Google sees one indexed copy on `www`. While it's split:
+
+- **Keep the Vercel project and its domains.** Step 5's "remove the domains from Vercel" waits until `www` is on Hostinger.
+- **A push to `master` goes live on `www` through Vercel.** Hostinger builds whichever branch its app is set to (`master` after step 2); for now it only answers the bare domain with the redirect.
+- **Cloudflare Web Analytics already counts** visits on `www`, since the beacon checks the hostname, not the host.
+
+To finish the move:
+
+- [ ] In hPanel, make sure `www.superzydanofficial.com` is connected to the Node.js app (not only `superzydanofficial.com`), then open the SSL settings and issue or reinstall the certificate for `www`.
+- [ ] Check the certificate before touching DNS. This asks one of Hostinger's servers for `www` directly and should print `DNS:www.superzydanofficial.com` (on 23 October it still printed only `DNS:superzydanofficial.com`):
+
+  ```bash
+  echo | openssl s_client -connect superzydanofficial.com.cdn.hstgr.net:443 -servername www.superzydanofficial.com 2>/dev/null | openssl x509 -noout -ext subjectAltName
+  ```
+
+- [ ] Only then change the `www` CNAME to `www.superzydanofficial.com.cdn.hstgr.net` and run step 4 again.
+
+## DNS before the switch (22 October 2026)
 
 The domain's DNS is already at Hostinger (nameservers `ns1.dns-parking.com` and `ns2.dns-parking.com`), so every change below happens in hPanel. Nothing changes at a registrar.
 
@@ -35,7 +61,7 @@ Write these two Vercel values down. Putting them back is the rollback.
   - Delete the A record `@ → 216.198.79.1` (Vercel).
   - Delete the CNAME `www → 80fcb165234b9028.vercel-dns-017.com` (Vercel).
   - Add exactly the records hPanel's connect screen lists for `@` and `www`. Don't copy the temporary domain's records; use the values that screen gives you.
-- [ ] Wait for the SSL certificate. Hostinger issues a free one for both names once the DNS points at it. That can take from a few minutes to about an hour. Don't touch anything while the site shows a certificate warning in that window.
+- [ ] Wait for the SSL certificate. Hostinger issues a free one for each connected name once the DNS points at it. That can take from a few minutes to about an hour. On 22 October it issued one for `superzydanofficial.com` only, so check `www` with the `openssl` command under "Where things stand now" before moving its CNAME.
 
 ## 4. Right after the switch
 
