@@ -86,7 +86,7 @@ export function SiteFooter() {
               href="/privacy"
               className="-my-3 inline-block py-3 underline-offset-4 transition-colors hover:text-white hover:underline"
             >
-              Privacy
+              ZydanEditor privacy
             </Link>
           </p>
         </div>
