@@ -113,6 +113,14 @@ export const PAGES = {
       "What ZydanEditor, my private posting tool, does with YouTube and Instagram data: what it accesses, what it stores and how to remove its access.",
     updated: "2026-10-27",
   },
+  /* ZydanEditor's terms, for the same YouTube API audit. */
+  appTerms: {
+    path: "/terms",
+    title: "Terms of Service: ZydanEditor | SuperZydan",
+    description:
+      "Terms of Service for ZydanEditor, the private tool SuperZydan LLC uses to upload its own videos to its own YouTube channel through YouTube API Services.",
+    updated: "2026-10-27",
+  },
 } satisfies Record<string, PageSeo>;
 
 /*

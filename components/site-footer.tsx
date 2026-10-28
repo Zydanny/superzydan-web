@@ -88,6 +88,15 @@ export function SiteFooter() {
             >
               ZydanEditor privacy
             </Link>
+            <span aria-hidden className="mx-2 text-neon-violet">
+              /
+            </span>
+            <Link
+              href="/terms"
+              className="-my-3 inline-block py-3 underline-offset-4 transition-colors hover:text-white hover:underline"
+            >
+              ZydanEditor terms
+            </Link>
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import { List, Section, TextLink } from "@/components/legal-prose";
 import { PageHero } from "@/components/page-hero";
-import { PAGES, pageMetadata } from "@/lib/seo";
+import { absoluteUrl, PAGES, pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata(PAGES.appPrivacy);
@@ -12,33 +12,6 @@ export const metadata: Metadata = pageMetadata(PAGES.appPrivacy);
  * app settings link to this URL, so keep the path and the owner's wording.
  * The site's own policy lives at /privacy-policy.
  */
-
-function TextLink({ href, children }: { href: string; children?: ReactNode }) {
-  const external = href.startsWith("http");
-  return (
-    <a
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noopener noreferrer" : undefined}
-      className="font-semibold break-all text-neon-cyan underline decoration-neon-cyan/40 underline-offset-4 hover:text-white"
-    >
-      {children ?? href}
-    </a>
-  );
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="mt-12">
-      <h2 className="text-2xl font-extrabold text-white">{title}</h2>
-      <div className="mt-3 space-y-3 text-lg leading-relaxed text-pretty text-haze">{children}</div>
-    </section>
-  );
-}
-
-function List({ children }: { children: ReactNode }) {
-  return <ul className="list-disc space-y-2 pl-6 marker:text-neon-violet">{children}</ul>;
-}
 
 /* A legal page reads as plain prose: one column, no cards, no motion. */
 export default function AppPrivacyPage() {
@@ -112,6 +85,12 @@ export default function AppPrivacyPage() {
           <Section title="Contact">
             <p>
               <TextLink href={`mailto:${site.email}`}>{site.email}</TextLink>
+            </p>
+          </Section>
+
+          <Section title="Terms of Service">
+            <p>
+              ZydanEditor&rsquo;s Terms of Service: <TextLink href={PAGES.appTerms.path}>{absoluteUrl(PAGES.appTerms.path)}</TextLink>
             </p>
           </Section>
         </div>
