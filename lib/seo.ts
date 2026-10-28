@@ -105,6 +105,14 @@ export const PAGES = {
       "How superzydanofficial.com handles your data: analytics, embedded videos and chat, affiliate links and how to reach us with questions.",
     updated: "2026-10-22",
   },
+  /* ZydanEditor's policy. Google's YouTube API audit and Meta's app settings link here. */
+  appPrivacy: {
+    path: "/privacy",
+    title: "Privacy Policy: ZydanEditor | SuperZydan",
+    description:
+      "What ZydanEditor, my private posting tool, does with YouTube and Instagram data: what it accesses, what it stores and how to remove its access.",
+    updated: "2026-10-27",
+  },
 } satisfies Record<string, PageSeo>;
 
 /*

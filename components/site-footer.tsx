@@ -76,7 +76,19 @@ export function SiteFooter() {
       <div className="border-t border-neon-violet/20">
         <div className="shell flex flex-col gap-4 py-7 text-sm text-haze lg:flex-row lg:items-start lg:justify-between lg:gap-12">
           <p className="max-w-xl text-pretty">{affiliateDisclosure}</p>
-          <p className="shrink-0">© {new Date().getFullYear()} SuperZydan LLC</p>
+          <p className="shrink-0">
+            © {new Date().getFullYear()} SuperZydan LLC
+            <span aria-hidden className="mx-2 text-neon-violet">
+              /
+            </span>
+            {/* py-3 with -my-3 makes a 44px tap target without changing the row's height. */}
+            <Link
+              href="/privacy"
+              className="-my-3 inline-block py-3 underline-offset-4 transition-colors hover:text-white hover:underline"
+            >
+              Privacy
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
