@@ -16,7 +16,7 @@ export const cloudflareAnalyticsToken = "4aef8e4973114e2f8c6912f8b98a6d2d";
  * The first sober day as YYYY-MM-DD. When it's set, /journal shows the running
  * day count. Leave it null to hide the counter.
  */
-export const soberSince: string | null = null;
+export const soberSince: string | null = "2026-09-14";
 
 export const navLinks = [
   { label: "About", href: "/about" },
