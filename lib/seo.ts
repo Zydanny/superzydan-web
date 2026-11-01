@@ -56,6 +56,13 @@ export const PAGES = {
       "Recipes, family game nights, Roblox events and the stuff we can't stop talking about, newest first. Gear reviews have their own page.",
     updated: "2026-10-21",
   },
+  journal: {
+    path: "/journal",
+    title: "SuperZydan's Journal: Real Life, Logged as It Happens",
+    description:
+      "My life outside the stream: wins, rough days, what I'm grateful for and where my head's at. Written as it happens, newest first.",
+    updated: "2026-11-01",
+  },
   vods: {
     path: "/vods",
     title: "SuperZydan Stream VODs and Videos",

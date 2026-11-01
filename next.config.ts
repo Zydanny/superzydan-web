@@ -64,6 +64,8 @@ const nextConfig: NextConfig = {
     "/lifestyle/[slug]": ["./content/blog/**/*"],
     "/product-reviews": ["./content/blog/**/*"],
     "/work-with-me": ["./content/blog/**/*"],
+    "/journal": ["./content/journal/**/*"],
+    "/sitemap.xml": ["./content/journal/**/*"],
   },
   async redirects() {
     return legacyPostSlugs.map((slug) => ({

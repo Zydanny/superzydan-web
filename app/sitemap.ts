@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts, isReview, postPath } from "@/lib/blog";
+import { getJournalEntries } from "@/lib/journal";
 import { REVIEW_CATEGORIES, reviewCategoryPath } from "@/lib/review-categories";
 import { absoluteUrl, PAGES } from "@/lib/seo";
 
@@ -14,6 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     list.reduce((latest, post) => (post.updated > latest ? post.updated : latest), fallback);
 
   const reviews = posts.filter(isReview);
+  const journalUpdated = (await getJournalEntries())[0]?.day;
   const pages = Object.values(PAGES).map((page) => {
     // List pages change whenever a post in them does.
     const updated =
@@ -21,7 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ? newest(posts, page.updated)
         : page === PAGES.productReviews
           ? newest(reviews, page.updated)
-          : page.updated;
+          : page === PAGES.journal && journalUpdated && journalUpdated > page.updated
+            ? journalUpdated
+            : page.updated;
     return { url: absoluteUrl(page.path), lastModified: updated };
   });
 

@@ -39,6 +39,16 @@ The real keys live in `.env.local` on your machine and in the app's Environment 
 - `content/blog/`: blog posts, one `.mdx` file per post, named `<slug>.mdx`. To edit a post, edit its file (this works from the GitHub website on your phone too). Post images go in `public/blog/<slug>/`.
 - `public/`: logo, images and other static files.
 
+## Journal
+
+`/journal` is the public life log: one plain-text `.md` file per entry in `content/journal/`, with `date` (with time and offset), `type` (`thought`, `affirmation`, `grateful`, `win` or `moment`) and an optional `mood` (`Rough`, `Meh`, `Okay`, `Good`, `Great`) in the frontmatter. Entries are plain text, not MDX, and blank lines split paragraphs.
+
+- Write from your phone at `/journal/new` (not linked anywhere, kept out of search). Publishing commits the entry to GitHub and the site rebuilds, so it shows up a few minutes later. Turn on "Draft an X post" and the composer trims a version to X's 280 characters; "Post to X" opens X with it filled in, and nothing posts until you tap Post there.
+- It needs `JOURNAL_PASSWORD` and `JOURNAL_GITHUB_TOKEN` in hPanel (see `.env.example`). On a test site, also set `JOURNAL_BRANCH` to the test branch.
+- To fix or remove an entry, edit or delete its file on GitHub.
+- The repo is public, so private entries never go here.
+- `soberSince` in `lib/site.ts` (YYYY-MM-DD) turns on the sober day counter at the top of the page.
+
 ## Review posts
 
 Reviews are blog posts with `category: Reviews`. They show on the Product Reviews page, filtered by `productCategory`. Extra frontmatter:
