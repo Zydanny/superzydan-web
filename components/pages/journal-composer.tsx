@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { cn } from "cn";
 import { NeonButton } from "@/components/neon-button";
 import {
+  cleanJournalText,
   draftXPost,
   JOURNAL_MAX_LENGTH,
   JOURNAL_MOODS,
@@ -75,6 +76,8 @@ export function JournalComposer() {
   const xDraft = xEdited ? xText : draftXPost(text);
   const xCount = xLength(xDraft);
   const xOver = xCount > X_LIMIT;
+  // The entry didn't fit, so the draft is only part of it.
+  const xTrimmed = !xEdited && xLength(cleanJournalText(text).replace(/\s*\n+\s*/g, " ")) > X_LIMIT;
 
   function onTextChange(value: string) {
     setText(value);
@@ -262,6 +265,11 @@ export function JournalComposer() {
                   </button>
                 ) : null}
               </div>
+              {xTrimmed ? (
+                <p className="mt-1 text-sm text-haze">
+                  Your entry is too long for X, so this keeps the opening sentences. Edit it to use a different line.
+                </p>
+              ) : null}
             </>
           ) : null}
         </div>

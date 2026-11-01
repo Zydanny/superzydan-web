@@ -78,11 +78,29 @@ export function xLength(text: string) {
 
 /*
  * The first draft of an X post from an entry: the whole thing if it fits,
- * otherwise as many whole words as fit with "..." on the end.
+ * otherwise as many whole sentences from the start as fit, so the post ends on
+ * a complete thought. Only when the first sentence alone is too long does it
+ * fall back to whole words with "..." on the end.
  */
 export function draftXPost(text: string) {
-  const flat = cleanJournalText(text).replace(/\s*\n+\s*/g, " ");
+  const cleaned = cleanJournalText(text);
+  const flat = cleaned.replace(/\s*\n+\s*/g, " ");
   if (xLength(flat) <= X_LIMIT) return flat;
+
+  // A line break ends a sentence too, even without a full stop.
+  const sentences = cleaned
+    .split(/\n+/)
+    .flatMap((line) => line.trim().split(/(?<=[.!?…]["')\]]?)\s+/))
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+  let fitted = "";
+  for (const sentence of sentences) {
+    const next = fitted ? `${fitted} ${sentence}` : sentence;
+    if (xLength(next) > X_LIMIT) break;
+    fitted = next;
+  }
+  if (fitted) return fitted;
+
   const words = flat.split(" ");
   let draft = "";
   for (const word of words) {
