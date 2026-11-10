@@ -54,12 +54,13 @@ export default async function Home() {
   return (
     <TwitchStatusProvider initialStatus={twitchStatus}>
       <main id="content" className="flex-1">
+        {/* Temporary: remove after GTA VI's launch (see gtaCountdown in lib/site.ts). */}
+        {showGta ? <GtaCountdown /> : null}
         <NeonHero
           latestVideo={videos[0] ?? null}
           youtubeSubscribers={subscriberCount}
           discordMembers={discordStats.members}
         />
-        {showGta ? <GtaCountdown /> : null}
         <Watch videos={videos} clips={twitchClips} />
         <FeaturedVideo
           title={featured?.title ?? featuredVideo.title}
