@@ -68,10 +68,14 @@ const page = `<!doctype html>
   var launchAt = Date.parse(${JSON.stringify(gtaCountdown.launchAt)});
   if (new URLSearchParams(location.search).get("bg") === "sunset") document.body.className = "sunset";
   var pad = function (n) { return String(n).padStart(2, "0"); };
+  // Checked five times a second; the text only changes when the number does.
+  var shown = -1, timer;
   function tick() {
-    var now = Date.now();
-    var left = Math.max(0, Math.floor((launchAt - now) / 1000));
+    var left = Math.max(0, Math.ceil((launchAt - Date.now()) / 1000));
+    if (left === shown) return;
+    shown = left;
     if (left === 0) {
+      clearInterval(timer);
       document.getElementById("timer").style.display = "none";
       document.getElementById("small").textContent = "is out now";
       return;
@@ -80,8 +84,8 @@ const page = `<!doctype html>
     document.getElementById("h").textContent = pad(Math.floor((left % 86400) / 3600));
     document.getElementById("m").textContent = pad(Math.floor((left % 3600) / 60));
     document.getElementById("s").textContent = pad(left % 60);
-    setTimeout(tick, 1000 - (now % 1000));
   }
+  timer = setInterval(tick, 200);
   tick();
 </script>
 </body>

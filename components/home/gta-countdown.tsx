@@ -49,17 +49,23 @@ function Palm({ className }: { className?: string }) {
  * announcing every tick.
  */
 export function GtaCountdown() {
+  // Whole seconds on the visitor's clock, so React only re-renders when the shown number changes.
   const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
+    /*
+     * Check the clock five times a second instead of one timer aimed at each
+     * second's edge: a timer landing a hair early showed one number twice and
+     * then skipped the next.
+     */
     const tick = () => {
-      const current = Date.now();
-      setNow(current);
-      if (current < launchAt) timer = setTimeout(tick, 1000 - (current % 1000));
+      const second = Math.floor(Date.now() / 1000) * 1000;
+      setNow((previous) => (previous === second ? previous : second));
+      if (second >= launchAt) clearInterval(timer);
     };
+    const timer = setInterval(tick, 200);
     tick();
-    return () => clearTimeout(timer);
+    return () => clearInterval(timer);
   }, []);
 
   if (now !== null && now >= hideAfter) return null;
