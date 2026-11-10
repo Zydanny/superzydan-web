@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { NeonButton } from "@/components/neon-button";
+import { GtaStreamKit } from "@/components/home/gta-stream-kit";
 import { gtaCountdown, twitchChannel } from "@/lib/site";
 
 const launchAt = Date.parse(gtaCountdown.launchAt);
@@ -23,7 +24,12 @@ function split(msLeft: number) {
  */
 function Palm({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 200 320" className={className} aria-hidden fill="currentColor">
+    <svg
+      viewBox="0 0 200 320"
+      className={className}
+      aria-hidden
+      fill="currentColor"
+    >
       <path d="M96 320c4-60 10-120 30-178 4-12 9-22 14-30l7 4c-6 9-10 19-14 31-18 56-24 114-27 173z" />
       <path d="M142 112c-30-22-70-26-104-8 34-4 66 2 98 18z" />
       <path d="M142 112c-24-34-60-50-96-46 32 8 60 24 88 52z" />
@@ -82,7 +88,10 @@ export function GtaCountdown() {
         className="absolute bottom-[-14rem] left-1/2 -z-10 size-[28rem] -translate-x-1/2 rounded-full bg-[linear-gradient(180deg,#ffe07a_0%,#ff9a4a_45%,#ff4f8b_100%)] [mask-image:repeating-linear-gradient(180deg,#000_0_22px,transparent_22px_30px)] lg:bottom-[-16rem] lg:left-[78%] lg:size-[36rem]"
       />
       {/* Water line. */}
-      <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-10 bg-[linear-gradient(180deg,#5b1d6e,#1a0b33)] lg:h-14" />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 -z-10 h-10 bg-[linear-gradient(180deg,#5b1d6e,#1a0b33)] lg:h-14"
+      />
       <Palm className="absolute bottom-0 left-[-3.5rem] -z-10 h-64 text-[#14061f] lg:left-0 lg:h-[26rem]" />
       <Palm className="absolute right-[-3.5rem] bottom-0 -z-10 h-52 scale-x-[-1] text-[#14061f] lg:right-4 lg:h-[22rem]" />
 
@@ -112,24 +121,32 @@ export function GtaCountdown() {
         </div>
 
         {launched ? null : (
-          <ol
-            role="timer"
-            aria-label="Time left until GTA VI unlocks"
-            className="mt-8 grid max-w-4xl grid-cols-4 gap-2 sm:gap-4 lg:mt-12"
-          >
-            {split(now === null ? 0 : launchAt - now).map((unit) => (
-              <li key={unit.label} className="chamfer bg-[#2fe0ff]/70 p-[2px] [--cut:14px]">
-                <div className="chamfer flex flex-col items-center bg-[#1a0b33]/85 px-1 py-4 backdrop-blur-sm [--cut:13px] sm:py-6">
-                  <span className="font-display text-5xl leading-none font-black text-white tabular-nums [text-shadow:0_0_2px_#fff,0_0_10px_#2fe0ff,0_0_22px_#ff3fb4] min-[400px]:text-6xl lg:text-8xl">
-                    {now === null ? "--" : String(unit.value).padStart(2, "0")}
-                  </span>
-                  <span className="mt-2 text-sm font-bold tracking-wide text-[#ffd9ef] uppercase lg:text-base">
-                    {unit.label}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <>
+            <ol
+              role="timer"
+              aria-label="Time left until GTA VI unlocks"
+              className="mt-8 grid max-w-4xl grid-cols-4 gap-2 sm:gap-4 lg:mt-12"
+            >
+              {split(now === null ? 0 : launchAt - now).map((unit) => (
+                <li
+                  key={unit.label}
+                  className="chamfer bg-[#2fe0ff]/70 p-[2px] [--cut:14px]"
+                >
+                  <div className="chamfer flex flex-col items-center bg-[#1a0b33]/85 px-1 py-4 backdrop-blur-sm [--cut:13px] sm:py-6">
+                    <span className="font-display text-5xl leading-none font-black text-white tabular-nums [text-shadow:0_0_2px_#fff,0_0_10px_#2fe0ff,0_0_22px_#ff3fb4] min-[400px]:text-6xl lg:text-8xl">
+                      {now === null
+                        ? "--"
+                        : String(unit.value).padStart(2, "0")}
+                    </span>
+                    <span className="mt-2 text-sm font-bold tracking-wide text-[#ffd9ef] uppercase lg:text-base">
+                      {unit.label}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <GtaStreamKit />
+          </>
         )}
       </div>
     </section>
