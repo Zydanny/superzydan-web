@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { CheckIcon, CopyIcon, GripIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  CopyIcon,
+  GripIcon,
+  MonitorPlayIcon,
+} from "lucide-react";
 import { absoluteUrl } from "@/lib/seo";
 
 const WIDTH = 800;
@@ -58,14 +64,21 @@ export function GtaStreamKit() {
 
   return (
     <details className="group/kit mt-6 max-w-4xl">
-      <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 font-bold text-white underline decoration-[#2fe0ff] decoration-2 underline-offset-4 hover:text-[#d9fbff] [&::-webkit-details-marker]:hidden">
-        Put this countdown on your stream
+      <summary className="group/sum relative isolate inline-flex min-h-12 cursor-pointer list-none items-center gap-2 px-6 text-base font-extrabold tracking-wide text-[#ffd166] uppercase transition-transform select-none active:scale-[0.97] [&::-webkit-details-marker]:hidden">
         <span
           aria-hidden
-          className="transition-transform group-open/kit:rotate-90"
-        >
-          ›
-        </span>
+          className="chamfer absolute inset-0 -z-10 bg-[#ffd166] [--cut:10px]"
+        />
+        <span
+          aria-hidden
+          className="chamfer absolute inset-[2px] -z-10 bg-[#1a0b33] transition-colors group-hover/sum:bg-[#2a1240] [--cut:9px]"
+        />
+        <MonitorPlayIcon className="size-5" />
+        Add it to your stream
+        <ChevronDownIcon
+          aria-hidden
+          className="size-4 transition-transform group-open/kit:rotate-180"
+        />
       </summary>
 
       <div className="chamfer mt-3 bg-[#2fe0ff]/70 p-[2px] [--cut:14px]">
