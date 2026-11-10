@@ -19,15 +19,15 @@ export const cloudflareAnalyticsToken = "4aef8e4973114e2f8c6912f8b98a6d2d";
 export const soberSince: string | null = "2026-09-14";
 
 /*
- * The GTA VI countdown on the home page, right under the hero. It counts to
- * midnight Central on Nov 19, 2026 (06:00 UTC), the owner's time zone; store
- * listings show a midnight local unlock, and Rockstar hasn't announced a time.
- * If that changes, change launchAt. After launch the section says it's out
- * until hideAfter, then disappears. Set enabled to false to hide it now.
+ * The GTA VI countdown at the top of the home page and at /overlay/gta6. It
+ * counts to when the PS5 store unlocks the game: 11 PM Central on Nov 18, 2026
+ * (midnight Eastern, 05:00 UTC). Rockstar hasn't announced a time; if the
+ * store countdown changes, change launchAt. After launch the section says it's
+ * out until hideAfter, then disappears. Set enabled to false to hide it now.
  */
 export const gtaCountdown = {
   enabled: true,
-  launchAt: "2026-11-19T06:00:00Z",
+  launchAt: "2026-11-19T05:00:00Z",
   hideAfter: "2026-11-26T06:00:00Z",
 };
 
