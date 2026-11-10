@@ -18,6 +18,24 @@ export const cloudflareAnalyticsToken = "4aef8e4973114e2f8c6912f8b98a6d2d";
  */
 export const soberSince: string | null = "2026-09-14";
 
+/*
+ * The GTA VI countdown on the home page, right under the hero. It counts to
+ * midnight Central on Nov 19, 2026 (06:00 UTC), the owner's time zone; store
+ * listings show a midnight local unlock, and Rockstar hasn't announced a time.
+ * If that changes, change launchAt. After launch the section says it's out
+ * until hideAfter, then disappears. Set enabled to false to hide it now.
+ */
+export const gtaCountdown = {
+  enabled: true,
+  launchAt: "2026-11-19T06:00:00Z",
+  hideAfter: "2026-11-26T06:00:00Z",
+};
+
+/* Whether the home page renders the countdown section at all right now. */
+export function showGtaCountdown(now = Date.now()) {
+  return gtaCountdown.enabled && now < Date.parse(gtaCountdown.hideAfter);
+}
+
 export const navLinks = [
   { label: "About", href: "/about" },
   { label: "Lifestyle", href: "/lifestyle" },

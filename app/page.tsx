@@ -3,6 +3,7 @@ import { Collabs } from "@/components/home/collabs";
 import { DeskTeaser } from "@/components/home/desk-teaser";
 import { DiscordCta } from "@/components/home/discord-cta";
 import { FeaturedVideo } from "@/components/home/featured-video";
+import { GtaCountdown } from "@/components/home/gta-countdown";
 import { LatestPosts } from "@/components/home/latest-posts";
 import { NeonHero } from "@/components/home/neon-hero";
 import { Watch } from "@/components/home/watch";
@@ -13,7 +14,7 @@ import { getAllPosts } from "@/lib/blog";
 import { getDiscordStats } from "@/lib/discord";
 import { videoSummary } from "@/lib/post-seo";
 import { PAGES, pageMetadata, personJsonLd, videoJsonLd, websiteJsonLd } from "@/lib/seo";
-import { featuredVideo, youtubeVideos } from "@/lib/site";
+import { featuredVideo, showGtaCountdown, youtubeVideos } from "@/lib/site";
 import { getTwitchClips, getTwitchStatus } from "@/lib/twitch";
 import { getLatestChannelVideos, getVideoDetails, getYouTubeSubscriberCount } from "@/lib/youtube";
 
@@ -47,6 +48,8 @@ export default async function Home() {
   // The button only shows when its post really exists.
   const featuredPost = featuredVideo.post ? posts.find((post) => post.slug === featuredVideo.post?.slug) : undefined;
   const summary = featured ? videoSummary(featured.description) : "";
+  // Rechecked on every 15-minute re-render; the component hides itself in the browser too.
+  const showGta = showGtaCountdown();
 
   return (
     <TwitchStatusProvider initialStatus={twitchStatus}>
@@ -56,6 +59,7 @@ export default async function Home() {
           youtubeSubscribers={subscriberCount}
           discordMembers={discordStats.members}
         />
+        {showGta ? <GtaCountdown /> : null}
         <Watch videos={videos} clips={twitchClips} />
         <FeaturedVideo
           title={featured?.title ?? featuredVideo.title}
