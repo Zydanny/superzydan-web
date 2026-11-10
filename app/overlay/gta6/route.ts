@@ -31,31 +31,38 @@ const page = `<!doctype html>
   body.sunset {
     background: linear-gradient(180deg, #1a0b33 0%, #4a1460 35%, #b8327a 70%, #ff7a59 100%);
   }
-  .title {
-    font-size: 17vh; line-height: 1; font-style: italic; letter-spacing: 0.02em;
-    text-shadow: 0.25vh 0.25vh 0 #ff3fb4, 0.5vh 0.5vh 0 #2fe0ff, 0 0 2vh rgba(0,0,0,.6);
+  .row { display: flex; align-items: center; gap: 9vh; }
+  .title { text-align: center; font-style: italic; line-height: 0.82; white-space: nowrap; }
+  .big {
+    display: block; font-size: 40vh; letter-spacing: 0.01em;
+    text-shadow: 0.8vh 0.8vh 0 #ff3fb4, 1.6vh 1.6vh 0 #2fe0ff, 0 0 3vh rgba(0,0,0,.6);
   }
-  .timer { display: flex; gap: 2vw; margin-top: 2vh; }
+  .small {
+    display: block; font-size: 13vh; letter-spacing: 0.08em; color: #ffd9ef; margin-top: 2vh;
+    text-shadow: 0.4vh 0.4vh 0 #ff3fb4, 0 0 2vh rgba(0,0,0,.7);
+  }
+  .timer { display: flex; gap: 3vh; }
   .unit {
-    min-width: 17vw; padding: 1.5vh 1vw 1vh; text-align: center;
+    min-width: 36vh; padding: 2vh 0 1.5vh; text-align: center;
     background: rgba(26, 11, 51, 0.82); border: 0.5vh solid #2fe0ff;
     clip-path: polygon(10% 0, 90% 0, 100% 14%, 100% 86%, 90% 100%, 10% 100%, 0 86%, 0 14%);
   }
   .num {
-    display: block; font-size: 34vh; line-height: 0.9; font-variant-numeric: tabular-nums;
+    display: block; font-size: 28vh; line-height: 0.9; font-variant-numeric: tabular-nums;
     text-shadow: 0 0 0.4vh #fff, 0 0 2vh #2fe0ff, 0 0 4vh #ff3fb4;
   }
   .label { display: block; font-size: 6vh; letter-spacing: 0.12em; color: #ffd9ef; margin-top: 0.5vh; }
-  .out { font-size: 30vh; }
 </style>
 </head>
 <body>
-  <div class="title" id="title">GTA VI in</div>
+  <div class="row">
+  <div class="title"><span class="big">GTA VI</span><span class="small" id="small">drops in</span></div>
   <div class="timer" id="timer">
     <div class="unit"><span class="num" id="d">--</span><span class="label">days</span></div>
     <div class="unit"><span class="num" id="h">--</span><span class="label">hrs</span></div>
     <div class="unit"><span class="num" id="m">--</span><span class="label">min</span></div>
     <div class="unit"><span class="num" id="s">--</span><span class="label">sec</span></div>
+  </div>
   </div>
 <script>
   var launchAt = Date.parse(${JSON.stringify(gtaCountdown.launchAt)});
@@ -66,9 +73,7 @@ const page = `<!doctype html>
     var left = Math.max(0, Math.floor((launchAt - now) / 1000));
     if (left === 0) {
       document.getElementById("timer").style.display = "none";
-      var title = document.getElementById("title");
-      title.textContent = "GTA VI is out";
-      title.className = "title out";
+      document.getElementById("small").textContent = "is out now";
       return;
     }
     document.getElementById("d").textContent = pad(Math.floor(left / 86400));

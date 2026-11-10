@@ -85,9 +85,14 @@ export function GtaCountdown() {
           <div>
             <h2
               id="gta-title"
-              className="font-display text-5xl leading-[0.86] font-black text-white uppercase italic [text-shadow:3px_3px_0_#ff3fb4,6px_6px_0_#2fe0ff] min-[400px]:text-6xl lg:text-8xl"
+              className="font-display leading-[0.82] font-black text-white uppercase italic"
             >
-              {launched ? "GTA VI is out" : "GTA VI countdown"}
+              <span className="block text-8xl [text-shadow:4px_4px_0_#ff3fb4,8px_8px_0_#2fe0ff] min-[400px]:text-9xl lg:text-[11rem]">
+                GTA VI
+              </span>
+              <span className="mt-2 block text-3xl tracking-wide text-[#ffd9ef] [text-shadow:2px_2px_0_#ff3fb4] lg:text-5xl">
+                {launched ? "is out now" : "drops in"}
+              </span>
             </h2>
             <p className="mt-4 max-w-xl text-lg font-semibold text-pretty text-white lg:text-xl">
               {launched
