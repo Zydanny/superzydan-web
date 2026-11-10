@@ -96,8 +96,8 @@ export function GtaCountdown() {
             </h2>
             <p className="mt-4 max-w-xl text-lg font-semibold text-pretty text-white lg:text-xl">
               {launched
-                ? "It's finally out on PS5 and Xbox Series X|S. Come hang out in Vice City on stream."
-                : "Unlocks Nov 18 at 11 PM Central. Coming to PS5 and Xbox Series X|S."}
+                ? "It's finally out. Come hang out in Vice City on stream."
+                : "Unlocks Nov 18 at 11 PM Central."}
             </p>
           </div>
           <NeonButton variant="outline" href={twitchChannel} external>
